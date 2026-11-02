@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -22,10 +23,15 @@ public class PillManager : MonoBehaviour
     private bool _qteActive = false;
     public float targetAngle = 90f; //this gets randomized each time
 
+    [Header("DEBUG STUFF")]
+    public TextMeshProUGUI pillAmount; //debug//
+    public CanvasGroup vignetteEffect; //debug temp effect//
+
     private void Start()
     {
         qteGroup.alpha = 0;
-        
+        pillAmount.text = pillsLeft.ToString();
+        vignetteEffect.alpha = 1; 
     }
 
     void StartQTE()
@@ -46,8 +52,18 @@ public class PillManager : MonoBehaviour
         _qteSuccess = success;
         qteGroup.alpha = 0;
 
-        if (success) Debug.Log("QTE SUCCESS :D");
-        else Debug.Log("QTE FAILED D:");
+        if (success)
+        {
+            Debug.Log("QTE SUCCESS :D");
+            // do visual stuff here for hallucinations //
+            pillsLeft--;
+            vignetteEffect.alpha = 0;
+            pillAmount.text = pillsLeft.ToString();
+        }
+        else
+        { 
+            Debug.Log("QTE FAILED D:"); 
+        }
     }
 
     private void Update()
