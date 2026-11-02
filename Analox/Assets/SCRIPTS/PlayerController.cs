@@ -26,12 +26,13 @@ public class PlayerController : MonoBehaviour
 
     [Header("Object Interaction")]
     public Vector2 boxCastSize = new Vector2(0.1f, 0.1f);
-    private Interactable _currentInteractable;
+    private InteractableObj _hoveredObj;
     public LayerMask interactLayer;
 
     [Tooltip("Whether or not to show a ui prompt when the player is nearby the object or whenever the mouse hovers")]
     public bool hoverWhenNearby = false; 
     private UiManager _ui;
+
 
     private List<InteractableObj> _nearby = new List<InteractableObj>();
   
@@ -61,7 +62,22 @@ public class PlayerController : MonoBehaviour
         _ui = GameController.instance.GetComponent<UiManager>();
     }
 
-    
+    private void Update()
+    {
+        Ray ray = _pActiveCam.ScreenPointToRay(_pointAction.ReadValue<Vector2>()); 
+
+        if(GameController.instance.currentState != GameController.playerState.isDisabled
+            && Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, interactLayer))
+        {
+            _ui.ShowPrompt(hit.transform);
+
+        }
+        else
+        {
+            _ui.HidePrompt();
+        }
+    }
+
     private void OnEnable()
     {
         playerActions.Enable();
@@ -111,10 +127,10 @@ public class PlayerController : MonoBehaviour
 
 
 
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayerMask))
-            {
-                agent.SetDestination(hit.point);
-            }
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayerMask))
+        {
+            agent.SetDestination(hit.point);
+        }
 
 
 

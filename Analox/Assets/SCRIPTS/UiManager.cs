@@ -61,6 +61,8 @@ public class UiManager : MonoBehaviour
 
     private void Update()
     {
+        UpdatePrompt(); 
+
         // temporary, swapped to state machine later
         if (!_isInspecting || _inspectedObj == null) return; //if already inspecting ignore
 
@@ -78,6 +80,7 @@ public class UiManager : MonoBehaviour
     #region object inspection stuff
     public void EnterInspect(GameObject targetOBJ)
     {
+        HidePrompt();
         if (_isInspecting) return;
 
         _isInspecting = true;
@@ -204,9 +207,9 @@ public class UiManager : MonoBehaviour
         promptCanvas.SetActive(true);
     }
 
-    public void HidePrompt(Transform target)
+    public void HidePrompt()
     {
-        if (target != _promptTarget) return; //ignore exit events from prev inspection
+        
         _promptTarget = null;
         promptCanvas.SetActive(false);
     }
