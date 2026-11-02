@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     private Interactable _currentInteractable;
     public LayerMask interactLayer;
 
+    [Tooltip("Whether or not to show a ui prompt when the player is nearby the object or whenever the mouse hovers")]
+    public bool hoverWhenNearby = false; 
     private UiManager _ui;
 
     private List<InteractableObj> _nearby = new List<InteractableObj>();

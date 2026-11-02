@@ -11,6 +11,17 @@ public class UiManager : MonoBehaviour
 
     // -> handles object inspection system
 
+    [Header("UI ELEMENTS")]
+    [Space(20)]
+    [Header("INTERACTION PROMPT")]
+    private Vector3 _basePosition; //set by interactable via popupOffset which will sit on the interactable obj itself (later)
+    public Vector3 _popUpOffset = new Vector3(0, 2, 0); // TEMP //
+    public GameObject promptCanvas;
+    public Camera activeCam;
+    private Transform _promptTarget;
+    private bool _visible; //debug temp var
+    // this is basic pop up stuff, but you can add animation stuff to this script //
+
 
     [Header("Object Inspection")]
     public CanvasGroup inspectPanel;
@@ -40,6 +51,12 @@ public class UiManager : MonoBehaviour
         SetPanel(false); //setter
         itemName.text = "";
         itemDesc.text = "";
+        activeCam = Camera.main;
+        promptCanvas.SetActive(false);
+    }
+    private void Start()
+    {
+        
     }
 
     private void Update()
@@ -178,5 +195,35 @@ public class UiManager : MonoBehaviour
 
     #endregion
 
+    #region interaction pop up 
 
+    public void ShowPrompt(Transform target)
+    {
+        if (_isInspecting) return;
+        _promptTarget = target;
+        promptCanvas.SetActive(true);
+    }
+
+    public void HidePrompt(Transform target)
+    {
+        if (target != _promptTarget) return; //ignore exit events from prev inspection
+        _promptTarget = null;
+        promptCanvas.SetActive(false);
+    }
+
+    private void UpdatePrompt()
+    {
+        if (_promptTarget == null) return;
+        // add any animation here //
+
+        Transform t = promptCanvas.transform;
+        t.position = _promptTarget.position + _popUpOffset;
+
+        if(activeCam != null)
+        {
+            t.rotation = Quaternion.LookRotation(t.position - activeCam.transform.position);
+        }
+    }
+
+    #endregion
 }
