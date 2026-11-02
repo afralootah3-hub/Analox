@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PillManager : MonoBehaviour
 {
@@ -15,9 +16,9 @@ public class PillManager : MonoBehaviour
     public float needleSpeed = 20f;
     private float _needleAngle = 0f;
 
-    public KeyCode keyToPress = KeyCode.Space;
     public CanvasGroup qteGroup;
     private bool _qteSuccess = false;
+    public float zoneSize = 20f;
     private bool _qteActive = false;
     public float targetAngle = 90f; //this gets randomized each time
 
@@ -29,6 +30,7 @@ public class PillManager : MonoBehaviour
 
     void StartQTE()
     {
+        targetZone.GetComponent<Image>().fillAmount = zoneSize / 360f;
         _qteActive = true;
         _needleAngle = 0;
         _qteSuccess = false;
@@ -38,10 +40,20 @@ public class PillManager : MonoBehaviour
 
     }
 
+    private void EndQTE(bool success)
+    {
+        _qteActive = false;
+        _qteSuccess = success;
+        qteGroup.alpha = 0;
+
+        if (success) Debug.Log("QTE SUCCESS :D");
+        else Debug.Log("QTE FAILED D:");
+    }
+
     private void Update()
     {
         //temp test trigger
-        if (!_qteActive && Keyboard.current.spaceKey.wasPressedThisFrame) StartQTE();
+        if (!_qteActive && Keyboard.current.eKey.wasPressedThisFrame) StartQTE();
 
         if (!_qteActive) return;
 
@@ -49,7 +61,21 @@ public class PillManager : MonoBehaviour
         _needleAngle += needleSpeed * Time.deltaTime;
         needle.localRotation = Quaternion.Euler(0, 0, -_needleAngle);
 
-        
+        // input check //
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            float diff = Mathf.DeltaAngle(_needleAngle, targetAngle);
+            float distanceFromCenter = Mathf.Abs(diff);
+            float halfzone = zoneSize / 2f;
+
+            bool hit = distanceFromCenter <= halfzone;
+            EndQTE(hit);
+        }
+        else if (_needleAngle >= 360)
+        {
+            EndQTE(false);
+        }
 
 
     }
