@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -30,11 +31,15 @@ public class UiManager : MonoBehaviour
     private bool _rbWasKinematic;
     private bool _isInspecting; //temporary bool, will be swapped to follow state machine instead
 
+    public TextMeshProUGUI itemName;
+    public TextMeshProUGUI itemDesc;
 
 
     private void Awake()
     {
         SetPanel(false); //setter
+        itemName.text = "";
+        itemDesc.text = "";
     }
 
     private void Update()
@@ -64,6 +69,11 @@ public class UiManager : MonoBehaviour
         _inspectedObj = targetOBJ.transform;
 
         GameController.instance.currentState = GameController.playerState.isDisabled;
+        InteractableObj itemContainer = targetOBJ.GetComponent<InteractableObj>(); //fetch itemdata
+        ItemData data = itemContainer.itemdata;
+
+        itemName.text = data.ItemName;
+        itemDesc.text = data.ItemDescription;
 
         _savedRB = targetOBJ.GetComponent<Rigidbody>();
 
@@ -103,6 +113,10 @@ public class UiManager : MonoBehaviour
     public void ExitInspect()
     {
         if (!_isInspecting) return;
+
+        itemName.text = "";
+        itemDesc.text = "";
+
         _isInspecting = false;
         SetPanel(false);
         GameController.instance.currentState = GameController.playerState.isIdle;
