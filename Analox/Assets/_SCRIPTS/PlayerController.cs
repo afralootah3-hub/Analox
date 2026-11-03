@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = _pActiveCam.ScreenPointToRay(_pointAction.ReadValue<Vector2>()); 
 
-        if(_InputBlocked && Physics.Raycast(ray,
+        if(!_InputBlocked && Physics.Raycast(ray,
             out RaycastHit hit, Mathf.Infinity, interactLayer))
         {
             _ui.ShowPrompt(hit.transform);
@@ -93,6 +93,9 @@ public class PlayerController : MonoBehaviour
         {
             _ui.HidePrompt();
         }
+
+        Debug.Log(currentState);
+
     }
 
     private void OnEnable()

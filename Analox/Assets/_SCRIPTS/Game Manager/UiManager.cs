@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -28,18 +29,20 @@ public class UiManager : MonoBehaviour
     public CanvasGroup inspectPanel;
     public float fadeDuration = .3f; // <- this animates a fade in, can be changed for smth cooler
 
+    [Tooltip("Degress of Rotation")]
+    [Range(0, 1)]
+    public float rotateSpeed = 200f; 
     
-    [Tooltip("How fast the object can be rotated when being inspected")]
-    public float rotateSpeed = 200f;
-
     //      PRIVATE REFERENCES      //
     private Renderer _inspectObjRend; // cache //
     public Transform holdpoint;
+    public GameObject holdLight; 
     private Transform _inspectedObj;
     private Vector3 _savedPosition;
     private Transform _savedParent;
     private Vector3 _savedScale;
     private Quaternion _savedRotation;
+    private PlayerController _playerCC; //cache to access
     private Rigidbody _savedRB;
     private bool _rbWasKinematic;
     private bool _isInspecting; //temporary bool, will be swapped to follow state machine instead
@@ -55,6 +58,9 @@ public class UiManager : MonoBehaviour
         itemDesc.text = "";
         activeCam = Camera.main;
         promptCanvas.SetActive(false);
+
+        _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
     }
     private void Start()
     {
@@ -86,21 +92,23 @@ public class UiManager : MonoBehaviour
         if (_isInspecting) return;
 
         _isInspecting = true;
-
+        holdLight.SetActive(true);
 
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
 
         //      SET UP      //
 
-        GameController.instance.currentState = GameController.playerState.isDisabled;
+        // disable input
+        _playerCC.setPlayerState(PlayerController.playerState.isDisabled); // lockinput
+
         InteractableObj itemContainer = targetOBJ.GetComponent<InteractableObj>(); //fetch itemdata
         ItemData data = itemContainer.itemdata;
         _inspectObjRend = itemContainer.itemRenderer; // cache renderer to disable casting shadows on the ground
 
         _inspectObjRend.shadowCastingMode = ShadowCastingMode.Off; // turn off cast shadows to not cast shadows on the ground 
         _inspectObjRend.receiveShadows = false; //also recieving shadows 
-
+        
 
         itemName.text = data.ItemName;
         itemDesc.text = data.ItemDescription;
@@ -144,6 +152,7 @@ public class UiManager : MonoBehaviour
     public void ExitInspect()
     {
         if (!_isInspecting) return;
+        holdLight.SetActive(false);
 
         itemName.text = "";
         itemDesc.text = "";
@@ -156,7 +165,7 @@ public class UiManager : MonoBehaviour
 
         _isInspecting = false;
         SetPanel(false);
-        GameController.instance.currentState = GameController.playerState.isIdle;
+        _playerCC.setPlayerState(PlayerController.playerState.isIdle); //revert to idle
 
         //return obj position to its original orientation 
         if (_inspectedObj != null)
@@ -193,6 +202,7 @@ public class UiManager : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
+        /* old code
         //rotate around world axes
         //space.world makes sure the object rotates relative to the global coordinate system,
         // it moves along global axes regardless of which way the object is currently facing
@@ -203,6 +213,18 @@ public class UiManager : MonoBehaviour
             , -mouseX * rotateSpeed * Time.deltaTime, Space.World);
         _inspectedObj.transform.Rotate(holdpoint.right,
             mouseY * rotateSpeed * Time.deltaTime, Space.World);
+        */
+
+        // only rotate while dragging with left mouse button
+        if (!Mouse.current.leftButton.isPressed) return;
+
+        Vector2 delta = Mouse.current.delta.ReadValue();
+        Transform cam = activeCam.transform;
+
+        //rotate around CAMERAS axes so obj follows drag on screen
+
+        _inspectedObj.Rotate(cam.up, -delta.x * rotateSpeed, Space.World);
+        _inspectedObj.Rotate(cam.right, delta.y * rotateSpeed, Space.World);
 
     }
 
