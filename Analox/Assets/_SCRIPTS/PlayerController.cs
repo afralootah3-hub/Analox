@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using static GameController;
 using RangeAttribute = UnityEngine.RangeAttribute;
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -12,6 +13,11 @@ public class PlayerController : MonoBehaviour
 {
     // handles point and click, as well as CAMERA stuff (orthographic room viewing)
 
+    
+
+    public enum playerState { isIdle, isMoving, isDisabled }
+    [Header("READ ONLY - DEBUG")]
+    [SerializeField] private playerState currentState = playerState.isIdle; //default state
 
     private NavMeshAgent agent;
     private Animator playerAnimator;
@@ -34,7 +40,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Object Interaction")]
     public Vector2 boxCastSize = new Vector2(0.1f, 0.1f);
-    private InteractableObj _hoveredObj;
+    private InteractableObj _hoveredObj; // cache //
     public LayerMask interactLayer;
 
     [Tooltip("Whether or not to show a ui prompt when the player is nearby the object or whenever the mouse hovers")]
@@ -77,8 +83,8 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = _pActiveCam.ScreenPointToRay(_pointAction.ReadValue<Vector2>()); 
 
-        if(GameController.instance.currentState != GameController.playerState.isDisabled
-            && Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, interactLayer))
+        if(_InputBlocked && Physics.Raycast(ray,
+            out RaycastHit hit, Mathf.Infinity, interactLayer))
         {
             _ui.ShowPrompt(hit.transform);
 
@@ -102,12 +108,52 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    //          PLAYER STATE MACHINE        //
+
+    public void setPlayerState(playerState newstate)
+    {
+
+        if (newstate == currentState) return; //same state so return
+
+        currentState = newstate;
+
+
+        // PLAYER ANIMATION NOT HANDLED HERE, HANDLED BY VELOCITY CHECK //
+
+        switch (currentState)
+        {
+            case playerState.isIdle:
+                Debug.Log("Player is in Idle state");
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                break;
+            case playerState.isMoving:
+                Debug.Log("Player is in moving state");
+                break;
+            case playerState.isDisabled:
+                Debug.Log("Disabling player movement");
+                // disable player movement
+
+                break;
+        }
+
+
+
+
+    }
+
+
+    // a bool for blocking input (shortens if statements and helps with readabilty)
+    // THIS IS AUTOMATICALLY SET BY STATE MACHINE AND DOES NOT GET EDITED BY OTHER SCRIPTS
+    private bool _InputBlocked => currentState == playerState.isDisabled;
+
+
     // handles movement AND checks if we click on an object and are WITHIN RANGE
 
     #region INPUT STUFF
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
-        if (GameController.instance.currentState == GameController.playerState.isDisabled) return;
+        if (_InputBlocked) return;
         
 
             Debug.Log("CLICKED");
@@ -152,9 +198,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnRotatePerformed(InputAction.CallbackContext context)
     {
-        if (_isRotating) return;
-        if (fixedCamera) return;
-        if (_cameraHolder == null) return;
+        if (_InputBlocked || _isRotating || fixedCamera || _cameraHolder == null) return; 
 
         //
 

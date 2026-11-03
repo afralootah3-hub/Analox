@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class UiManager : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class UiManager : MonoBehaviour
     public float rotateSpeed = 200f;
 
     //      PRIVATE REFERENCES      //
+    private Renderer _inspectObjRend; // cache //
     public Transform holdpoint;
     private Transform _inspectedObj;
     private Vector3 _savedPosition;
@@ -85,12 +87,20 @@ public class UiManager : MonoBehaviour
 
         _isInspecting = true;
 
+
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
+
+        //      SET UP      //
 
         GameController.instance.currentState = GameController.playerState.isDisabled;
         InteractableObj itemContainer = targetOBJ.GetComponent<InteractableObj>(); //fetch itemdata
         ItemData data = itemContainer.itemdata;
+        _inspectObjRend = itemContainer.itemRenderer; // cache renderer to disable casting shadows on the ground
+
+        _inspectObjRend.shadowCastingMode = ShadowCastingMode.Off; // turn off cast shadows to not cast shadows on the ground 
+        _inspectObjRend.receiveShadows = false; //also recieving shadows 
+
 
         itemName.text = data.ItemName;
         itemDesc.text = data.ItemDescription;
@@ -127,6 +137,7 @@ public class UiManager : MonoBehaviour
         SetPanel(true); // setter
     }
 
+
     //called by interactableobj when player presses interact key or the exit button 
 
     //this will probably get swapped to a button they can press?
@@ -136,6 +147,12 @@ public class UiManager : MonoBehaviour
 
         itemName.text = "";
         itemDesc.text = "";
+
+        _inspectObjRend.shadowCastingMode = ShadowCastingMode.On; // turn on cast shadows
+        _inspectObjRend.receiveShadows = true; //recieving shadows on
+
+        // clear cache//
+        _inspectObjRend = null; 
 
         _isInspecting = false;
         SetPanel(false);
