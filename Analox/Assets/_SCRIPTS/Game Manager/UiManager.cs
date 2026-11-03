@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -49,6 +51,15 @@ public class UiManager : MonoBehaviour
 
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemDesc;
+    public TextMeshProUGUI scanDesc;
+
+    public GameObject scanButton; 
+
+    private ItemData _itemDataCache;
+
+    private List<string> itemIndex; //stores the itemID's (which is the itemName)//
+
+    private string _scanString; //cache
 
 
     private void Awake()
@@ -56,15 +67,20 @@ public class UiManager : MonoBehaviour
         SetPanel(false); //setter
         itemName.text = "";
         itemDesc.text = "";
+        scanDesc.text = "";
         activeCam = Camera.main;
         promptCanvas.SetActive(false);
 
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
+
+
+
     }
     private void Start()
     {
-        
+        if (scanDesc == null || itemDesc == null || itemName == null) Debug.LogWarning("MISSING COMPONENT IN INSPECTOR");
+
     }
 
     private void Update()
@@ -97,23 +113,50 @@ public class UiManager : MonoBehaviour
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
 
+        
+
         //      SET UP      //
 
         // disable input
         _playerCC.setPlayerState(PlayerController.playerState.isDisabled); // lockinput
 
         InteractableObj itemContainer = targetOBJ.GetComponent<InteractableObj>(); //fetch itemdata
-        ItemData data = itemContainer.itemdata;
+        _itemDataCache = itemContainer.itemdata;
         _inspectObjRend = itemContainer.itemRenderer; // cache renderer to disable casting shadows on the ground
 
         _inspectObjRend.shadowCastingMode = ShadowCastingMode.Off; // turn off cast shadows to not cast shadows on the ground 
         _inspectObjRend.receiveShadows = false; //also recieving shadows 
         
 
-        itemName.text = data.ItemName;
-        itemDesc.text = data.ItemDescription;
+        itemName.text = _itemDataCache.ItemName;
+        itemDesc.text = _itemDataCache.ItemDescription;
+        _scanString = _itemDataCache.ScanInformation; //cache text but don't show it yet
 
-        _savedRB = targetOBJ.GetComponent<Rigidbody>();
+        // ADD TO LIST AND ENABLE BOOL //
+
+        //if (!itemIndex.Contains(_itemDataCache.ItemName))
+        //{
+        //    itemIndex.Add(_itemDataCache.ItemName);  //add to list
+        //}
+
+        if (_itemDataCache.wasScanned)
+        {
+            //if it was already scanned show the text 
+            // DONT invoke scan function because it decreases sanity
+            scanButton.SetActive(false);
+
+            scanDesc.text = _scanString;
+        }
+        else
+        {
+            scanButton.SetActive(true);
+        }
+
+
+
+            // //////////////////// // NOTE: add check if item has been scanned, if you look at it again show the scanned information without needing to drain sanity
+
+            _savedRB = targetOBJ.GetComponent<Rigidbody>();
 
         if (_savedRB != null)
         {
@@ -145,6 +188,27 @@ public class UiManager : MonoBehaviour
         SetPanel(true); // setter
     }
 
+    //          SCAN STUFF          //
+
+    public void OnScannedObject()
+    {
+        // this shows the scanned information (for now it just appears but it'll be a cool transition eventually)
+
+        // when click button to scan (or whatever you do)
+
+        // do some animation/transition stuff and show text 
+
+        scanDesc.text = _scanString; //set string 
+        _itemDataCache.wasScanned = true; //set true so you dont need to rescan 
+        scanButton.SetActive(false);
+
+
+
+
+    }
+
+
+
 
     //called by interactableobj when player presses interact key or the exit button 
 
@@ -156,6 +220,8 @@ public class UiManager : MonoBehaviour
 
         itemName.text = "";
         itemDesc.text = "";
+        scanDesc.text = "";
+        _itemDataCache = null; //clear cache
 
         _inspectObjRend.shadowCastingMode = ShadowCastingMode.On; // turn on cast shadows
         _inspectObjRend.receiveShadows = true; //recieving shadows on
@@ -215,14 +281,23 @@ public class UiManager : MonoBehaviour
             mouseY * rotateSpeed * Time.deltaTime, Space.World);
         */
 
-        // only rotate while dragging with left mouse button
+        // only rotate while dragging with left mouse button (clikc and dragged)
+        // isPressed is true every frame the button stays down
         if (!Mouse.current.leftButton.isPressed) return;
+
+        // delta means change -> its how far the mouse moved since the LAST frame
+        // delta.x > 0 -> mouse moved right -- delta.x < 0 -> mouse moved left
+        // delta.y does the same for up and down
+        // delta is 0,0 if mouse is held still
 
         Vector2 delta = Mouse.current.delta.ReadValue();
         Transform cam = activeCam.transform;
 
         //rotate around CAMERAS axes so obj follows drag on screen
 
+        //-delta is used as without it the controls are inverted (idk why)
+
+        // 
         _inspectedObj.Rotate(cam.up, -delta.x * rotateSpeed, Space.World);
         _inspectedObj.Rotate(cam.right, delta.y * rotateSpeed, Space.World);
 
