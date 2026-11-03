@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,11 +10,18 @@ using RangeAttribute = UnityEngine.RangeAttribute;
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerController : MonoBehaviour
 {
+    // handles point and click, as well as CAMERA stuff (orthographic room viewing)
+
+
     private NavMeshAgent agent;
     private Animator playerAnimator;
 
-
-    public Camera _pActiveCam; //set to private later
+    [Header("CAMERA SETTINGS")]
+    public Camera _pActiveCam;
+    private Transform _cameraHolder; //controls the rotation stuff (ONE PER SCENE)
+    public bool fixedCamera; // if we want the camera to not be controlled (used to disable pplayer input to rotate camera)
+    private bool _isRotating; // safety check to prevent spamming button 
+    public float camRotSpeed = 5f;
     public InputActionAsset playerActions;
     private InputAction _clickAction;
     private InputAction _pointAction;
@@ -60,6 +68,9 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _ui = GameController.instance.GetComponent<UiManager>();
+
+        // this will later be moved to ONSCENELOAD //
+        _cameraHolder = GameObject.FindWithTag("camHolder").transform;
     }
 
     private void Update()
@@ -92,6 +103,8 @@ public class PlayerController : MonoBehaviour
     }
 
     // handles movement AND checks if we click on an object and are WITHIN RANGE
+
+    #region INPUT STUFF
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
         if (GameController.instance.currentState == GameController.playerState.isDisabled) return;
@@ -137,6 +150,41 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    public void OnRotatePerformed(InputAction.CallbackContext context)
+    {
+        if (_isRotating) return;
+        if (fixedCamera) return;
+        if (_cameraHolder == null) return;
+
+        //
+
+        Debug.Log("HIT ROTATE KEY");
+
+        StartCoroutine(RotateCamera());
+
+    }
+
+    IEnumerator RotateCamera()
+    {
+        Quaternion currentRot = _cameraHolder.transform.rotation; //store current rot
+        Quaternion newRot = currentRot * Quaternion.Euler(0, 90, 0);
+        _isRotating = true;
+        float duration = camRotSpeed;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            _cameraHolder.transform.rotation = Quaternion.Slerp(currentRot, newRot, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        _cameraHolder.rotation = newRot;
+        _isRotating = false;
+
+    }
+
+    #endregion
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "iObj")
@@ -162,6 +210,5 @@ public class PlayerController : MonoBehaviour
             if (obj != null) _nearby.Remove(obj);
         }
     }
-
 
 }
