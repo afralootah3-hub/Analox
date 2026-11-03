@@ -303,6 +303,16 @@ public class UiManager : MonoBehaviour
 
     }
 
+    public void OpenDoor(GameObject door)
+    {
+        Debug.Log("CLICKED ON DOOR OPENING IT YAY");
+    }
+
+    public void OpenDrawer(GameObject drawer)
+    {
+
+    }
+
     private void SetPanel(bool visible)
     {
         inspectPanel.alpha = visible ? 1f : 0f;

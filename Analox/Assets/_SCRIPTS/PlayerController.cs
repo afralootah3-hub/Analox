@@ -156,6 +156,9 @@ public class PlayerController : MonoBehaviour
     #region INPUT STUFF
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
+        //  the actual logic where stuff happens when u click on it is handled in UI MANAGEr //
+
+
         if (_InputBlocked) return;
         
 

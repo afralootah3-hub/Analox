@@ -1850,7 +1850,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662e2e92b5096dd4799a0ff18a9bfa37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractableObj
-  itemdata: {fileID: 0}
+  itemdata: {fileID: 11400000, guid: d4667418c40b7c447ad61935037fc8a4, type: 2}
   itemRenderer: {fileID: 0}
 --- !u!1 &791157270
 GameObject:
@@ -4268,7 +4268,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013136643}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -4404,6 +4404,7 @@ MonoBehaviour:
   itemName: {fileID: 472561774}
   itemDesc: {fileID: 1553001917}
   scanDesc: {fileID: 1111965363}
+  scanButton: {fileID: 6385738}
 --- !u!114 &2141680562
 MonoBehaviour:
   m_ObjectHideFlags: 0

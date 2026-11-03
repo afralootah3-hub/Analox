@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class InteractableObj : MonoBehaviour
 {
+    
+
     public ItemData itemdata;
 
     [Header("READ ONLY - AUTOMATICALLY ASSIGNED AT RUNTIME")]

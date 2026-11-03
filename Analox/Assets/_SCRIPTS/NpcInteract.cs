@@ -8,7 +8,7 @@ public enum iType { npc, item } //interaction type enum
 
 public class NpcInteract : MonoBehaviour
 {
-    /*
+    
     [Tooltip("Select the type of Interaction to gain access to necessary variables")]
     public iType type; //type of interaction
 
@@ -50,8 +50,6 @@ public class NpcInteract : MonoBehaviour
     [Header("NPC Camera Rig Variables")]
     public CamData camdata;
 
-
-    public Confetti confettiSC;
 
     private void OnEnable()
     {
@@ -136,7 +134,7 @@ public class NpcInteract : MonoBehaviour
 
 
                 dialogdata.npcDialogue.StartDialogue(dialogdata.storyData.startingNode); //passing in the node (Case sensitive)
-                camdata.npcCamRig.movePlayer();
+                //camdata.npcCamRig.movePlayer(); 
                 Debug.Log("START NPC DIALOGUE");
                 setText("");
                 //load in dialogue system
@@ -217,18 +215,12 @@ public class NpcInteract : MonoBehaviour
     public void removeItem(string itemToRemove)
     {
         PlayerUI.instance.removeItem(itemToRemove);
-    }
-
-    [YarnCommand("PlayEffect")]
-    public void playConfetti()
-    {
-        confettiSC.PlayEffect();
-    }
+    }    
 
     public void OnApplicationQuit()
     {
         dialogdata.storyData.dataReset();
     }
 
-    */
+    
 }
