@@ -10,7 +10,7 @@ public class InteractableObj : MonoBehaviour
     private void Start()
     {
         itemRenderer = GetComponentInChildren<MeshRenderer>();
-        
+        itemdata.wasScanned = false;
     }
 
 }
