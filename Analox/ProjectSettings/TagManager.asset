@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - iObj
+  - camHolder
   layers:
   - Default
   - TransparentFX

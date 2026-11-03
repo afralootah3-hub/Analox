@@ -1,0 +1,258 @@
+using NUnit.Framework;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.InputSystem;
+using static GameController;
+using RangeAttribute = UnityEngine.RangeAttribute;
+
+[RequireComponent(typeof(NavMeshAgent))]
+public class PlayerController : MonoBehaviour
+{
+    // handles point and click, as well as CAMERA stuff (orthographic room viewing)
+
+    
+
+    public enum playerState { isIdle, isMoving, isDisabled }
+    [Header("READ ONLY - DEBUG")]
+    [SerializeField] private playerState currentState = playerState.isIdle; //default state
+
+    private NavMeshAgent agent;
+    private Animator playerAnimator;
+
+    [Header("CAMERA SETTINGS")]
+    public Camera _pActiveCam;
+    private Transform _cameraHolder; //controls the rotation stuff (ONE PER SCENE)
+    public bool fixedCamera; // if we want the camera to not be controlled (used to disable pplayer input to rotate camera)
+    private bool _isRotating; // safety check to prevent spamming button 
+    public float camRotSpeed = 5f;
+    public InputActionAsset playerActions;
+    private InputAction _clickAction;
+    private InputAction _pointAction;
+   
+
+    [Header("Movement Settings")]
+    [Range(0, 20)]
+    public float moveSpeed = 10f;
+
+
+    [Header("Object Interaction")]
+    public Vector2 boxCastSize = new Vector2(0.1f, 0.1f);
+    private InteractableObj _hoveredObj; // cache //
+    public LayerMask interactLayer;
+
+    [Tooltip("Whether or not to show a ui prompt when the player is nearby the object or whenever the mouse hovers")]
+    public bool hoverWhenNearby = false; 
+    private UiManager _ui;
+
+
+    private List<InteractableObj> _nearby = new List<InteractableObj>();
+  
+
+    // reference interactable script / scriptable obj
+
+    private void Awake()
+    {
+        //anim = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+
+        agent.speed = moveSpeed;
+        
+        if(playerActions == null)
+        {
+            Debug.LogError("MISSING INPUT ACTION ASSET FROM INSPECTOR");
+        }
+
+        // fetch needed actions
+        _clickAction = playerActions.FindAction("Player/Click");
+        _pointAction = playerActions.FindAction("Player/Point");
+        
+    }
+
+    private void Start()
+    {
+        _ui = GameController.instance.GetComponent<UiManager>();
+
+        // this will later be moved to ONSCENELOAD //
+        _cameraHolder = GameObject.FindWithTag("camHolder").transform;
+    }
+
+    private void Update()
+    {
+        Ray ray = _pActiveCam.ScreenPointToRay(_pointAction.ReadValue<Vector2>()); 
+
+        if(_InputBlocked && Physics.Raycast(ray,
+            out RaycastHit hit, Mathf.Infinity, interactLayer))
+        {
+            _ui.ShowPrompt(hit.transform);
+
+        }
+        else
+        {
+            _ui.HidePrompt();
+        }
+    }
+
+    private void OnEnable()
+    {
+        playerActions.Enable();
+        _clickAction.performed += OnClickPerformed;
+    }
+
+    private void OnDisable()
+    {
+        playerActions.Disable();
+        _clickAction.performed -= OnClickPerformed;
+
+    }
+
+    //          PLAYER STATE MACHINE        //
+
+    public void setPlayerState(playerState newstate)
+    {
+
+        if (newstate == currentState) return; //same state so return
+
+        currentState = newstate;
+
+
+        // PLAYER ANIMATION NOT HANDLED HERE, HANDLED BY VELOCITY CHECK //
+
+        switch (currentState)
+        {
+            case playerState.isIdle:
+                Debug.Log("Player is in Idle state");
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                break;
+            case playerState.isMoving:
+                Debug.Log("Player is in moving state");
+                break;
+            case playerState.isDisabled:
+                Debug.Log("Disabling player movement");
+                // disable player movement
+
+                break;
+        }
+
+
+
+
+    }
+
+
+    // a bool for blocking input (shortens if statements and helps with readabilty)
+    // THIS IS AUTOMATICALLY SET BY STATE MACHINE AND DOES NOT GET EDITED BY OTHER SCRIPTS
+    private bool _InputBlocked => currentState == playerState.isDisabled;
+
+
+    // handles movement AND checks if we click on an object and are WITHIN RANGE
+
+    #region INPUT STUFF
+    private void OnClickPerformed(InputAction.CallbackContext context)
+    {
+        if (_InputBlocked) return;
+        
+
+            Debug.Log("CLICKED");
+
+            //read current screen position of mouse
+            Vector2 mouseSPos = _pointAction.ReadValue<Vector2>();
+
+            //ray cast onto floor
+            Ray ray = _pActiveCam.ScreenPointToRay(mouseSPos);
+            int groundLayerMask = LayerMask.GetMask("ground");
+            int objectsLayerMask = LayerMask.GetMask("iObject");
+
+            Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 2f);
+
+        // checks object FIRST before ground 
+
+        if(_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit objHit, Mathf.Infinity, objectsLayerMask))
+        {
+            InteractableObj clicked = objHit.collider.GetComponentInParent<InteractableObj>();
+
+            //only inspect if inside trigger
+
+            if(clicked != null && _nearby.Contains(clicked))
+            {
+                agent.ResetPath(); //stop walking
+                _ui.EnterInspect(clicked.gameObject);
+                return; //so we dont keep walking
+            }
+        }
+
+
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayerMask))
+        {
+            agent.SetDestination(hit.point);
+        }
+
+
+
+        
+    }
+
+    public void OnRotatePerformed(InputAction.CallbackContext context)
+    {
+        if (_InputBlocked || _isRotating || fixedCamera || _cameraHolder == null) return; 
+
+        //
+
+        Debug.Log("HIT ROTATE KEY");
+
+        StartCoroutine(RotateCamera());
+
+    }
+
+    IEnumerator RotateCamera()
+    {
+        Quaternion currentRot = _cameraHolder.transform.rotation; //store current rot
+        Quaternion newRot = currentRot * Quaternion.Euler(0, 90, 0);
+        _isRotating = true;
+        float duration = camRotSpeed;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            _cameraHolder.transform.rotation = Quaternion.Slerp(currentRot, newRot, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        _cameraHolder.rotation = newRot;
+        _isRotating = false;
+
+    }
+
+    #endregion
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "iObj")
+        {
+            Debug.Log("entered TRIGGER of" + other.name);
+
+            // add obj to list of nearby objects ( this is probably overcomplicated but for now it stays)
+
+            InteractableObj obj = other.GetComponentInParent<InteractableObj>();
+
+            if (obj != null && !_nearby.Contains(obj)) _nearby.Add(obj);
+
+
+        }
+
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "iObj")
+        {
+            InteractableObj obj = other.GetComponentInParent<InteractableObj>();
+            if (obj != null) _nearby.Remove(obj);
+        }
+    }
+
+}

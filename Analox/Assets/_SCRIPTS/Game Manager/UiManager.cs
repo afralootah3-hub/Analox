@@ -1,5 +1,7 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class UiManager : MonoBehaviour
 {
@@ -9,6 +11,17 @@ public class UiManager : MonoBehaviour
     //      Handles     //
 
     // -> handles object inspection system
+
+    [Header("UI ELEMENTS")]
+    [Space(20)]
+    [Header("INTERACTION PROMPT")]
+    private Vector3 _basePosition; //set by interactable via popupOffset which will sit on the interactable obj itself (later)
+    public Vector3 _popUpOffset = new Vector3(0, 2, 0); // TEMP //
+    public GameObject promptCanvas;
+    public Camera activeCam;
+    private Transform _promptTarget;
+    private bool _visible; //debug temp var
+    // this is basic pop up stuff, but you can add animation stuff to this script //
 
 
     [Header("Object Inspection")]
@@ -20,6 +33,7 @@ public class UiManager : MonoBehaviour
     public float rotateSpeed = 200f;
 
     //      PRIVATE REFERENCES      //
+    private Renderer _inspectObjRend; // cache //
     public Transform holdpoint;
     private Transform _inspectedObj;
     private Vector3 _savedPosition;
@@ -30,15 +44,27 @@ public class UiManager : MonoBehaviour
     private bool _rbWasKinematic;
     private bool _isInspecting; //temporary bool, will be swapped to follow state machine instead
 
+    public TextMeshProUGUI itemName;
+    public TextMeshProUGUI itemDesc;
 
 
     private void Awake()
     {
         SetPanel(false); //setter
+        itemName.text = "";
+        itemDesc.text = "";
+        activeCam = Camera.main;
+        promptCanvas.SetActive(false);
+    }
+    private void Start()
+    {
+        
     }
 
     private void Update()
     {
+        UpdatePrompt(); 
+
         // temporary, swapped to state machine later
         if (!_isInspecting || _inspectedObj == null) return; //if already inspecting ignore
 
@@ -56,14 +82,28 @@ public class UiManager : MonoBehaviour
     #region object inspection stuff
     public void EnterInspect(GameObject targetOBJ)
     {
+        HidePrompt();
         if (_isInspecting) return;
 
         _isInspecting = true;
 
+
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
 
+        //      SET UP      //
+
         GameController.instance.currentState = GameController.playerState.isDisabled;
+        InteractableObj itemContainer = targetOBJ.GetComponent<InteractableObj>(); //fetch itemdata
+        ItemData data = itemContainer.itemdata;
+        _inspectObjRend = itemContainer.itemRenderer; // cache renderer to disable casting shadows on the ground
+
+        _inspectObjRend.shadowCastingMode = ShadowCastingMode.Off; // turn off cast shadows to not cast shadows on the ground 
+        _inspectObjRend.receiveShadows = false; //also recieving shadows 
+
+
+        itemName.text = data.ItemName;
+        itemDesc.text = data.ItemDescription;
 
         _savedRB = targetOBJ.GetComponent<Rigidbody>();
 
@@ -97,12 +137,23 @@ public class UiManager : MonoBehaviour
         SetPanel(true); // setter
     }
 
+
     //called by interactableobj when player presses interact key or the exit button 
 
     //this will probably get swapped to a button they can press?
     public void ExitInspect()
     {
         if (!_isInspecting) return;
+
+        itemName.text = "";
+        itemDesc.text = "";
+
+        _inspectObjRend.shadowCastingMode = ShadowCastingMode.On; // turn on cast shadows
+        _inspectObjRend.receiveShadows = true; //recieving shadows on
+
+        // clear cache//
+        _inspectObjRend = null; 
+
         _isInspecting = false;
         SetPanel(false);
         GameController.instance.currentState = GameController.playerState.isIdle;
@@ -164,5 +215,35 @@ public class UiManager : MonoBehaviour
 
     #endregion
 
+    #region interaction pop up 
 
+    public void ShowPrompt(Transform target)
+    {
+        if (_isInspecting) return;
+        _promptTarget = target;
+        promptCanvas.SetActive(true);
+    }
+
+    public void HidePrompt()
+    {
+        
+        _promptTarget = null;
+        promptCanvas.SetActive(false);
+    }
+
+    private void UpdatePrompt()
+    {
+        if (_promptTarget == null) return;
+        // add any animation here //
+
+        Transform t = promptCanvas.transform;
+        t.position = _promptTarget.position + _popUpOffset;
+
+        if(activeCam != null)
+        {
+            t.rotation = Quaternion.LookRotation(t.position - activeCam.transform.position);
+        }
+    }
+
+    #endregion
 }

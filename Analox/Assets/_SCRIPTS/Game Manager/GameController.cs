@@ -9,9 +9,9 @@ public class GameController : MonoBehaviour
     public GameObject playerRig;
 
     [Header("READ ONLY - DEBUG")]
-    public playerState currentState = playerState.isIdle; //default state
-
-
+    [SerializeField] private playerState currentState = playerState.isIdle; //default state
+    // other scripts can subscribe to REACT to changes
+    public event System.Action<playerState> OnStateChanged;
 
 
     public void Awake()
@@ -26,37 +26,44 @@ public class GameController : MonoBehaviour
             instance = this;
 
             //ad scene manager stuff here 
-            
+
             DontDestroyOnLoad(this);
         }
     }
 
     //we will toggle true/false in the event system to call whetehr we want to move or not
-    public void setPlayerState()
+   
+    //          PLAYER STATE MACHINE        //
+    
+    public void setPlayerState(playerState newstate)
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
         
+        if (newstate == currentState) return; //same state so return
+
+        currentState = newstate;
+
+
+        // PLAYER ANIMATION NOT HANDLED HERE, HANDLED BY VELOCITY CHECK //
+
         switch (currentState)
         {
             case playerState.isIdle:
                 Debug.Log("Player is in Idle state");
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 break;
             case playerState.isMoving:
                 Debug.Log("Player is in moving state");
                 break;
             case playerState.isDisabled:
                 Debug.Log("Disabling player movement");
+                // disable player movement
+                
                 break;
         }
 
-        
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            Debug.Log("DISABLED MOVEMENT");
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            Debug.Log("ENABLED MOVEMENTS");
-        
+
+
 
     }
 
