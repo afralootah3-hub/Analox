@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum itemType { clueObj, Door, Drawer} //interaction type enum
@@ -17,7 +18,9 @@ public class ItemData : ScriptableObject
     //
     public Transform doorPivot;
     public bool isOpen;
+    public bool isOpeningDoor;
 
+    public Quaternion closedRot; //or starting rotation
     //
 
     public bool drawerIsOpen;
@@ -27,6 +30,7 @@ public class ItemData : ScriptableObject
     private void Awake()
     {
         wasScanned = false;
+       
     }
 
 }

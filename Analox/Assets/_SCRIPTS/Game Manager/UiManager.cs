@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -56,6 +57,8 @@ public class UiManager : MonoBehaviour
     public GameObject scanButton; 
 
     private ItemData _itemDataCache;
+
+    private Transform _doorTransformCache;
 
     private List<string> itemIndex; //stores the itemID's (which is the itemName)//
 
@@ -303,9 +306,50 @@ public class UiManager : MonoBehaviour
 
     }
 
-    public void OpenDoor(GameObject door)
+    public void OpenDoor(ItemData doorData)
     {
+        if (doorData.isOpeningDoor) return;
+
+        doorData.isOpeningDoor = true;
+
+        Quaternion targetRot;
+
+        if (doorData.isOpen)
+        {
+            targetRot = doorData.closedRot;
+        }
+        else
+        {
+            targetRot = Quaternion.Euler(0, -128, 0);
+        }
+
+        doorData.isOpen = !doorData.isOpen;
+
+        // call routine
+        StartCoroutine(RotateDoor(doorData, targetRot, 2f));
+
         Debug.Log("CLICKED ON DOOR OPENING IT YAY");
+         
+
+
+    }
+
+    private IEnumerator RotateDoor(ItemData door, Quaternion targetRot, float duration)
+    {
+        door.isOpeningDoor = true;
+        Quaternion startRot = door.doorPivot.localRotation;
+        float t = 0f; 
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            door.doorPivot.localRotation = Quaternion.Slerp(startRot, targetRot, Mathf.SmoothStep(0f, 1f, t));
+            yield return null;
+        }
+
+        door.doorPivot.localRotation = targetRot;
+        door.isOpeningDoor = false;
+
     }
 
     public void OpenDrawer(GameObject drawer)
