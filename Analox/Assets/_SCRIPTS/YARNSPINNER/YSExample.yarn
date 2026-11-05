@@ -2,6 +2,7 @@
 ---
 <<jump testNode>>
 This is an example/Reference of how to set up dialog
+
 The first node of Dialog MUST be named in this manner
 The Starting Node set in the NPCData scriptable object attached
 to the npcInteract
@@ -23,7 +24,6 @@ will be run
 ^ the inspectable object that has the interactableObj script 
 NOT ITS CHILD 
 <<endif>>
-
 
 ! if you want to check if the player has an item that 
 WAS SCANNED. then you run this command a little differently.
@@ -51,5 +51,16 @@ The player has the item ObjHolder
 The player has the item ObjHolder AND has scanned it
 
 <<endif>>
+
+
+This checks for the players SANITY LEVEL 
+// The value of CheckSanity(x) x should always just be 0 (it doesn't matter)
+// and then use any operator (just like a regular if statement)
+// == >= <= !=
+
+<<if CheckSanity(0) == 5>>
+    player sanity is equal to 5
+<<endif>>
+
 
 ===

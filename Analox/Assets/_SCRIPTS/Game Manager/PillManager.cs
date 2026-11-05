@@ -2,13 +2,24 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Yarn.Unity;
 
 public class PillManager : MonoBehaviour
 {
-    [Header("This Script manages: pill tracker, quickTimeEvent activation")]
+    public static PillManager instance { get; set; }
+
+
+
+    [Header("This Script manages: pill tracker, quickTimeEvent activation, Sanity stuff")]
     [Space(20)]
     [Header("SETTINGS")]
     public int pillsLeft;
+    public int currentSanity = 5;
+    public int maxSanity = 5;
+    // sanity increments visibility of the vignette , pill resets the vignette to 0
+    public TextMeshProUGUI pillAmount; //debug//
+    public CanvasGroup vignetteEffect; //debug temp effect//
+    private float _sanityIncrement; // automatically calculated based on maxSanity
 
     [Header("QUICK TIME EVENT SETTINGS")]
 
@@ -23,15 +34,26 @@ public class PillManager : MonoBehaviour
     private bool _qteActive = false;
     public float targetAngle = 90f; //this gets randomized each time
 
-    [Header("DEBUG STUFF")]
-    public TextMeshProUGUI pillAmount; //debug//
-    public CanvasGroup vignetteEffect; //debug temp effect//
-
     private void Start()
     {
+        currentSanity = maxSanity;
         qteGroup.alpha = 0;
         pillAmount.text = pillsLeft.ToString();
-        vignetteEffect.alpha = 1; 
+        vignetteEffect.alpha = 0;
+    }
+
+    public void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
     }
 
     void StartQTE()
@@ -46,6 +68,39 @@ public class PillManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// AMT SHOULD ONLY BE EITHER 1 or -1. if bool is true then amt does not matter
+    /// </summary>
+    /// <param name="amt"></param>
+    /// <param name="isReset"></param>
+    public void SetSanity(int amt, bool isReset) //amt doesn't matter if we're resetting
+    {
+        float alphaamt = (amt) / 3f;
+
+        Debug.Log("alpha amount is " + alphaamt);
+        Debug.Log("amt is " + amt);
+        Debug.Log(vignetteEffect.alpha);
+        // split either 1 or -1 by 5 to equally increase alpha
+
+        if (isReset == true) // reset it/ its cleared
+        {
+            vignetteEffect.alpha = 0;
+        }
+        else //if we're NOT reseting sanity
+        { 
+            currentSanity += amt;
+            vignetteEffect.alpha -= alphaamt;
+        }
+
+    }
+
+    [YarnFunction("CheckSanity")]
+    public static int SanityIs(int sanity)
+    {
+        return PillManager.instance.currentSanity;
+    }
+
+
     private void EndQTE(bool success)
     {
         _qteActive = false;
@@ -57,7 +112,8 @@ public class PillManager : MonoBehaviour
             Debug.Log("QTE SUCCESS :D");
             // do visual stuff here for hallucinations //
             pillsLeft--;
-            vignetteEffect.alpha = 0;
+            //vignetteEffect.alpha = 0;
+            SetSanity(1, true);
             pillAmount.text = pillsLeft.ToString();
         }
         else

@@ -143,6 +143,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case playerState.isDisabled:
                 Debug.Log("Disabling player movement");
+                
                 // disable player movement
 
                 break;
@@ -151,6 +152,18 @@ public class PlayerController : MonoBehaviour
 
 
 
+    }
+
+    public void setPlayerInput(bool disabled)
+    {
+        if (disabled)
+        {
+            currentState = playerState.isDisabled;
+        }
+        else
+        {
+            currentState = playerState.isIdle;
+        }
     }
 
 
