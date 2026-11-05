@@ -15,6 +15,7 @@ public class ItemData : ScriptableObject
     public bool wasScanned = false; // READ ONLY //
 
 
+
     //
     public Transform doorPivot;
     public bool isOpen;

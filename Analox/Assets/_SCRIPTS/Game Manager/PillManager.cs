@@ -69,7 +69,7 @@ public class PillManager : MonoBehaviour
     private void Update()
     {
         //temp test trigger
-        if (!_qteActive && Keyboard.current.eKey.wasPressedThisFrame) StartQTE();
+        if (!_qteActive && Keyboard.current.pKey.wasPressedThisFrame) StartQTE();
 
         if (!_qteActive) return;
 

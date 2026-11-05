@@ -33,11 +33,11 @@ public class customNPC_Interact : Editor
             }
 
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("camdata"));
-            if (GUILayout.Button("Instantiate NPC Camera Prefab"))
-            {
-                npcI.loadNpcCamPrefab();
-            }
+            //EditorGUILayout.PropertyField(serializedObject.FindProperty("camdata"));
+            //if (GUILayout.Button("Instantiate NPC Camera Prefab"))
+            //{
+            //    npcI.loadNpcCamPrefab();
+            //}
 
             EditorGUILayout.HelpBox("Manually load the NPC_CAM_Prefab before Instantiating in Scene", MessageType.Info);
 

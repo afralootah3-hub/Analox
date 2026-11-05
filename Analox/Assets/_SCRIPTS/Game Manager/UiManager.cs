@@ -116,7 +116,6 @@ public class UiManager : MonoBehaviour
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
 
-        
 
         //      SET UP      //
 
@@ -153,11 +152,17 @@ public class UiManager : MonoBehaviour
         else
         {
             scanButton.SetActive(true);
+
+            if (!PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
+            {
+                Debug.Log("added item to inventory (not scanned)");
+                PlayerUI.instance.addItem(_itemDataCache.ItemName);
+            }
+            
         }
 
 
-
-            // //////////////////// // NOTE: add check if item has been scanned, if you look at it again show the scanned information without needing to drain sanity
+        // add object to list to inventory 
 
             _savedRB = targetOBJ.GetComponent<Rigidbody>();
 
@@ -205,7 +210,16 @@ public class UiManager : MonoBehaviour
         _itemDataCache.wasScanned = true; //set true so you dont need to rescan 
         scanButton.SetActive(false);
 
+        // if was scanned, alter its index in the list 
 
+        if (PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
+        {
+
+            Debug.Log("updated inventory index to have updated altered itemID");
+            PlayerUI.instance._inventoryItems.Remove(_itemDataCache.ItemName);
+
+            PlayerUI.instance.addItem(_itemDataCache.ItemName + "_scan"); // alter index to mark we have the scanned info 
+        }
 
 
     }
@@ -283,6 +297,8 @@ public class UiManager : MonoBehaviour
         _inspectedObj.transform.Rotate(holdpoint.right,
             mouseY * rotateSpeed * Time.deltaTime, Space.World);
         */
+
+
 
         // only rotate while dragging with left mouse button (clikc and dragged)
         // isPressed is true every frame the button stays down

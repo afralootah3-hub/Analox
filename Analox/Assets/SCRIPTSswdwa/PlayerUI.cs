@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Yarn.Unity;
 
+
 public class PlayerUI : MonoBehaviour
 {
     // changing this to evidence log stuff
@@ -56,6 +57,8 @@ public class PlayerUI : MonoBehaviour
         
 
     }
+
+
 
     public void updateInventoryUI(string item)
     {
