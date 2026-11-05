@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
+
 public class UiManager : MonoBehaviour
 {
     // MUST BE AND STAY ATTACHED TO GAMECONTROLLER GAMEOBJECT //
@@ -59,7 +60,7 @@ public class UiManager : MonoBehaviour
     private ItemData _itemDataCache;
 
     private Transform _doorTransformCache;
-
+    private PillManager _pillmanager;
     private List<string> itemIndex; //stores the itemID's (which is the itemName)//
 
     private string _scanString; //cache
@@ -75,7 +76,7 @@ public class UiManager : MonoBehaviour
         promptCanvas.SetActive(false);
 
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-
+        _pillmanager = GetComponent<PillManager>();
 
 
 
@@ -115,6 +116,7 @@ public class UiManager : MonoBehaviour
 
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
+
 
 
         //      SET UP      //
@@ -205,7 +207,7 @@ public class UiManager : MonoBehaviour
         // when click button to scan (or whatever you do)
 
         // do some animation/transition stuff and show text 
-
+        _pillmanager.SetSanity(-1, false);
         scanDesc.text = _scanString; //set string 
         _itemDataCache.wasScanned = true; //set true so you dont need to rescan 
         scanButton.SetActive(false);
@@ -214,7 +216,7 @@ public class UiManager : MonoBehaviour
 
         if (PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
         {
-
+            
             Debug.Log("updated inventory index to have updated altered itemID");
             PlayerUI.instance._inventoryItems.Remove(_itemDataCache.ItemName);
 
@@ -298,7 +300,7 @@ public class UiManager : MonoBehaviour
             mouseY * rotateSpeed * Time.deltaTime, Space.World);
         */
 
-
+        
 
         // only rotate while dragging with left mouse button (clikc and dragged)
         // isPressed is true every frame the button stays down
