@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Yarn.Unity;
 
-public enum iType { npc, item } //interaction type enum
+public enum iType { npc, item } //interaction type enum (unsued)
 
 public class NpcInteract : MonoBehaviour
 {
-    /*
+    
     [Tooltip("Select the type of Interaction to gain access to necessary variables")]
     public iType type; //type of interaction
 
@@ -34,33 +34,33 @@ public class NpcInteract : MonoBehaviour
         public DialogueRunner npcDialogue;
         public npcData storyData;
 
+        public npcStateCheck npcstatecheck;
 
     }
     [Header("YarnSpinner & Story Data Variables")]
     public DialogData dialogdata;
+    private string startingNode;
 
-    [System.Serializable]
-    public struct CamData
-    {
+    //[System.Serializable]
+    //public struct CamData
+    //{
 
-        public GameObject npcCamPrefab;
-        public NpcCamRig npcCamRig;
+    //    public GameObject npcCamPrefab;
+    //    public NpcCamRig npcCamRig;
 
-    }
-    [Header("NPC Camera Rig Variables")]
-    public CamData camdata;
+    //}
+    //[Header("NPC Camera Rig Variables")]
+    //public CamData camdata;
 
-
-    public Confetti confettiSC;
 
     private void OnEnable()
     {
-        PlayerUI.instance.changePhase.AddListener(getStoryPhase);
+        //PlayerUI.instance.changePhase.AddListener(getStoryPhase);
     }
 
     private void OnDisable()
     {
-        PlayerUI.instance.changePhase.RemoveListener(getStoryPhase);
+        //PlayerUI.instance.changePhase.RemoveListener(getStoryPhase);
     }
 
 
@@ -81,11 +81,11 @@ public class NpcInteract : MonoBehaviour
         textdata.promptText = GameObject.FindGameObjectWithTag("pText").GetComponent<TextMeshProUGUI>();
     }
 
-    public void loadNpcCamPrefab()
-    {
-        Instantiate(camdata.npcCamPrefab, transform);
-        camdata.npcCamRig = transform.GetComponentInChildren<NpcCamRig>();
-    }
+    //public void loadNpcCamPrefab()
+    //{
+    //    Instantiate(camdata.npcCamPrefab, transform);
+    //    camdata.npcCamRig = transform.GetComponentInChildren<NpcCamRig>();
+    //}
 
     public void loadDialogRunner()
     {
@@ -133,12 +133,22 @@ public class NpcInteract : MonoBehaviour
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
                 dialogdata.npcDialogue = FindFirstObjectByType<DialogueRunner>();
-
-
-                dialogdata.npcDialogue.StartDialogue(dialogdata.storyData.startingNode); //passing in the node (Case sensitive)
-                camdata.npcCamRig.movePlayer();
                 Debug.Log("START NPC DIALOGUE");
                 setText("");
+
+                dayState currentState = GameController.instance.currentDay;
+
+                string startingNodeName = dialogdata.npcstatecheck.checkState(currentState);
+                string startingNode = dialogdata.storyData.startingNode;
+
+                dialogdata.npcDialogue.StartDialogue(startingNode+startingNodeName); //start dialog depending on what day it is
+                Debug.Log(startingNode + startingNodeName);
+                // note: if ys script is too long or should be split up, it might cause some issues? with remembering past conversations
+
+                //dialogdata.npcDialogue.StartDialogue(dialogdata.storyData.startingNode); //passing in the node (Case sensitive)
+                //camdata.npcCamRig.movePlayer(); 
+
+
                 //load in dialogue system
 
 
@@ -217,18 +227,17 @@ public class NpcInteract : MonoBehaviour
     public void removeItem(string itemToRemove)
     {
         PlayerUI.instance.removeItem(itemToRemove);
-    }
+    }    
 
-    [YarnCommand("PlayEffect")]
-    public void playConfetti()
-    {
-        confettiSC.PlayEffect();
-    }
+    //          YarnCommands for NPC and player Sprite Changes      //
+    //written later
+
+
 
     public void OnApplicationQuit()
     {
         dialogdata.storyData.dataReset();
     }
 
-    */
+     
 }

@@ -12,6 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 058ee9514bf2fa84bb25fc45f19d47a6, type: 3}
   m_Name: ItemPH
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  ItemName: 'item name '
+  objtype: 0
+  ItemName: ObjHolder
   ItemDescription: item description
   ScanInformation: Item Scan information
+  wasScanned: 0
+  doorPivot: {fileID: 0}
+  isOpen: 0
+  isOpeningDoor: 0
+  closedRot: {x: 0, y: 0, z: 0, w: 0}
+  drawerIsOpen: 0

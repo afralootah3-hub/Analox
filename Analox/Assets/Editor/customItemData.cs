@@ -12,22 +12,43 @@ public class customItemData : Editor
         //DrawDefaultInspector();
         serializedObject.Update();
 
+        SerializedProperty typeProperty = serializedObject.FindProperty("objtype");
+        EditorGUILayout.PropertyField(typeProperty);
 
-        EditorGUILayout.HelpBox("This holds the DATA for any item you can INTERACT with (does not include doors/drawers)", MessageType.Info);
+        itemType currentObjType = (itemType)typeProperty.enumValueIndex;
+
+
+        EditorGUILayout.HelpBox("This holds the DATA for any item you can INTERACT with, THIS INCLUDES DOORS/DRAWERS", MessageType.Info);
 
         EditorGUILayout.Space();
-        EditorGUILayout.HelpBox("EACH ITEMDATA SHOULD HAVE A UNIQUE ITEM NAME - NO ITEMS SHOULD SHARE THE SAME ITEMNAME", MessageType.Warning);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("ItemName"));
-        EditorGUILayout.HelpBox("Name that will be shown during inspection", MessageType.None);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("ItemDescription"));
-        EditorGUILayout.HelpBox("description that will be shown during inspection", MessageType.None);
+        if (currentObjType == itemType.clueObj) // for clue objects
+        {
+            EditorGUILayout.HelpBox("EACH ITEMDATA SHOULD HAVE A UNIQUE ITEM NAME - NO ITEMS SHOULD SHARE THE SAME ITEMNAME", MessageType.Warning);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("ScanInformation"));
-        EditorGUILayout.HelpBox("This is shown after the player SCANS the object (using up sanity)", MessageType.Info);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("ItemName"));
+            EditorGUILayout.HelpBox("Name that will be shown during inspection", MessageType.None);
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("wasScanned"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("ItemDescription"));
+            EditorGUILayout.HelpBox("description that will be shown during inspection", MessageType.None);
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("ScanInformation"));
+            EditorGUILayout.HelpBox("This is shown after the player SCANS the object (using up sanity)", MessageType.Info);
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("wasScanned"));
+
+
+        }
+
+        if (currentObjType == itemType.Door)
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("doorPivot"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("isOpen"));
+        }
+
+
+
 
 
         // make sure we're going to load in all of the functionality of npcinteract

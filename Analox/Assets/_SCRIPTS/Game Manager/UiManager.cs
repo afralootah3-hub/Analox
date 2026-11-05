@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -57,6 +58,8 @@ public class UiManager : MonoBehaviour
 
     private ItemData _itemDataCache;
 
+    private Transform _doorTransformCache;
+
     private List<string> itemIndex; //stores the itemID's (which is the itemName)//
 
     private string _scanString; //cache
@@ -113,7 +116,6 @@ public class UiManager : MonoBehaviour
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
 
-        
 
         //      SET UP      //
 
@@ -150,11 +152,17 @@ public class UiManager : MonoBehaviour
         else
         {
             scanButton.SetActive(true);
+
+            if (!PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
+            {
+                Debug.Log("added item to inventory (not scanned)");
+                PlayerUI.instance.addItem(_itemDataCache.ItemName);
+            }
+            
         }
 
 
-
-            // //////////////////// // NOTE: add check if item has been scanned, if you look at it again show the scanned information without needing to drain sanity
+        // add object to list to inventory 
 
             _savedRB = targetOBJ.GetComponent<Rigidbody>();
 
@@ -202,7 +210,16 @@ public class UiManager : MonoBehaviour
         _itemDataCache.wasScanned = true; //set true so you dont need to rescan 
         scanButton.SetActive(false);
 
+        // if was scanned, alter its index in the list 
 
+        if (PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
+        {
+
+            Debug.Log("updated inventory index to have updated altered itemID");
+            PlayerUI.instance._inventoryItems.Remove(_itemDataCache.ItemName);
+
+            PlayerUI.instance.addItem(_itemDataCache.ItemName + "_scan"); // alter index to mark we have the scanned info 
+        }
 
 
     }
@@ -281,6 +298,8 @@ public class UiManager : MonoBehaviour
             mouseY * rotateSpeed * Time.deltaTime, Space.World);
         */
 
+
+
         // only rotate while dragging with left mouse button (clikc and dragged)
         // isPressed is true every frame the button stays down
         if (!Mouse.current.leftButton.isPressed) return;
@@ -300,6 +319,57 @@ public class UiManager : MonoBehaviour
         // 
         _inspectedObj.Rotate(cam.up, -delta.x * rotateSpeed, Space.World);
         _inspectedObj.Rotate(cam.right, delta.y * rotateSpeed, Space.World);
+
+    }
+
+    public void OpenDoor(ItemData doorData)
+    {
+        if (doorData.isOpeningDoor) return;
+
+        doorData.isOpeningDoor = true;
+
+        Quaternion targetRot;
+
+        if (doorData.isOpen)
+        {
+            targetRot = doorData.closedRot;
+        }
+        else
+        {
+            targetRot = Quaternion.Euler(0, -128, 0);
+        }
+
+        doorData.isOpen = !doorData.isOpen;
+
+        // call routine
+        StartCoroutine(RotateDoor(doorData, targetRot, 2f));
+
+        Debug.Log("CLICKED ON DOOR OPENING IT YAY");
+         
+
+
+    }
+
+    private IEnumerator RotateDoor(ItemData door, Quaternion targetRot, float duration)
+    {
+        door.isOpeningDoor = true;
+        Quaternion startRot = door.doorPivot.localRotation;
+        float t = 0f; 
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            door.doorPivot.localRotation = Quaternion.Slerp(startRot, targetRot, Mathf.SmoothStep(0f, 1f, t));
+            yield return null;
+        }
+
+        door.doorPivot.localRotation = targetRot;
+        door.isOpeningDoor = false;
+
+    }
+
+    public void OpenDrawer(GameObject drawer)
+    {
 
     }
 
