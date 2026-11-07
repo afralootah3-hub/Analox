@@ -32,6 +32,7 @@ public class UiManager : MonoBehaviour
     [Header("Object Inspection")]
     public CanvasGroup inspectPanel;
     public float fadeDuration = .3f; // <- this animates a fade in, can be changed for smth cooler
+    public float scaleMult = 3f;
 
     [Tooltip("Degress of Rotation")]
     [Range(0, 1)]
@@ -186,6 +187,7 @@ public class UiManager : MonoBehaviour
         targetOBJ.transform.SetParent(holdpoint, worldPositionStays: false);
         targetOBJ.transform.localPosition = Vector3.zero;
         targetOBJ.transform.localRotation = Quaternion.identity;
+        targetOBJ.transform.localScale = _savedScale * scaleMult;
 
         
         // show cursor and do some cool transition to inspection (idk) 
@@ -255,7 +257,7 @@ public class UiManager : MonoBehaviour
         //return obj position to its original orientation 
         if (_inspectedObj != null)
         {
-            _inspectedObj.transform.SetParent(null);
+            _inspectedObj.transform.SetParent(_savedParent);
             _inspectedObj.transform.position = _savedPosition;
             _inspectedObj.transform.rotation = _savedRotation;
             _inspectedObj.transform.localScale = _savedScale;
@@ -326,6 +328,7 @@ public class UiManager : MonoBehaviour
 
     public void OpenDoor(ItemData doorData)
     {
+
         if (doorData.isOpeningDoor) return;
 
         doorData.isOpeningDoor = true;
@@ -352,6 +355,34 @@ public class UiManager : MonoBehaviour
 
     }
 
+    public void OpenDrawer(ItemData drawerData)
+    {
+        Debug.Log(drawerData.isOpeningDrawer);
+        if (drawerData.isOpeningDrawer) return;
+        if (drawerData.drawerIsOpen) return;
+        Vector3 targetPosition;
+
+        Debug.Log("OPENDRAWER RUN");
+
+        drawerData.drawerIsOpen = !drawerData.drawerIsOpen;
+
+        if (!drawerData.drawerIsOpen)
+        {
+            targetPosition = new Vector3(drawerData.drawerPivot.localPosition.x, drawerData.drawerPivot.localPosition.y, drawerData.drawerPivot.localPosition.z - .5f);
+            drawerData.insideObjCol.isTrigger = false;
+        }
+        else
+        {
+            targetPosition = new Vector3(drawerData.drawerPivot.localPosition.x, drawerData.drawerPivot.localPosition.y, drawerData.drawerPivot.localPosition.z + .5f);
+            drawerData.insideObjCol.isTrigger = true;
+
+        }
+
+        StartCoroutine(OpenDrawer(drawerData, targetPosition, 1f));
+
+
+    }
+
     private IEnumerator RotateDoor(ItemData door, Quaternion targetRot, float duration)
     {
         door.isOpeningDoor = true;
@@ -370,8 +401,24 @@ public class UiManager : MonoBehaviour
 
     }
 
-    public void OpenDrawer(GameObject drawer)
+    private IEnumerator OpenDrawer(ItemData drawer, Vector3 targetPos, float duration)
     {
+        drawer.isOpeningDrawer = true;
+
+        Vector3 startPos = drawer.drawerPivot.localPosition;
+        Debug.Log("IS OPENING DRAWER");
+
+        float t = 0f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            drawer.drawerPivot.localPosition = Vector3.Lerp(startPos, targetPos, Mathf.SmoothStep(0f, 1f, t));
+            yield return null;
+        }
+
+        drawer.drawerPivot.localPosition = targetPos;
+        drawer.isOpeningDrawer = false; 
 
     }
 

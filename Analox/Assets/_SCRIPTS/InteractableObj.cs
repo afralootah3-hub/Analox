@@ -9,13 +9,16 @@ public class InteractableObj : MonoBehaviour
 
     [Header("READ ONLY - AUTOMATICALLY ASSIGNED AT RUNTIME")]
     public Renderer itemRenderer;
+
+    public Transform drawerPivotPoint;
+    public Collider insideObjCollider;
   
-    
 
     private void Awake()
     {
         itemRenderer = GetComponentInChildren<MeshRenderer>();
         itemdata.wasScanned = false;
+
         if(itemdata.objtype == itemType.Door)
         {
             itemdata.doorPivot = this.transform;
@@ -23,6 +26,15 @@ public class InteractableObj : MonoBehaviour
             itemdata.isOpeningDoor = false;
             itemdata.isOpen = false;
         }
+
+        if(itemdata.objtype == itemType.Drawer)
+        {
+            itemdata.drawerPivot = drawerPivotPoint;
+            itemdata.insideObjCol = insideObjCollider;
+            itemdata.drawerIsOpen = false;
+            itemdata.isOpeningDrawer = false;
+        }
+
     }
 
 }

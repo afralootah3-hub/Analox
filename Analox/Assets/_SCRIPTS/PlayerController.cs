@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour
 {
     // handles point and click, as well as CAMERA stuff (orthographic room viewing)
 
-    
-
     public enum playerState { isIdle, isMoving, isDisabled }
     [Header("READ ONLY - DEBUG")]
     [SerializeField] private playerState currentState = playerState.isIdle; //default state
@@ -51,6 +49,7 @@ public class PlayerController : MonoBehaviour
     private LayerMask objectsLayerMask;
 
     private LayerMask doorsLayerMask;
+    private LayerMask drawerLayerMask;
 
     private List<InteractableObj> _nearby = new List<InteractableObj>();
   
@@ -62,6 +61,7 @@ public class PlayerController : MonoBehaviour
         groundLayerMask = LayerMask.GetMask("ground");
         objectsLayerMask = LayerMask.GetMask("iObject");
         doorsLayerMask = LayerMask.GetMask("door");
+        drawerLayerMask = LayerMask.GetMask("drawer");
 
         //anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
@@ -234,6 +234,28 @@ public class PlayerController : MonoBehaviour
                 //call door function from ui manager
 
                 _ui.OpenDoor(doorDataCache); //send item data to ui manager
+
+
+                return; //so we dont keep walking
+            }
+        }
+
+        //      CHECK 3    DRAWERS         //
+        if (_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit drawerHit, Mathf.Infinity, drawerLayerMask))
+        {
+            InteractableObj clicked = drawerHit.collider.GetComponentInParent<InteractableObj>();
+            ItemData drawerCache = clicked.itemdata;
+            //only inspect if inside trigger
+
+            Debug.Log("HIT DRAWER");
+            
+
+            if (clicked != null && _nearby.Contains(clicked))
+            {
+                agent.ResetPath(); //stop walking
+                //call door function from ui manager
+
+                _ui.OpenDrawer(drawerCache); //send item data to ui manager
 
 
                 return; //so we dont keep walking
