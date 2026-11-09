@@ -6,6 +6,7 @@ TagManager:
   tags:
   - iObj
   - camHolder
+  - dRunner
   layers:
   - Default
   - TransparentFX
@@ -14,8 +15,8 @@ TagManager:
   - Water
   - UI
   - iObject
-  - 
-  - 
+  - door
+  - drawer
   - 
   - 
   - 

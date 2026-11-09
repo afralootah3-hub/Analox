@@ -1,0 +1,66 @@
+﻿title: BobstartDay1
+---
+<<jump testNode>>
+This is an example/Reference of how to set up dialog
+
+The first node of Dialog MUST be named in this manner
+The Starting Node set in the NPCData scriptable object attached
+to the npcInteract
+AND 'startDay1' or 'startDay2/3/4' depending on what day this dialog is for
+
+! its best to keep all dialog for a character across days on one big YS script,
+and break it up into different days instead of multiple scripts
+
+How to check if player has an item?
+
+You can check if the player has obtained evidence that has either been
+SCANNED or NOT SCANNED using this command. 
+
+<<if HasItem("objectID")>>
+if the player has that object then anything written here
+will be run 
+
+! the objectID is the OBJECT HOLDERS NAME 
+^ the inspectable object that has the interactableObj script 
+NOT ITS CHILD 
+<<endif>>
+
+! if you want to check if the player has an item that 
+WAS SCANNED. then you run this command a little differently.
+<<if HasItem("objectID_scan")>>
+
+! this will be the same objectID but with _scan 
+^^^ do not edit the gameobject's name to include _scan,
+the scripts will automatically add it to inventory with that 
+
+<<endif>>
+
+<<jump testNode>>
+===
+title: testNode
+---
+This node tests if the player has inspected the object 
+<<if HasItem("ObjHolder")>>
+
+The player has the item ObjHolder
+
+<<endif>>
+
+<<if HasItem("ObjHolder_scan")>>
+
+The player has the item ObjHolder AND has scanned it
+
+<<endif>>
+
+
+This checks for the players SANITY LEVEL 
+// The value of CheckSanity(x) x should always just be 0 (it doesn't matter)
+// and then use any operator (just like a regular if statement)
+// == >= <= !=
+
+<<if CheckSanity(0) == 5>>
+    player sanity is equal to 5
+<<endif>>
+
+
+===

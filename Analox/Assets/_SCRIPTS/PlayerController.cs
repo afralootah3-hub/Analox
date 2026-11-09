@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour
 {
     // handles point and click, as well as CAMERA stuff (orthographic room viewing)
 
-    
-
     public enum playerState { isIdle, isMoving, isDisabled }
     [Header("READ ONLY - DEBUG")]
     [SerializeField] private playerState currentState = playerState.isIdle; //default state
@@ -47,6 +45,11 @@ public class PlayerController : MonoBehaviour
     public bool hoverWhenNearby = false; 
     private UiManager _ui;
 
+    private LayerMask groundLayerMask;
+    private LayerMask objectsLayerMask;
+
+    private LayerMask doorsLayerMask;
+    private LayerMask drawerLayerMask;
 
     private List<InteractableObj> _nearby = new List<InteractableObj>();
   
@@ -55,6 +58,11 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        groundLayerMask = LayerMask.GetMask("ground");
+        objectsLayerMask = LayerMask.GetMask("iObject");
+        doorsLayerMask = LayerMask.GetMask("door");
+        drawerLayerMask = LayerMask.GetMask("drawer");
+
         //anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
 
@@ -135,6 +143,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case playerState.isDisabled:
                 Debug.Log("Disabling player movement");
+                
                 // disable player movement
 
                 break;
@@ -145,6 +154,18 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void setPlayerInput(bool disabled)
+    {
+        if (disabled)
+        {
+            currentState = playerState.isDisabled;
+        }
+        else
+        {
+            currentState = playerState.isIdle;
+        }
+    }
+
 
     // a bool for blocking input (shortens if statements and helps with readabilty)
     // THIS IS AUTOMATICALLY SET BY STATE MACHINE AND DOES NOT GET EDITED BY OTHER SCRIPTS
@@ -153,12 +174,13 @@ public class PlayerController : MonoBehaviour
 
     // handles movement AND checks if we click on an object and are WITHIN RANGE
 
-    #region INPUT STUFF
+    #region INPUT AND RAYCAST
     private void OnClickPerformed(InputAction.CallbackContext context)
     {
-        if (_InputBlocked) return;
-        
+        //  the actual logic where stuff happens when u click on it is handled in UI MANAGER  //
+        // PlayerCC fires raycast and UI manager runs the logic //
 
+        if (_InputBlocked) return;
             Debug.Log("CLICKED");
 
             //read current screen position of mouse
@@ -166,12 +188,22 @@ public class PlayerController : MonoBehaviour
 
             //ray cast onto floor
             Ray ray = _pActiveCam.ScreenPointToRay(mouseSPos);
-            int groundLayerMask = LayerMask.GetMask("ground");
-            int objectsLayerMask = LayerMask.GetMask("iObject");
+            //int groundLayerMask = LayerMask.GetMask("ground");
+            //int objectsLayerMask = LayerMask.GetMask("iObject");
 
             Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 2f);
 
         // checks object FIRST before ground 
+
+        //      CHECK 1     CHECK FOR INTERACTABLE OBJECTS      //
+
+        /* using a list 
+            the player's collider can overlap several interactables (drawer that contains an interactable obj)
+            so the list of _nearby holds any number of objects unlike ontriggerEnter/Exit 
+            -> ontrigger checks if player trigger overlaps object collider
+                -> if it does add it to the list , when it no longer does remove it from the list
+            -> raycast checks what the mouse points at 
+         */
 
         if(_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit objHit, Mathf.Infinity, objectsLayerMask))
         {
@@ -179,6 +211,7 @@ public class PlayerController : MonoBehaviour
 
             //only inspect if inside trigger
 
+            // contains() is a range check, to ensure player can only interact with when nearby //
             if(clicked != null && _nearby.Contains(clicked))
             {
                 agent.ResetPath(); //stop walking
@@ -188,6 +221,49 @@ public class PlayerController : MonoBehaviour
         }
 
 
+        //      CHECK 2     CHECK FOR DOORS/DRAWERS         //
+        if (_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit doorHit, Mathf.Infinity, doorsLayerMask))
+        {
+            InteractableObj clicked = doorHit.collider.GetComponentInParent<InteractableObj>();
+            ItemData doorDataCache = clicked.itemdata;
+            //only inspect if inside trigger
+
+            if (clicked != null && _nearby.Contains(clicked))
+            {
+                agent.ResetPath(); //stop walking
+                //call door function from ui manager
+
+                _ui.OpenDoor(doorDataCache); //send item data to ui manager
+
+
+                return; //so we dont keep walking
+            }
+        }
+
+        //      CHECK 3    DRAWERS         //
+        if (_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit drawerHit, Mathf.Infinity, drawerLayerMask))
+        {
+            InteractableObj clicked = drawerHit.collider.GetComponentInParent<InteractableObj>();
+            ItemData drawerCache = clicked.itemdata;
+            //only inspect if inside trigger
+
+            Debug.Log("HIT DRAWER");
+            
+
+            if (clicked != null && _nearby.Contains(clicked))
+            {
+                agent.ResetPath(); //stop walking
+                //call door function from ui manager
+
+                _ui.OpenDrawer(drawerCache); //send item data to ui manager
+
+
+                return; //so we dont keep walking
+            }
+        }
+
+
+        // GROUND CHECK // LAST PRIORITY FOR RAYCAST
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayerMask))
         {

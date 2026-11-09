@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -5,6 +6,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+
 
 public class UiManager : MonoBehaviour
 {
@@ -30,6 +32,7 @@ public class UiManager : MonoBehaviour
     [Header("Object Inspection")]
     public CanvasGroup inspectPanel;
     public float fadeDuration = .3f; // <- this animates a fade in, can be changed for smth cooler
+    public float scaleMult = 3f;
 
     [Tooltip("Degress of Rotation")]
     [Range(0, 1)]
@@ -57,6 +60,8 @@ public class UiManager : MonoBehaviour
 
     private ItemData _itemDataCache;
 
+    private Transform _doorTransformCache;
+    private PillManager _pillmanager;
     private List<string> itemIndex; //stores the itemID's (which is the itemName)//
 
     private string _scanString; //cache
@@ -72,7 +77,7 @@ public class UiManager : MonoBehaviour
         promptCanvas.SetActive(false);
 
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-
+        _pillmanager = GetComponent<PillManager>();
 
 
 
@@ -113,7 +118,7 @@ public class UiManager : MonoBehaviour
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
 
-        
+
 
         //      SET UP      //
 
@@ -150,11 +155,17 @@ public class UiManager : MonoBehaviour
         else
         {
             scanButton.SetActive(true);
+
+            if (!PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
+            {
+                Debug.Log("added item to inventory (not scanned)");
+                PlayerUI.instance.addItem(_itemDataCache.ItemName);
+            }
+            
         }
 
 
-
-            // //////////////////// // NOTE: add check if item has been scanned, if you look at it again show the scanned information without needing to drain sanity
+        // add object to list to inventory 
 
             _savedRB = targetOBJ.GetComponent<Rigidbody>();
 
@@ -176,6 +187,7 @@ public class UiManager : MonoBehaviour
         targetOBJ.transform.SetParent(holdpoint, worldPositionStays: false);
         targetOBJ.transform.localPosition = Vector3.zero;
         targetOBJ.transform.localRotation = Quaternion.identity;
+        targetOBJ.transform.localScale = _savedScale * scaleMult;
 
         
         // show cursor and do some cool transition to inspection (idk) 
@@ -197,12 +209,21 @@ public class UiManager : MonoBehaviour
         // when click button to scan (or whatever you do)
 
         // do some animation/transition stuff and show text 
-
+        _pillmanager.SetSanity(-1, false);
         scanDesc.text = _scanString; //set string 
         _itemDataCache.wasScanned = true; //set true so you dont need to rescan 
         scanButton.SetActive(false);
 
+        // if was scanned, alter its index in the list 
 
+        if (PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
+        {
+            
+            Debug.Log("updated inventory index to have updated altered itemID");
+            PlayerUI.instance._inventoryItems.Remove(_itemDataCache.ItemName);
+
+            PlayerUI.instance.addItem(_itemDataCache.ItemName + "_scan"); // alter index to mark we have the scanned info 
+        }
 
 
     }
@@ -236,7 +257,7 @@ public class UiManager : MonoBehaviour
         //return obj position to its original orientation 
         if (_inspectedObj != null)
         {
-            _inspectedObj.transform.SetParent(null);
+            _inspectedObj.transform.SetParent(_savedParent);
             _inspectedObj.transform.position = _savedPosition;
             _inspectedObj.transform.rotation = _savedRotation;
             _inspectedObj.transform.localScale = _savedScale;
@@ -281,6 +302,8 @@ public class UiManager : MonoBehaviour
             mouseY * rotateSpeed * Time.deltaTime, Space.World);
         */
 
+        
+
         // only rotate while dragging with left mouse button (clikc and dragged)
         // isPressed is true every frame the button stays down
         if (!Mouse.current.leftButton.isPressed) return;
@@ -300,6 +323,102 @@ public class UiManager : MonoBehaviour
         // 
         _inspectedObj.Rotate(cam.up, -delta.x * rotateSpeed, Space.World);
         _inspectedObj.Rotate(cam.right, delta.y * rotateSpeed, Space.World);
+
+    }
+
+    public void OpenDoor(ItemData doorData)
+    {
+
+        if (doorData.isOpeningDoor) return;
+
+        doorData.isOpeningDoor = true;
+
+        Quaternion targetRot;
+
+        if (doorData.isOpen)
+        {
+            targetRot = doorData.closedRot;
+        }
+        else
+        {
+            targetRot = Quaternion.Euler(0, -128, 0);
+        }
+
+        doorData.isOpen = !doorData.isOpen;
+
+        // call routine
+        StartCoroutine(RotateDoor(doorData, targetRot, 2f));
+
+        Debug.Log("CLICKED ON DOOR OPENING IT YAY");
+         
+
+
+    }
+
+    public void OpenDrawer(ItemData drawerData)
+    {
+        Debug.Log(drawerData.isOpeningDrawer);
+        if (drawerData.isOpeningDrawer) return;
+        if (drawerData.drawerIsOpen) return;
+        Vector3 targetPosition;
+
+        Debug.Log("OPENDRAWER RUN");
+
+        drawerData.drawerIsOpen = !drawerData.drawerIsOpen;
+
+        if (!drawerData.drawerIsOpen)
+        {
+            targetPosition = new Vector3(drawerData.drawerPivot.localPosition.x, drawerData.drawerPivot.localPosition.y, drawerData.drawerPivot.localPosition.z - .5f);
+            drawerData.insideObjCol.isTrigger = false;
+        }
+        else
+        {
+            targetPosition = new Vector3(drawerData.drawerPivot.localPosition.x, drawerData.drawerPivot.localPosition.y, drawerData.drawerPivot.localPosition.z + .5f);
+            drawerData.insideObjCol.isTrigger = true;
+
+        }
+
+        StartCoroutine(OpenDrawer(drawerData, targetPosition, 1f));
+
+
+    }
+
+    private IEnumerator RotateDoor(ItemData door, Quaternion targetRot, float duration)
+    {
+        door.isOpeningDoor = true;
+        Quaternion startRot = door.doorPivot.localRotation;
+        float t = 0f; 
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            door.doorPivot.localRotation = Quaternion.Slerp(startRot, targetRot, Mathf.SmoothStep(0f, 1f, t));
+            yield return null;
+        }
+
+        door.doorPivot.localRotation = targetRot;
+        door.isOpeningDoor = false;
+
+    }
+
+    private IEnumerator OpenDrawer(ItemData drawer, Vector3 targetPos, float duration)
+    {
+        drawer.isOpeningDrawer = true;
+
+        Vector3 startPos = drawer.drawerPivot.localPosition;
+        Debug.Log("IS OPENING DRAWER");
+
+        float t = 0f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            drawer.drawerPivot.localPosition = Vector3.Lerp(startPos, targetPos, Mathf.SmoothStep(0f, 1f, t));
+            yield return null;
+        }
+
+        drawer.drawerPivot.localPosition = targetPos;
+        drawer.isOpeningDrawer = false; 
 
     }
 
