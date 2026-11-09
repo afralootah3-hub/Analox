@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
     {
         if (instance != null && instance != this)
         {
+
             Destroy(this.gameObject);
             return;
         }
@@ -35,6 +36,9 @@ public class GameController : MonoBehaviour
         currentDay = day;
 
         //this is used to set which day dialog the npc does :D
+
+
+
     }
 
 

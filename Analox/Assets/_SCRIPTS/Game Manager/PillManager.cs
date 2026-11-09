@@ -8,7 +8,9 @@ public class PillManager : MonoBehaviour
 {
     public static PillManager instance { get; set; }
 
-
+    [SerializeField] private AudioClip _breathSound; 
+    [SerializeField] private Material _SanityEffect;
+    private AudioSource _audioSource;
 
     [Header("This Script manages: pill tracker, quickTimeEvent activation, Sanity stuff")]
     [Space(20)]
@@ -40,6 +42,10 @@ public class PillManager : MonoBehaviour
         qteGroup.alpha = 0;
         pillAmount.text = pillsLeft.ToString();
         vignetteEffect.alpha = 0;
+        _SanityEffect.SetFloat("_Blend", 0);
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.volume = 0;
+
     }
 
     public void Awake()
@@ -85,11 +91,19 @@ public class PillManager : MonoBehaviour
         if (isReset == true) // reset it/ its cleared
         {
             vignetteEffect.alpha = 0;
+            _SanityEffect.SetFloat("_Blend", 0);
+            _audioSource.volume = 0;
         }
         else //if we're NOT reseting sanity
         { 
             currentSanity += amt;
             vignetteEffect.alpha -= alphaamt;
+            _SanityEffect.SetFloat("_Blend", -alphaamt);
+            _audioSource.volume = -alphaamt;
+
+            //debug
+            //_audioSource.Play();
+
         }
 
     }
