@@ -15,7 +15,6 @@ public class ItemData : ScriptableObject
     public bool wasScanned = false; // READ ONLY //
 
 
-
     //
     public Transform doorPivot;
     public bool isOpen;
@@ -25,12 +24,17 @@ public class ItemData : ScriptableObject
     //
 
     public bool drawerIsOpen;
-
+    public bool isOpeningDrawer;
+    public Transform drawerPivot;
+    public Collider insideObjCol;
 
 
     private void Awake()
     {
         wasScanned = false;
+        isOpeningDrawer = false;
+        drawerIsOpen = false;
+        isOpen = false; 
        
     }
 
