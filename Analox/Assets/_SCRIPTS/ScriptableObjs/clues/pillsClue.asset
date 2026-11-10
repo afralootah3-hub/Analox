@@ -16,8 +16,9 @@ MonoBehaviour:
   ItemName: Emptied pill bottle
   ItemDescription: A well used bottle of pills. The capsules seem to have been present
     for some time.
-  ScanInformation: 
-  wasScanned: 0
+  ScanInformation: Acetomenaphine..in an identical fashion to my own. Why does Cipher
+    have these?
+  wasScanned: 1
   doorPivot: {fileID: 0}
   isOpen: 0
   isOpeningDoor: 0

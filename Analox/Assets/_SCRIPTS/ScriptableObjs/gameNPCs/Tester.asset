@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f77fc68443e5f484fafe19255f2aaaf8, type: 3}
   m_Name: Tester
   m_EditorClassIdentifier: Assembly-CSharp::npcData
-  npcName: the GM
+  npcName: Tester
   startingNode: Tester
-  currentPhase: 0
+  currentPhase: 1

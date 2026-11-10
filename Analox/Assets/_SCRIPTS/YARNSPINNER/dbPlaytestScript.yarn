@@ -40,7 +40,7 @@ the scripts will automatically add it to inventory with that
 title: playtestNode
 ---
 Hello, welcome to ANALOX testing grounds.
-Pllease enjoy, and when you're done, leave us a piece of feedback.
+Please enjoy, and when you're done, leave us a piece of feedback.
 ///pills
 <<if HasItem("Pills")>>
 
@@ -94,11 +94,11 @@ This checks for the players SANITY LEVEL
     player sanity is equal to 5
 <<endif>>
 
-<<if CheckSanity(0) == 3>>
+<<if CheckSanity(0) != 5>>
     Hey..you seem a bit shaky...are you OK...?
 <<endif>>
 
-<<if CheckSanity(0) == 1>>
+<<if CheckSanity(0) == 0>>
     You...you need help.
     Like, medical help.
 <<endif>>

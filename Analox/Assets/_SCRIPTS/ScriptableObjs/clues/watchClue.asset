@@ -15,8 +15,8 @@ MonoBehaviour:
   objtype: 0
   ItemName: Wrist Watch
   ItemDescription: A well kempt gold watch, with wear along the inside.
-  ScanInformation: 
-  wasScanned: 0
+  ScanInformation: It has a signiature on the inside..."Draco Drift"
+  wasScanned: 1
   doorPivot: {fileID: 0}
   isOpen: 0
   isOpeningDoor: 0
