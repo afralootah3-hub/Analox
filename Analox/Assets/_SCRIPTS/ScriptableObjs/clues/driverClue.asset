@@ -15,7 +15,9 @@ MonoBehaviour:
   objtype: 0
   ItemName: Ch!p Dr1ve
   ItemDescription: Looks identical to the one the victim had.
-  ScanInformation: 
+  ScanInformation: Wait...is this the original driver....if so, then...was the one
+    inside Cipher a virus..? More importantly, why does it have the same signiature
+    as mine...?
   wasScanned: 0
   doorPivot: {fileID: 0}
   isOpen: 0
