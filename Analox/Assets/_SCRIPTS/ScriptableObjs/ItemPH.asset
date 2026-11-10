@@ -16,9 +16,12 @@ MonoBehaviour:
   ItemName: ObjHolder
   ItemDescription: item description
   ScanInformation: Item Scan information
-  wasScanned: 0
+  wasScanned: 1
   doorPivot: {fileID: 0}
   isOpen: 0
   isOpeningDoor: 0
   closedRot: {x: 0, y: 0, z: 0, w: 0}
   drawerIsOpen: 0
+  isOpeningDrawer: 0
+  drawerPivot: {fileID: 0}
+  insideObjCol: {fileID: 0}

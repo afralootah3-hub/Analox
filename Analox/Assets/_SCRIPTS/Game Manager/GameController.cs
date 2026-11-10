@@ -6,7 +6,7 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance { get; set; }
     [Space(20)]
-    public GameObject playerRig;
+    //public GameObject playerRig;
 
     public dayState currentDay;
 
