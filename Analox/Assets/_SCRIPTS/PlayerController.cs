@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("CAMERA SETTINGS")]
     public Camera _pActiveCam;
-    private Transform _cameraHolder; //controls the rotation stuff (ONE PER SCENE)
+    public Transform _cameraHolder; //controls the rotation stuff (ONE PER SCENE)
     public bool fixedCamera; // if we want the camera to not be controlled (used to disable pplayer input to rotate camera)
     private bool _isRotating; // safety check to prevent spamming button 
     public float camRotSpeed = 5f;
@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour
         _ui = GameController.instance.GetComponent<UiManager>();
 
         // this will later be moved to ONSCENELOAD //
-        _cameraHolder = GameObject.FindWithTag("camHolder").transform;
+        //_cameraHolder = GameObject.FindWithTag("camHolder").transform;
     }
 
     private void Update()
