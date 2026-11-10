@@ -92,14 +92,15 @@ public class PillManager : MonoBehaviour
         {
             vignetteEffect.alpha = 0;
             _SanityEffect.SetFloat("_Blend", 0);
-            //_audioSource.volume = 0;
+            _audioSource.volume = 0;
         }
         else //if we're NOT reseting sanity
         { 
             currentSanity += amt;
             vignetteEffect.alpha -= alphaamt;
-            _SanityEffect.SetFloat("_Blend", -alphaamt);
-            //_audioSource.volume = -alphaamt;
+            _SanityEffect.SetFloat("_Blend", -0.2f);
+            Debug.Log(_SanityEffect.GetFloat("_Blend"));
+            _audioSource.volume = 1;
 
             //debug
             //_audioSource.Play();
@@ -141,6 +142,7 @@ public class PillManager : MonoBehaviour
         //temp test trigger
         if (!_qteActive && Keyboard.current.pKey.wasPressedThisFrame) StartQTE();
 
+        Debug.Log("QTE STARTED");
         if (!_qteActive) return;
 
         //spin needle 
