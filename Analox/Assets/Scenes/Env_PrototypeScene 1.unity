@@ -1852,6 +1852,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractableObj
   itemdata: {fileID: 0}
   itemRenderer: {fileID: 0}
+  drawerPivotPoint: {fileID: 0}
+  insideObjCollider: {fileID: 0}
 --- !u!1 &791157270
 GameObject:
   m_ObjectHideFlags: 0
@@ -2943,6 +2945,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractableObj
   itemdata: {fileID: 11400000, guid: d4667418c40b7c447ad61935037fc8a4, type: 2}
   itemRenderer: {fileID: 654282647}
+  drawerPivotPoint: {fileID: 0}
+  insideObjCollider: {fileID: 0}
 --- !u!1 &1059021424
 GameObject:
   m_ObjectHideFlags: 0
@@ -4025,6 +4029,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1678379517}
   m_CullTransparentMesh: 1
+--- !u!1001 &1747200434
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.879583
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.41913593
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 23.43772
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+      propertyPath: m_Name
+      value: FBXBlockout
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
 --- !u!1 &1793887881
 GameObject:
   m_ObjectHideFlags: 0
@@ -4478,6 +4539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
   playerRig: {fileID: 0}
+  currentDay: 0
 --- !u!4 &2141680560
 Transform:
   m_ObjectHideFlags: 0
@@ -4510,6 +4572,7 @@ MonoBehaviour:
   activeCam: {fileID: 330585545}
   inspectPanel: {fileID: 956614519}
   fadeDuration: 0.3
+  scaleMult: 3
   rotateSpeed: 1
   holdpoint: {fileID: 2013136646}
   holdLight: {fileID: 1518663540}
@@ -4529,15 +4592,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7047be2e084791b4fa9e4c54f957243b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PillManager
+  _breathSound: {fileID: 0}
+  _SanityEffect: {fileID: 0}
   pillsLeft: 2
+  currentSanity: 5
+  maxSanity: 5
+  pillAmount: {fileID: 323982414}
+  vignetteEffect: {fileID: 93315618}
   needle: {fileID: 1906889683}
   targetZone: {fileID: 449184160}
   needleSpeed: 100
   qteGroup: {fileID: 330178187}
   zoneSize: 50
   targetAngle: 90
-  pillAmount: {fileID: 323982414}
-  vignetteEffect: {fileID: 93315618}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4555,3 +4622,4 @@ SceneRoots:
   - {fileID: 981007156}
   - {fileID: 1074440388}
   - {fileID: 1387930455}
+  - {fileID: 1747200434}
