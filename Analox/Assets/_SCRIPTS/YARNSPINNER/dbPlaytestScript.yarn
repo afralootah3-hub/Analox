@@ -39,19 +39,51 @@ the scripts will automatically add it to inventory with that
 ===
 title: playtestNode
 ---
-This node tests if the player has inspected the object 
-<<if HasItem("ObjHolder")>>
+Hello, welcome to ANALOX testing grounds.
+Pllease enjoy, and when you're done, leave us a piece of feedback.
+///pills
+<<if HasItem("Pills")>>
 
-The player has the item ObjHolder
-
-<<endif>>
-
-<<if HasItem("ObjHolder_scan")>>
-
-The player has the item ObjHolder AND has scanned it
+I see you've found the pills!
 
 <<endif>>
 
+
+<<if HasItem("Pills_scan")>>
+
+They seem to be rather old, don't they.
+I wonder what they were for...
+
+<<endif>>
+
+///watch
+<<if HasItem("Watch")>>
+
+WOW, thats a really nice watch.
+You'd get a lump sum with that.
+
+<<endif>>
+
+<<if HasItem("Watch_scan")>>
+
+...On second thougt, given who it belongs to...
+I think i'd like to keep my life...
+
+<<endif>>
+
+///chip driver
+<<if HasItem("SDCARD")>>
+
+That's the culprit of the murder, no?
+Seems rather small.
+
+<<endif>>
+
+<<if HasItem("SDCARD_scan")>>
+
+That driver is a tiny but mighty thing...
+
+<<endif>>
 
 This checks for the players SANITY LEVEL 
 // The value of CheckSanity(x) x should always just be 0 (it doesn't matter)
@@ -60,6 +92,15 @@ This checks for the players SANITY LEVEL
 
 <<if CheckSanity(0) == 5>>
     player sanity is equal to 5
+<<endif>>
+
+<<if CheckSanity(0) == 3>>
+    Hey..you seem a bit shaky...are you OK...?
+<<endif>>
+
+<<if CheckSanity(0) == 1>>
+    You...you need help.
+    Like, medical help.
 <<endif>>
 
 
