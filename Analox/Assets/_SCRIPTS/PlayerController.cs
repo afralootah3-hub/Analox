@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("CAMERA SETTINGS")]
     public Camera _pActiveCam;
+    public CinemachineCamera _cineMActiveCam; //for swapping priority
     public Transform _cameraHolder; //controls the rotation stuff (ONE PER SCENE)
     public bool fixedCamera; // if we want the camera to not be controlled (used to disable pplayer input to rotate camera)
     private bool _isRotating; // safety check to prevent spamming button 
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour
     public InputActionAsset playerActions;
     private InputAction _clickAction;
     private InputAction _pointAction;
+    private InputAction _rotateCamAction;
    
 
     [Header("Movement Settings")]
@@ -76,6 +79,8 @@ public class PlayerController : MonoBehaviour
         // fetch needed actions
         _clickAction = playerActions.FindAction("Player/Click");
         _pointAction = playerActions.FindAction("Player/Point");
+        _rotateCamAction = playerActions.FindAction("Player/RotateCam");
+        
         
     }
 
@@ -282,6 +287,7 @@ public class PlayerController : MonoBehaviour
         //
 
         Debug.Log("HIT ROTATE KEY");
+        float Axis = _rotateCamAction.ReadValue<float>();
 
         StartCoroutine(RotateCamera());
 

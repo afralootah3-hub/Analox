@@ -107,12 +107,12 @@
                 },
                 {
                     "name": "RotateCam",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "cc918132-c2a9-4d9e-bba7-b946098277e8",
-                    "expectedControlType": "",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -524,15 +524,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "d0168e4b-f3cf-4e9e-a0a2-ceca0310ce0e",
+                    "name": "ArrowKeys",
+                    "id": "8a9bf32b-dc74-470b-b462-f240ce76868f",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateCam",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "39d24331-1254-4103-a7b1-2c1a54498f11",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateCam",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "52a7a07c-71e3-4af8-b427-bdab6e3cdbe2",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "RotateCam",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 }
             ]
         },
