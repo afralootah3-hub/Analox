@@ -24,17 +24,27 @@ public class PillManager : MonoBehaviour
     private float _sanityIncrement; // automatically calculated based on maxSanity
 
     [Header("QUICK TIME EVENT SETTINGS")]
+    // new qte 
+    public Transform startPoint;
+    public Transform endPoint;
 
-    public RectTransform needle;
-    public RectTransform targetZone;
-    public float needleSpeed = 20f;
-    private float _needleAngle = 0f;
+    public RectTransform greenZone;
+    public RectTransform yellowZone;
+    public float qteSpeed = 100f;
+    private float _qteDirection;
+    public RectTransform pointerTransform;
+    private Vector3 _QteTargetPos;
+
+    private bool _qteHitGreen;
+    private bool _qteHitYellow;
+    private bool _qteFailed;
+    private bool _qteActive = false; 
+
+
+    
 
     public CanvasGroup qteGroup;
-    private bool _qteSuccess = false;
-    public float zoneSize = 20f;
-    private bool _qteActive = false;
-    public float targetAngle = 90f; //this gets randomized each time
+ 
 
     private void Start()
     {
@@ -45,6 +55,7 @@ public class PillManager : MonoBehaviour
         _SanityEffect.SetFloat("_Blend", 0);
         _audioSource = GetComponent<AudioSource>();
         _audioSource.volume = 0;
+        _QteTargetPos = endPoint.position;
 
     }
 
@@ -62,17 +73,7 @@ public class PillManager : MonoBehaviour
         }
     }
 
-    void StartQTE()
-    {
-        targetZone.GetComponent<Image>().fillAmount = zoneSize / 360f;
-        _qteActive = true;
-        _needleAngle = 0;
-        _qteSuccess = false;
-        targetAngle = Random.Range(60f, 300f);
-        targetZone.localRotation = Quaternion.Euler(0, 0, -targetAngle);
-        qteGroup.alpha = 1; 
-
-    }
+    #region Yarn Commands
 
     /// <summary>
     /// AMT SHOULD ONLY BE EITHER 1 or -1. if bool is true then amt does not matter
@@ -115,7 +116,9 @@ public class PillManager : MonoBehaviour
         return PillManager.instance.currentSanity;
     }
 
-
+    #endregion
+   
+    /* old QTE VOIDS
     private void EndQTE(bool success)
     {
         _qteActive = false;
@@ -136,38 +139,88 @@ public class PillManager : MonoBehaviour
             Debug.Log("QTE FAILED D:"); 
         }
     }
+    void StartQTE()
+    {
+        targetZone.GetComponent<Image>().fillAmount = zoneSize / 360f;
+        _qteActive = true;
+        _needleAngle = 0;
+        _qteSuccess = false;
+        targetAngle = Random.Range(60f, 300f);
+        targetZone.localRotation = Quaternion.Euler(0, 0, -targetAngle);
+        qteGroup.alpha = 1; 
+
+    }
+    */ 
 
     private void Update()
     {
-        //temp test trigger
-        if (!_qteActive && Keyboard.current.pKey.wasPressedThisFrame) StartQTE();
+        if (Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            StartQTE();
+            qteGroup.alpha = 1;
+        }
 
-        Debug.Log("QTE STARTED");
-        if (!_qteActive) return;
 
-        //spin needle 
-        _needleAngle += needleSpeed * Time.deltaTime;
-        needle.localRotation = Quaternion.Euler(0, 0, -_needleAngle);
+        //if (_qteActive)
+        //{
+        //    StartQTE();
+        //}
+        StartQTE();
+        qteGroup.alpha = 1;
+        
 
-        // input check //
+
+    }
+
+    private void StartQTE()
+    {
+        
+
+        // ping pong across bar 
+
+        if (Vector3.Distance(pointerTransform.position, startPoint.position) < 0.1f)
+        {
+            _QteTargetPos = endPoint.position;
+            _qteDirection = 1f;
+        }
+        else if (Vector3.Distance(pointerTransform.position, endPoint.position) < 0.1f)
+        {
+            _QteTargetPos = startPoint.position;
+            _qteDirection = -1f;
+        }
+
+        pointerTransform.position = Vector3.MoveTowards(pointerTransform.position,
+            _QteTargetPos, qteSpeed * Time.deltaTime);
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            float diff = Mathf.DeltaAngle(_needleAngle, targetAngle);
-            float distanceFromCenter = Mathf.Abs(diff);
-            float halfzone = zoneSize / 2f;
-
-            bool hit = distanceFromCenter <= halfzone;
-            EndQTE(hit);
-        }
-        else if (_needleAngle >= 360)
-        {
-            EndQTE(false);
+            CheckQTESucess();
         }
 
 
     }
 
+    private void CheckQTESucess()
+    {
+        if(RectTransformUtility.RectangleContainsScreenPoint(greenZone, pointerTransform.position, null))
+        {
+            Debug.Log("QTE SUCCESS");
+            _qteHitGreen = true;
+        }
+        else if(RectTransformUtility.RectangleContainsScreenPoint(yellowZone, pointerTransform.position, null))
+        {
+            Debug.Log("QTE HIT YELLOW");
+            _qteHitYellow = true;
+        }
+        else
+        {
+            Debug.Log("QTE FAIL"); //call function
+            _qteFailed = true;
+        }
+        _qteActive = false;
+        
+
+    }
 
 
 }

@@ -288,15 +288,27 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("HIT ROTATE KEY");
         float Axis = _rotateCamAction.ReadValue<float>();
-
-        StartCoroutine(RotateCamera());
+        bool isRight;
+        
+        if(Axis > 0)
+        {
+            isRight = true;
+        }
+        else
+        {
+            isRight = false;
+        }
+        StartCoroutine(RotateCamera(isRight));
 
     }
 
-    IEnumerator RotateCamera()
+    IEnumerator RotateCamera(bool right)
     {
         Quaternion currentRot = _cameraHolder.transform.rotation; //store current rot
-        Quaternion newRot = currentRot * Quaternion.Euler(0, 90, 0);
+
+        float direction = right ? -1 : 1;
+
+        Quaternion newRot = currentRot * Quaternion.Euler(0, (90 * direction), 0);
         _isRotating = true;
         float duration = camRotSpeed;
         float elapsed = 0f;
