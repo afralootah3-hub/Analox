@@ -30,6 +30,7 @@ public class UiManager : MonoBehaviour
     private bool _visible; //debug temp var
     // this is basic pop up stuff, but you can add animation stuff to this script //
 
+    private MenusManager _menusManager;
 
     [Header("Object Inspection")]
     public CanvasGroup inspectPanel;
@@ -83,7 +84,7 @@ public class UiManager : MonoBehaviour
 
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _pillmanager = GetComponent<PillManager>();
-
+        _menusManager = GetComponent<MenusManager>();
 
 
     }
@@ -148,6 +149,8 @@ public class UiManager : MonoBehaviour
         //{
         //    itemIndex.Add(_itemDataCache.ItemName);  //add to list
         //}
+
+        _menusManager.AddObjectClue(_itemDataCache); // menus manager handles duplicates (hopefully)
 
         if (_itemDataCache.wasScanned)
         {

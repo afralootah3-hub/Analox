@@ -17,7 +17,7 @@ public class customItemData : Editor
 
         itemType currentObjType = (itemType)typeProperty.enumValueIndex;
 
-
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("imageTexture"));
         EditorGUILayout.HelpBox("This holds the DATA for any item you can INTERACT with, THIS INCLUDES DOORS/DRAWERS", MessageType.Info);
 
         EditorGUILayout.Space();

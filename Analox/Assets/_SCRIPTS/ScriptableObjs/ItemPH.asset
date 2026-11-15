@@ -16,7 +16,9 @@ MonoBehaviour:
   ItemName: ObjHolder
   ItemDescription: item description
   ScanInformation: Item Scan information
-  wasScanned: 1
+  wasScanned: 0
+  imageTexture: {fileID: 2800000, guid: 25657affe51fd8c47b1f414941085628, type: 3}
+  clueTitle: 
   doorPivot: {fileID: 0}
   isOpen: 0
   isOpeningDoor: 0

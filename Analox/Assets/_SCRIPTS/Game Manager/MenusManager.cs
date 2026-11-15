@@ -1,7 +1,13 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MenusManager : MonoBehaviour
 {
+    public static MenusManager instance { get; set; }
+
+
     // manages:
     // corkboard 
     // any menus 
@@ -14,24 +20,97 @@ public class MenusManager : MonoBehaviour
     5. player can draw red lines conecting evidence (WHICH SHOULD PERSIST ACROSS SCENES) -> use logic from mail game / last year midterm (render on diff 
     */
 
-    public struct CorkBoardCaches
-    {
-        //these are used to temporarily 
-        private ItemData _itemDataCache;
-        private npcData _npcDataCache;
-        private string _clueInfoStr;
-        private string _clueScanStr;
-        private string _clueTitleStr;
-        
-    }
-
+   
     // corkboard var // 
     // restructured later to use tags and custom inspector for easy assinging in inspector//
     public GameObject corkBoardHolder;
-    public RectTransform sideBarTransform;
+    public GameObject itemsHolder;
+    public RectTransform boardArea;
+    public Transform boardItemsParent;
     public RectTransform dragLayer; 
-    // reference crockboard item script here
+    private List<string> _clueItems; //stores everything in inventory
+
+    public RectTransform itemDescTransform;
+    public TextMeshProUGUI itemDescTMP;
+    public RectTransform scanDescTransform;
+    public TextMeshProUGUI scanDescTMP;
+    public RectTransform itemDescStartPos, scanDescStartPos;
+
+    // these are STORING the data recieved form ui manager and should not be assigned in inspector
+    public List<ItemData> allClueItems;
+    public List<npcData> allNpcData;
+
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
+        itemDescStartPos = itemDescTransform;
+        scanDescStartPos = scanDescTransform;
+    }
+
+    private void Start()
+    {
+        corkBoardHolder.SetActive(false);
+    }
+
+    // placeholder, using id as display name (will change to smth else -> id is messy and holds _scan)
+    public string GetDisplayName(string itemID)
+    {
+        return itemID;
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current.tabKey.wasPressedThisFrame)
+        {
+            corkBoardHolder.SetActive(true); //debug
+        }
+    }
+
+    //public void ToggleMenu()
+    //{
+    //    if (_CorkMenuOpen) Close(); else Open();
+    //}
+
+    // spawn an item on the side bar for every item added since the last time this menu was opened
+
+    public void OpenMenu()
+    { 
 
 
+    }
+
+    public void AddObjectClue(ItemData iData)
+    {
+        if (allClueItems.Contains(iData)) return; // no duplicates
+        allClueItems.Add(iData);
+
+        GameObject newClue = new GameObject("Clue" + iData.ItemName.ToString(), typeof(RectTransform)); //creates the holder
+        newClue.AddComponent<CorkboardItem>();
+        CorkboardItem cbItem = newClue.GetComponent<CorkboardItem>();
+        newClue.transform.SetParent(itemsHolder.transform, false); // set as child for now
+
+        cbItem.InitalizeObjectClue(iData); // this adds any missing things and sets up image and text stuff according to the iData
+        // ^ this handles the drag and drop stuff now 
+
+
+    }
+
+    public void AddNpc(npcData nData)
+    {
+        // doing this later
+    }
+
+   
+
+    
 
 }
