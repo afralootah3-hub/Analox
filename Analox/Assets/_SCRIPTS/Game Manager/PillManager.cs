@@ -36,7 +36,7 @@ public class PillManager : MonoBehaviour
 
 
  
-    private Camera _mainCamera;
+    public Camera _mainCamera;
     private PlayerController _pCC;
     private CinemachineBasicMultiChannelPerlin _cmNoise;
     private Coroutine _fadeCamRoutine;

@@ -64,7 +64,8 @@ public class CorkboardItem : MonoBehaviour , IBeginDragHandler, IDragHandler, IE
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Vector3 worldPos = transform.position; 
+        Vector3 worldPos = transform.position;
+        if (_canvas == null) _canvas = GetComponentInParent<Canvas>();
 
         lastPos = transform.parent;
         transform.SetParent(MenusManager.instance.corkBoardHolder.transform, true);

@@ -29,6 +29,12 @@ public class MenusManager : MonoBehaviour
     public Transform boardItemsParent;
     public RectTransform dragLayer; 
     private List<string> _clueItems; //stores everything in inventory
+    private bool _corkMenuOpen;
+
+    public bool _canDraw;
+    
+    public Camera drawingCam;
+    public GameObject drawingHolder;
 
     public RectTransform itemDescTransform;
     public TextMeshProUGUI itemDescTMP;
@@ -59,6 +65,10 @@ public class MenusManager : MonoBehaviour
     private void Start()
     {
         corkBoardHolder.SetActive(false);
+        _corkMenuOpen = false;
+        drawingCam.enabled = false;
+        _canDraw = false;
+       // drawingHolder.SetActive(false);
     }
 
     // placeholder, using id as display name (will change to smth else -> id is messy and holds _scan)
@@ -71,21 +81,49 @@ public class MenusManager : MonoBehaviour
     {
         if (Keyboard.current.tabKey.wasPressedThisFrame)
         {
-            corkBoardHolder.SetActive(true); //debug
+            ToggleMenu();
+            //ToggleDrawing();
         }
     }
 
-    //public void ToggleMenu()
-    //{
-    //    if (_CorkMenuOpen) Close(); else Open();
-    //}
+    public void ToggleMenu()
+    {
+        if (_corkMenuOpen) CloseCork(); else OpenCork();
+    }
+
+    public void ToggleDrawing()
+    {
+        if (_canDraw)
+        {
+            drawingHolder.SetActive(false);
+            _canDraw = false;
+            Debug.Log(_canDraw);
+            //PillManager.instance._mainCamera = drawingCam;
+        }
+        else
+        {
+            drawingHolder.SetActive(true);
+            _canDraw = true;
+            //PillManager.instance._mainCamera = Camera.main;
+        }
+    }
+
 
     // spawn an item on the side bar for every item added since the last time this menu was opened
 
-    public void OpenMenu()
-    { 
+    public void OpenCork()
+    {
+        corkBoardHolder.SetActive(true);
+        drawingCam.enabled = true;
+        _corkMenuOpen = true;
 
+    }
 
+    public void CloseCork()
+    {
+        _corkMenuOpen = false;
+        drawingCam.enabled = false;
+        corkBoardHolder.SetActive(false);
     }
 
     public void AddObjectClue(ItemData iData)
