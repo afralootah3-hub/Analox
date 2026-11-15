@@ -291,6 +291,7 @@ GameObject:
   m_Component:
   - component: {fileID: 158471132}
   - component: {fileID: 158471133}
+  - component: {fileID: 158471134}
   m_Layer: 0
   m_Name: CM_Cam_Main
   m_TagString: Untagged
@@ -356,6 +357,23 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &158471134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158471131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBasicMultiChannelPerlin
+  NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 0
+  FrequencyGain: 0
+  m_NoiseOffsets: {x: -516.88794, y: 667.5513, z: -406.5603}
 --- !u!1 &159297017
 GameObject:
   m_ObjectHideFlags: 0
@@ -4458,6 +4476,42 @@ Transform:
   - {fileID: 1518663541}
   m_Father: {fileID: 330585546}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2036933165
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2036933166}
+  m_Layer: 5
+  m_Name: QTE SHAKER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2036933166
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036933165}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5622926088241591484}
+  m_Father: {fileID: 2961925799168781015}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2056687728
 GameObject:
   m_ObjectHideFlags: 0
@@ -5170,9 +5224,9 @@ MonoBehaviour:
   inspectPanel: {fileID: 2954073429740162478}
   fadeDuration: 0.3
   scaleMult: 3
-  rotateSpeed: 1
   holdpoint: {fileID: 2013136646}
   holdLight: {fileID: 1518663540}
+  rotateSpeed: 1
   itemName: {fileID: 8618767005115193056}
   itemDesc: {fileID: 405154168822578517}
   scanDesc: {fileID: 5552618791280347245}
@@ -10202,7 +10256,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5622926088241591484}
+  - {fileID: 2036933166}
   - {fileID: 3504674483161179072}
   - {fileID: 4778192583595897091}
   - {fileID: 6411649952367832148}
@@ -14955,7 +15009,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8678548600706572879}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14966,7 +15020,7 @@ RectTransform:
   - {fileID: 471609513}
   - {fileID: 2056687729}
   - {fileID: 74563906}
-  m_Father: {fileID: 2961925799168781015}
+  m_Father: {fileID: 2036933166}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -18794,8 +18848,9 @@ MonoBehaviour:
   endPoint: {fileID: 74563906}
   greenZone: {fileID: 849275799}
   yellowZone: {fileID: 198618874}
-  qteSpeed: 100
+  qteSpeed: 300
   pointerTransform: {fileID: 471609513}
+  _uiHolderTransfrom: {fileID: 2036933166}
   qteGroup: {fileID: 4835065714649502595}
 --- !u!4 &7793301120755735434
 Transform:

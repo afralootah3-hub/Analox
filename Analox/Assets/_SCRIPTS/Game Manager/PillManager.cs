@@ -1,4 +1,6 @@
+using System.Collections;
 using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -31,8 +33,22 @@ public class PillManager : MonoBehaviour
     public RectTransform greenZone;
     public RectTransform yellowZone;
     public float qteSpeed = 100f;
+
+
+ 
+    private Camera _mainCamera;
+    private PlayerController _pCC;
+    private CinemachineBasicMultiChannelPerlin _cmNoise;
+    private Coroutine _fadeCamRoutine;
     private float _qteDirection;
     public RectTransform pointerTransform;
+
+    [Header("SHAKE QTE UI")]
+    public RectTransform _uiHolderTransfrom;
+    private Vector2 _restPostQTEUI;
+    private float _QTEshakeIntensity;
+    private Coroutine _uiFadeRoutine; 
+
     private Vector3 _QteTargetPos;
 
     private bool _qteHitGreen;
@@ -41,10 +57,8 @@ public class PillManager : MonoBehaviour
     private bool _qteActive = false; 
 
 
-    
-
     public CanvasGroup qteGroup;
- 
+    private CinemachineBrain _brain;
 
     private void Start()
     {
@@ -55,7 +69,14 @@ public class PillManager : MonoBehaviour
         _SanityEffect.SetFloat("_Blend", 0);
         _audioSource = GetComponent<AudioSource>();
         _audioSource.volume = 0;
-        _QteTargetPos = endPoint.position;
+        _QteTargetPos = endPoint.localPosition;
+
+        // move to onsceneload //
+
+        _pCC = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        _mainCamera = Camera.main;
+        _brain = _mainCamera.GetComponent<CinemachineBrain>();
+        _restPostQTEUI = _uiHolderTransfrom.anchoredPosition;
 
     }
 
@@ -154,42 +175,46 @@ public class PillManager : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.pKey.wasPressedThisFrame)
+        if (Keyboard.current.pKey.wasPressedThisFrame && !_qteActive)
         {
-            StartQTE();
-            qteGroup.alpha = 1;
+            _qteActive = true;
+            pointerTransform.localPosition = startPoint.localPosition;
+            _QteTargetPos = endPoint.localPosition;
+            StartCameraShake();
+            StartUIShake();
         }
 
 
-        //if (_qteActive)
-        //{
-        //    StartQTE();
-        //}
-        StartQTE();
-        qteGroup.alpha = 1;
+        if (_qteActive)
+        {
+            StartQTE();
+            
+        }
         
+
 
 
     }
 
     private void StartQTE()
     {
+        qteGroup.alpha = 1;
         
 
         // ping pong across bar 
 
-        if (Vector3.Distance(pointerTransform.position, startPoint.position) < 0.1f)
+        if (Vector3.Distance(pointerTransform.localPosition, startPoint.localPosition) < 0.1f)
         {
-            _QteTargetPos = endPoint.position;
+            _QteTargetPos = endPoint.localPosition;
             _qteDirection = 1f;
         }
-        else if (Vector3.Distance(pointerTransform.position, endPoint.position) < 0.1f)
+        else if (Vector3.Distance(pointerTransform.localPosition, endPoint.localPosition) < 0.1f)
         {
-            _QteTargetPos = startPoint.position;
+            _QteTargetPos = startPoint.localPosition;
             _qteDirection = -1f;
         }
 
-        pointerTransform.position = Vector3.MoveTowards(pointerTransform.position,
+        pointerTransform.localPosition = Vector3.MoveTowards(pointerTransform.localPosition,
             _QteTargetPos, qteSpeed * Time.deltaTime);
 
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
@@ -218,9 +243,109 @@ public class PillManager : MonoBehaviour
             _qteFailed = true;
         }
         _qteActive = false;
-        
+        qteGroup.alpha = 0;
+        EndCameraShake();
+        EndUIShake();
 
     }
 
+    public void StartCameraShake(float amplitude = 1f, float frequency = 1f)
+    {
+        // grab active cinemachine camera //
+        ICinemachineCamera activeCam = _brain.ActiveVirtualCamera;
+        if(_brain.ActiveVirtualCamera is CinemachineVirtualCameraBase activeVCam)
+        {
+            _cmNoise = activeVCam.GetComponentInChildren<CinemachineBasicMultiChannelPerlin>();
 
+            if (_cmNoise == null)
+            {
+                Debug.LogWarning("MISSING CINEMACHINE COMPONENTS UNABLE TO GRAB ACTIVE CAMERA");
+                return;
+            }
+            }
+
+
+        //
+
+        if(_fadeCamRoutine != null)
+        {
+            StopCoroutine(_fadeCamRoutine);
+            _fadeCamRoutine = null;
+        }
+
+        _cmNoise.AmplitudeGain = amplitude;
+        _cmNoise.FrequencyGain = frequency;
+
+
+    }
+
+    public void EndCameraShake(float fadeTime = 2f)
+    {
+        if (_fadeCamRoutine != null) StopCoroutine(_fadeCamRoutine);
+        _fadeCamRoutine = StartCoroutine(FadeOutCam(fadeTime));
+    }
+
+    private IEnumerator FadeOutCam(float duration)
+    {
+        float startAmp = _cmNoise.AmplitudeGain;
+        float t = 0f; 
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            _cmNoise.AmplitudeGain = Mathf.Lerp(startAmp, 0f, t / duration);
+            yield return null;
+        }
+
+        _cmNoise.AmplitudeGain = 0f;
+        _fadeCamRoutine = null;
+    }
+
+    // ui effects for QTE (shake)
+
+    private void LateUpdate()
+    {
+        if(_QTEshakeIntensity > 0f)
+        {
+            _uiHolderTransfrom.anchoredPosition = _restPostQTEUI + Random.insideUnitCircle * _QTEshakeIntensity;
+        }
+
+
+    }
+
+    public void StartUIShake(float amount = 10f)
+    {
+        if(_uiFadeRoutine != null)
+        {
+            StopCoroutine(_uiFadeRoutine);
+            _uiFadeRoutine = null;
+        }
+        _uiHolderTransfrom.anchoredPosition = _restPostQTEUI;
+        _QTEshakeIntensity = amount;
+
+
+    }
+
+    public void EndUIShake(float fadeTime = 1f)
+    {
+        if (_uiFadeRoutine != null) StopCoroutine(_uiFadeRoutine);
+        _uiFadeRoutine = StartCoroutine(FadeUIShake(fadeTime));
+    }
+
+    private IEnumerator FadeUIShake(float duration)
+    {
+        float start = _QTEshakeIntensity;
+        float t = 0f;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            _QTEshakeIntensity = Mathf.Lerp(start, 0f, t / duration);
+            yield return null;
+        }
+
+        _QTEshakeIntensity = 0f;
+        _uiHolderTransfrom.anchoredPosition = _restPostQTEUI;
+        _uiFadeRoutine = null;
+    }
 }

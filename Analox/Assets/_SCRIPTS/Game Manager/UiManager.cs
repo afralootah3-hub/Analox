@@ -17,6 +17,8 @@ public class UiManager : MonoBehaviour
 
     // -> handles object inspection system
 
+    #region VARIABLES
+
     [Header("UI ELEMENTS")]
     [Space(20)]
     [Header("INTERACTION PROMPT")]
@@ -31,8 +33,10 @@ public class UiManager : MonoBehaviour
 
     [Header("Object Inspection")]
     public CanvasGroup inspectPanel;
-    public float fadeDuration = .3f; // <- this animates a fade in, can be changed for smth cooler
+    public float fadeDuration = .3f; // <- this animates a fade in, can be changed for smth cooler (UNUSED RN)
     public float scaleMult = 3f;
+    public Transform holdpoint;
+    public GameObject holdLight;  
 
     [Tooltip("Degress of Rotation")]
     [Range(0, 1)]
@@ -40,8 +44,6 @@ public class UiManager : MonoBehaviour
     
     //      PRIVATE REFERENCES      //
     private Renderer _inspectObjRend; // cache //
-    public Transform holdpoint;
-    public GameObject holdLight; 
     private Transform _inspectedObj;
     private Vector3 _savedPosition;
     private Transform _savedParent;
@@ -51,6 +53,8 @@ public class UiManager : MonoBehaviour
     private Rigidbody _savedRB;
     private bool _rbWasKinematic;
     private bool _isInspecting; //temporary bool, will be swapped to follow state machine instead
+
+    
 
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemDesc;
@@ -66,6 +70,7 @@ public class UiManager : MonoBehaviour
 
     private string _scanString; //cache
 
+    #endregion
 
     private void Awake()
     {

@@ -80,8 +80,7 @@ public class PlayerController : MonoBehaviour
         _clickAction = playerActions.FindAction("Player/Click");
         _pointAction = playerActions.FindAction("Player/Point");
         _rotateCamAction = playerActions.FindAction("Player/RotateCam");
-        
-        
+
     }
 
     private void Start()
@@ -351,5 +350,10 @@ public class PlayerController : MonoBehaviour
             if (obj != null) _nearby.Remove(obj);
         }
     }
+
+    /////////// CAMERA SHAKE / EFFECTS ///////////////
+    ///
+
+    
 
 }
