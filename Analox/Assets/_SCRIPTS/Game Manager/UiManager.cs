@@ -6,6 +6,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using Yarn.Unity;
 
 
 public class UiManager : MonoBehaviour
@@ -470,4 +471,17 @@ public class UiManager : MonoBehaviour
     }
 
     #endregion
+
+    #region NPC SCAN YARN COMMAND AND STUFF
+
+    [YarnCommand("scanNPC")]
+    public void ScanNPC(string npcName)
+    {
+        // pass the name of the npc we are scanning and display the right text for it :)
+    }
+
+
+    #endregion
+
+
 }

@@ -15,10 +15,16 @@ public class customNpcData : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("npcName"));
         EditorGUILayout.HelpBox("Name that will be shown during Dialog", MessageType.Info);
 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("basicDesc"));
+        EditorGUILayout.HelpBox("This description is shown in the corkboard menu", MessageType.Info);
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("scanDesc"));
+        EditorGUILayout.HelpBox("This is shown when the player scans this npc, and is also visible in the corkboard menu", MessageType.Info);
+
         EditorGUILayout.PropertyField(serializedObject.FindProperty("startingNode"));
         EditorGUILayout.HelpBox("When writing dialog in YS script, the first node for each day must be titled \n" +
             "startingNode + startDay1 or whichever day the dialog is"
-            +"  \n OTHERWISE DIALOG WON'T RUN AS INTENDED", MessageType.Warning);
+            +"  \n OTHERWISE DIALOG WON'T RUN AS INTENDED \n EXAMPLE: StartingNode is named Bob, the YS node is then called BobstartDay1", MessageType.Warning);
 
         serializedObject.ApplyModifiedProperties();
 
