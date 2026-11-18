@@ -17,6 +17,13 @@ MonoBehaviour:
   ItemDescription: 
   ScanInformation: 
   wasScanned: 0
+  imageTexture: {fileID: 0}
+  clueTitle: 
   doorPivot: {fileID: 0}
   isOpen: 0
+  isOpeningDoor: 1
+  closedRot: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   drawerIsOpen: 0
+  isOpeningDrawer: 0
+  drawerPivot: {fileID: 0}
+  insideObjCol: {fileID: 0}

@@ -54,6 +54,8 @@ public class PlayerController : MonoBehaviour
     private LayerMask doorsLayerMask;
     private LayerMask drawerLayerMask;
 
+    private InteractableObj _doorInRange;
+
     private List<InteractableObj> _nearby = new List<InteractableObj>();
   
 
@@ -107,6 +109,12 @@ public class PlayerController : MonoBehaviour
         }
 
         Debug.Log(currentState);
+
+        if(_doorInRange != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            _ui.OpenDoor(_doorInRange);
+        }
+
 
     }
 
@@ -224,6 +232,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        /* turning off clicking on doors, now changing it to a button press
 
         //      CHECK 2     CHECK FOR DOORS/DRAWERS         //
         if (_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit doorHit, Mathf.Infinity, doorsLayerMask))
@@ -243,6 +252,7 @@ public class PlayerController : MonoBehaviour
                 return; //so we dont keep walking
             }
         }
+        */
 
         //      CHECK 3    DRAWERS         //
         if (_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit drawerHit, Mathf.Infinity, drawerLayerMask))
@@ -327,6 +337,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.name);
+
         if(other.tag == "iObj")
         {
             Debug.Log("entered TRIGGER of" + other.name);
@@ -340,14 +352,28 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        if (other.CompareTag("doorCheck"))
+        {
+            _doorInRange = other.GetComponent<InteractableObj>();
+        }
+
+      
+
+
     }
 
+ 
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "iObj")
         {
             InteractableObj obj = other.GetComponentInParent<InteractableObj>();
             if (obj != null) _nearby.Remove(obj);
+        }
+
+        if (other.CompareTag("doorCheck"))
+        {
+            _doorInRange = null;
         }
     }
 

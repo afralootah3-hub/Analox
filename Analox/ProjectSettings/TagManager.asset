@@ -7,6 +7,7 @@ TagManager:
   - iObj
   - camHolder
   - dRunner
+  - doorCheck
   layers:
   - Default
   - TransparentFX

@@ -6684,6 +6684,7 @@ MonoBehaviour:
   itemDesc: {fileID: 405154168822578517}
   scanDesc: {fileID: 5552618791280347245}
   scanButton: {fileID: 3183950665372372346}
+  doorCooldown: 5
 --- !u!33 &346577993884097415
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -9530,6 +9531,67 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7501501045779734932, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+--- !u!1001 &1848985013815191224
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -26.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 28.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1205088330410818382, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2280756397194598525, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_Name
+      value: DoorPivot (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8483765341251053267, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
+      propertyPath: m_Radius
+      value: 2.36
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b2346539bf2ddbb4fa09cbbfaa73c7e9, type: 3}
 --- !u!64 &1849055400021366703
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10201,6 +10263,7 @@ MonoBehaviour:
   itemRenderer: {fileID: 0}
   drawerPivotPoint: {fileID: 0}
   insideObjCollider: {fileID: 0}
+  doorCheckTriggerCol: {fileID: 0}
 --- !u!4 &2285435020540596657
 Transform:
   m_ObjectHideFlags: 0
@@ -10322,6 +10385,7 @@ MonoBehaviour:
   itemRenderer: {fileID: 0}
   drawerPivotPoint: {fileID: 0}
   insideObjCollider: {fileID: 0}
+  doorCheckTriggerCol: {fileID: 0}
 --- !u!1 &2305722170743862428
 GameObject:
   m_ObjectHideFlags: 0
@@ -15237,6 +15301,7 @@ MonoBehaviour:
   itemRenderer: {fileID: 0}
   drawerPivotPoint: {fileID: 0}
   insideObjCollider: {fileID: 0}
+  doorCheckTriggerCol: {fileID: 0}
 --- !u!23 &4872883359770389113
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15593,6 +15658,7 @@ MonoBehaviour:
   itemRenderer: {fileID: 6276792824268593745}
   drawerPivotPoint: {fileID: 0}
   insideObjCollider: {fileID: 0}
+  doorCheckTriggerCol: {fileID: 0}
 --- !u!23 &5045190163290628317
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -17591,6 +17657,7 @@ MonoBehaviour:
   itemRenderer: {fileID: 0}
   drawerPivotPoint: {fileID: 0}
   insideObjCollider: {fileID: 0}
+  doorCheckTriggerCol: {fileID: 0}
 --- !u!64 &6276827947043059610
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -17835,6 +17902,7 @@ MonoBehaviour:
   itemRenderer: {fileID: 0}
   drawerPivotPoint: {fileID: 0}
   insideObjCollider: {fileID: 0}
+  doorCheckTriggerCol: {fileID: 0}
 --- !u!23 &6409527133116146165
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22757,3 +22825,4 @@ SceneRoots:
   - {fileID: 159297018}
   - {fileID: 5919747094638810305}
   - {fileID: 589036948528030995}
+  - {fileID: 1848985013815191224}

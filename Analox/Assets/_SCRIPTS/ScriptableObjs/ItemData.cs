@@ -23,6 +23,7 @@ public class ItemData : ScriptableObject
     public Transform doorPivot;
     public bool isOpen;
     public bool isOpeningDoor;
+    public float openAngle = -128f;
 
     public Quaternion closedRot; //or starting rotation
     //
@@ -38,7 +39,8 @@ public class ItemData : ScriptableObject
         wasScanned = false;
         isOpeningDrawer = false;
         drawerIsOpen = false;
-        isOpen = false; 
+        isOpen = false;
+        isOpeningDoor = false;
        
     }
 
