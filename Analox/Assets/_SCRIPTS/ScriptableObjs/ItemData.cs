@@ -14,11 +14,16 @@ public class ItemData : ScriptableObject
     public string ScanInformation;
     public bool wasScanned = false; // READ ONLY //
 
+    public Texture2D imageTexture;
+    [Header("Clue title should be the same as Item name")]
+    [Tooltip("this is used for the corkboard")]
+    public string clueTitle;
 
     //
     public Transform doorPivot;
     public bool isOpen;
     public bool isOpeningDoor;
+    public float openAngle = -128f;
 
     public Quaternion closedRot; //or starting rotation
     //
@@ -34,7 +39,8 @@ public class ItemData : ScriptableObject
         wasScanned = false;
         isOpeningDrawer = false;
         drawerIsOpen = false;
-        isOpen = false; 
+        isOpen = false;
+        isOpeningDoor = false;
        
     }
 

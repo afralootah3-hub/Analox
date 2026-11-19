@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("CAMERA SETTINGS")]
     public Camera _pActiveCam;
+    public CinemachineCamera _cineMActiveCam; //for swapping priority
     public Transform _cameraHolder; //controls the rotation stuff (ONE PER SCENE)
     public bool fixedCamera; // if we want the camera to not be controlled (used to disable pplayer input to rotate camera)
     private bool _isRotating; // safety check to prevent spamming button 
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour
     public InputActionAsset playerActions;
     private InputAction _clickAction;
     private InputAction _pointAction;
+    private InputAction _rotateCamAction;
    
 
     [Header("Movement Settings")]
@@ -50,6 +53,9 @@ public class PlayerController : MonoBehaviour
 
     private LayerMask doorsLayerMask;
     private LayerMask drawerLayerMask;
+
+    private InteractableObj _doorInRange;
+    
 
     private List<InteractableObj> _nearby = new List<InteractableObj>();
   
@@ -76,7 +82,8 @@ public class PlayerController : MonoBehaviour
         // fetch needed actions
         _clickAction = playerActions.FindAction("Player/Click");
         _pointAction = playerActions.FindAction("Player/Point");
-        
+        _rotateCamAction = playerActions.FindAction("Player/RotateCam");
+
     }
 
     private void Start()
@@ -103,6 +110,12 @@ public class PlayerController : MonoBehaviour
         }
 
         Debug.Log(currentState);
+
+        if(_doorInRange != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            _ui.OpenDoor(_doorInRange);
+        }
+
 
     }
 
@@ -158,11 +171,13 @@ public class PlayerController : MonoBehaviour
     {
         if (disabled)
         {
-            currentState = playerState.isDisabled;
+            setPlayerState(playerState.isDisabled);
+            Debug.Log("set player input to bool: " + disabled);
         }
-        else
+        else if (!disabled)
         {
-            currentState = playerState.isIdle;
+            setPlayerState(playerState.isIdle);
+            Debug.Log("set player input to bool: " + disabled);
         }
     }
 
@@ -212,14 +227,18 @@ public class PlayerController : MonoBehaviour
             //only inspect if inside trigger
 
             // contains() is a range check, to ensure player can only interact with when nearby //
-            if(clicked != null && _nearby.Contains(clicked))
+            if (clicked != null && _nearby.Contains(clicked))
             {
                 agent.ResetPath(); //stop walking
+
+                if (clicked.GetComponentInChildren<NpcInteract>() != null) return;
+
                 _ui.EnterInspect(clicked.gameObject);
                 return; //so we dont keep walking
             }
         }
 
+        /* turning off clicking on doors, now changing it to a button press
 
         //      CHECK 2     CHECK FOR DOORS/DRAWERS         //
         if (_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit doorHit, Mathf.Infinity, doorsLayerMask))
@@ -239,6 +258,7 @@ public class PlayerController : MonoBehaviour
                 return; //so we dont keep walking
             }
         }
+        */
 
         //      CHECK 3    DRAWERS         //
         if (_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit drawerHit, Mathf.Infinity, drawerLayerMask))
@@ -282,15 +302,28 @@ public class PlayerController : MonoBehaviour
         //
 
         Debug.Log("HIT ROTATE KEY");
-
-        StartCoroutine(RotateCamera());
+        float Axis = _rotateCamAction.ReadValue<float>();
+        bool isRight;
+        
+        if(Axis > 0)
+        {
+            isRight = true;
+        }
+        else
+        {
+            isRight = false;
+        }
+        StartCoroutine(RotateCamera(isRight));
 
     }
 
-    IEnumerator RotateCamera()
+    IEnumerator RotateCamera(bool right)
     {
         Quaternion currentRot = _cameraHolder.transform.rotation; //store current rot
-        Quaternion newRot = currentRot * Quaternion.Euler(0, 90, 0);
+
+        float direction = right ? -1 : 1;
+
+        Quaternion newRot = currentRot * Quaternion.Euler(0, (90 * direction), 0);
         _isRotating = true;
         float duration = camRotSpeed;
         float elapsed = 0f;
@@ -310,6 +343,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.name);
+
         if(other.tag == "iObj")
         {
             Debug.Log("entered TRIGGER of" + other.name);
@@ -323,8 +358,17 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        if (other.CompareTag("doorCheck"))
+        {
+            _doorInRange = other.GetComponent<InteractableObj>();
+        }
+
+      
+
+
     }
 
+ 
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "iObj")
@@ -332,6 +376,16 @@ public class PlayerController : MonoBehaviour
             InteractableObj obj = other.GetComponentInParent<InteractableObj>();
             if (obj != null) _nearby.Remove(obj);
         }
+
+        if (other.CompareTag("doorCheck"))
+        {
+            _doorInRange = null;
+        }
     }
+
+    /////////// CAMERA SHAKE / EFFECTS ///////////////
+    ///
+
+    
 
 }

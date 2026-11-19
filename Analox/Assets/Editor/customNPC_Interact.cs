@@ -9,7 +9,7 @@ public class customNPC_Interact : Editor
     {
         //this built-in method 'draws' the inspector as it normally would be viewed
         // 'draw' in this instance means to visually render in the editor 
-        //DrawDefaultInspector();
+        DrawDefaultInspector();
 
         serializedObject.Update(); // this built-in method on this obj will continue to 'draw' the editor code within this OnInspectorGUI Method
 

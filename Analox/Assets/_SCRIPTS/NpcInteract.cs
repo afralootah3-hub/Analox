@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using Yarn.Unity;
 
@@ -11,6 +12,17 @@ public class NpcInteract : MonoBehaviour
     
     [Tooltip("Select the type of Interaction to gain access to necessary variables")]
     public iType type; //type of interaction
+
+    // vision/stealth stuff 
+    public Transform eyes;
+    public float viewRange = 10f;
+    private Transform _playerT;
+    private bool _spotting;
+    private ActionWheel _wheel;
+    private PlayerController _player;
+    private UiManager _ui;
+
+    private Collider _triggerCol;
 
 
     [System.Serializable]
@@ -71,6 +83,11 @@ public class NpcInteract : MonoBehaviour
         //creating a systematized NPC rig & Interaction for multiple instances
 
         dialogdata.npcDialogue = FindFirstObjectByType<DialogueRunner>();
+        _playerT = GameObject.FindGameObjectWithTag("Player").transform;
+        _player = _playerT.GetComponent<PlayerController>();
+        _ui = GameController.instance.GetComponent<UiManager>();
+        _wheel = FindFirstObjectByType<ActionWheel>(FindObjectsInactive.Include);
+        _triggerCol = GetComponent<SphereCollider>();
 
     }
 
@@ -104,6 +121,7 @@ public class NpcInteract : MonoBehaviour
             //prompt interaction pops up 
             setText(textdata.interactText);
             canInteract = true;
+            Debug.Log(canInteract);
         }
     }
 
@@ -127,38 +145,142 @@ public class NpcInteract : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (canInteract)
         {
-            if (Keyboard.current.eKey.wasPressedThisFrame)
+            Debug.Log("ran first");
+            if(_wheel.isOpen == false)
             {
-                dialogdata.npcDialogue = FindFirstObjectByType<DialogueRunner>();
-                Debug.Log("START NPC DIALOGUE");
-                setText("");
+                Debug.Log("ran second");
+                if (Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    Debug.Log("pressed, canInteract = " + canInteract);
 
-                dayState currentState = GameController.instance.currentDay;
-
-                string startingNodeName = dialogdata.npcstatecheck.checkState(currentState);
-                string startingNode = dialogdata.storyData.startingNode;
-
-                dialogdata.npcDialogue.StartDialogue(startingNode+startingNodeName); //start dialog depending on what day it is
-                Debug.Log(startingNode + startingNodeName);
-                // note: if ys script is too long or should be split up, it might cause some issues? with remembering past conversations
-
-                //dialogdata.npcDialogue.StartDialogue(dialogdata.storyData.startingNode); //passing in the node (Case sensitive)
-                //camdata.npcCamRig.movePlayer(); 
-
-
-                //load in dialogue system
-
-
-
-                canInteract = false;
-
+                    if (mouseIsOverNPC())
+                    {
+                        Debug.Log("mouse is over npc");
+                        OpenWheel();
+                    }
+                }
             }
         }
 
+
+        bool seen = CanSeePlayer();
+        if (seen && !_spotting)
+        {
+            _spotting = true;
+            Debug.Log("ENTERED range");
+            PillManager.instance.UpdateStealth(-1);
+        }
+        else if (!seen && _spotting)
+        {
+            _spotting = false;
+            Debug.Log("LEFT range");
+            PillManager.instance.UpdateStealth(1);
+        }
+
+
     }
+
+    private void StartDialogue()
+    {
+        _player.setPlayerState(PlayerController.playerState.isDisabled);
+        dialogdata.npcDialogue = FindFirstObjectByType<DialogueRunner>();
+        Debug.Log("START NPC DIALOGUE");
+        setText("");
+
+        dayState currentState = GameController.instance.currentDay;
+
+        string startingNodeName = dialogdata.npcstatecheck.checkState(currentState);
+        string startingNode = dialogdata.storyData.startingNode;
+
+        dialogdata.npcDialogue.StartDialogue(startingNode + startingNodeName); //start dialog depending on what day it is
+        Debug.Log(startingNode + startingNodeName);
+        // note: if ys script is too long or should be split up, it might cause some issues? with remembering past conversations
+
+        //dialogdata.npcDialogue.StartDialogue(dialogdata.storyData.startingNode); //passing in the node (Case sensitive)
+        //camdata.npcCamRig.movePlayer(); 
+
+
+        //load in dialogue system
+
+
+
+        canInteract = false;
+    }
+
+    #region action wheel stuff
+    private bool mouseIsOverNPC()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        int layerMask = LayerMask.GetMask("iObject");
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
+        {
+            Collider hitobj = hit.collider.GetComponentInParent<SphereCollider>();
+            Debug.Log("ray hit " + hit.collider.name + ", its InteractableObj: " + hitobj + ", interactable of this: " + _triggerCol);
+
+
+            if (hitobj == _triggerCol)
+            {
+                return true;
+            }
+            else return false;
+        }
+        else
+        {
+            Debug.Log("ray hit nothing on the iObject layer");
+
+            return false;
+        }
+    }
+    private void OpenWheel()
+    {
+        _player.setPlayerState(PlayerController.playerState.isDisabled);
+
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        _wheel.OpenWheel(mousePos, OnWheelChoice);
+    }
+
+    /// <summary>
+    /// Handles what happens when selecting each option in the action wheel
+    /// </summary>
+    /// <param name="index"></param>
+    private void OnWheelChoice(int index)
+    {
+        
+
+        if(index == 0) // first in list
+        {
+            StartDialogue();
+            
+        }
+        else if (index == 1)
+        {
+            Debug.Log(index);
+            return;
+        }
+        else if (index == -1) // out of list bounds -> exit interaction
+        {
+            _player.setPlayerState(PlayerController.playerState.isIdle);
+            Debug.Log(index);
+            return;
+        }
+    }
+
+    private bool CanSeePlayer()
+    {
+        return Vector3.Distance(eyes.position, _playerT.position) <= viewRange;
+
+    }
+    #endregion
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, viewRange);
+    }
+
 
     /// <summary>
     /// 'sets' the $dialogPhase variable in YarnSpinner script
@@ -238,6 +360,7 @@ public class NpcInteract : MonoBehaviour
     {
         dialogdata.storyData.dataReset();
     }
+   
 
-     
+
 }
