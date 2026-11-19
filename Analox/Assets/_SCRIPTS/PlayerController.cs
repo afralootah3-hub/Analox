@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private LayerMask drawerLayerMask;
 
     private InteractableObj _doorInRange;
+    
 
     private List<InteractableObj> _nearby = new List<InteractableObj>();
   
@@ -170,11 +171,13 @@ public class PlayerController : MonoBehaviour
     {
         if (disabled)
         {
-            currentState = playerState.isDisabled;
+            setPlayerState(playerState.isDisabled);
+            Debug.Log("set player input to bool: " + disabled);
         }
-        else
+        else if (!disabled)
         {
-            currentState = playerState.isIdle;
+            setPlayerState(playerState.isIdle);
+            Debug.Log("set player input to bool: " + disabled);
         }
     }
 
@@ -224,9 +227,12 @@ public class PlayerController : MonoBehaviour
             //only inspect if inside trigger
 
             // contains() is a range check, to ensure player can only interact with when nearby //
-            if(clicked != null && _nearby.Contains(clicked))
+            if (clicked != null && _nearby.Contains(clicked))
             {
                 agent.ResetPath(); //stop walking
+
+                if (clicked.GetComponentInChildren<NpcInteract>() != null) return;
+
                 _ui.EnterInspect(clicked.gameObject);
                 return; //so we dont keep walking
             }

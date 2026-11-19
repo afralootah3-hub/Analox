@@ -21,6 +21,9 @@ public class PillManager : MonoBehaviour
     public int currentSanity = 5;
     public int maxSanity = 5;
     // sanity increments visibility of the vignette , pill resets the vignette to 0
+
+    public int maxStealth = 5;
+    public int currentStealth = 5;
     public TextMeshProUGUI pillAmount; //debug//
     public CanvasGroup vignetteEffect; //debug temp effect//
     private float _sanityIncrement; // automatically calculated based on maxSanity
@@ -63,6 +66,7 @@ public class PillManager : MonoBehaviour
     private void Start()
     {
         currentSanity = maxSanity;
+        currentStealth = maxStealth;
         qteGroup.alpha = 0;
         pillAmount.text = pillsLeft.ToString();
         vignetteEffect.alpha = 0;
@@ -348,4 +352,13 @@ public class PillManager : MonoBehaviour
         _uiHolderTransfrom.anchoredPosition = _restPostQTEUI;
         _uiFadeRoutine = null;
     }
+
+
+    public void UpdateStealth(int amt)
+    {
+        currentStealth = Mathf.Clamp(currentStealth + amt, 0, maxStealth);
+
+        Debug.Log("current stealth is " + currentStealth);
+    }
+
 }
