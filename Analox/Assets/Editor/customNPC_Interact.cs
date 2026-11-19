@@ -57,6 +57,8 @@ public class customNPC_Interact : Editor
             // then the editor will GENERATE that button as opposed to check to see if the condition 
         }
 
+
+
         //---ESSENTIAL LINE OF CODE TO ENSURE WE CAN EDIT THE PROPERTIES/VARIABLES OF OUR CLASS---//
         //-without this we cant add any data to our variables-//
         serializedObject.ApplyModifiedProperties();

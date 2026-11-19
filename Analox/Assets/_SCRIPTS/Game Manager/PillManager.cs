@@ -13,6 +13,7 @@ public class PillManager : MonoBehaviour
     [SerializeField] private AudioClip _breathSound; 
     [SerializeField] private Material _SanityEffect;
     private AudioSource _audioSource;
+    ///////////////////////////////////////////
 
     [Header("This Script manages: pill tracker, quickTimeEvent activation, Sanity stuff")]
     [Space(20)]
@@ -28,6 +29,8 @@ public class PillManager : MonoBehaviour
     public CanvasGroup vignetteEffect; //debug temp effect//
     private float _sanityIncrement; // automatically calculated based on maxSanity
 
+    ///////////////////////////////////////////
+
     [Header("QUICK TIME EVENT SETTINGS")]
     // new qte 
     public Transform startPoint;
@@ -37,31 +40,32 @@ public class PillManager : MonoBehaviour
     public RectTransform yellowZone;
     public float qteSpeed = 100f;
 
+    ///////////////////////////////////////////
 
- 
     public Camera _mainCamera;
-    private PlayerController _pCC;
-    private CinemachineBasicMultiChannelPerlin _cmNoise;
-    private Coroutine _fadeCamRoutine;
-    private float _qteDirection;
     public RectTransform pointerTransform;
 
     [Header("SHAKE QTE UI")]
     public RectTransform _uiHolderTransfrom;
+
+    #region private refs
+    private PlayerController _pCC;
+    private CinemachineBasicMultiChannelPerlin _cmNoise;
+    private Coroutine _fadeCamRoutine;
+    private float _qteDirection;
     private Vector2 _restPostQTEUI;
     private float _QTEshakeIntensity;
     private Coroutine _uiFadeRoutine; 
 
     private Vector3 _QteTargetPos;
-
     private bool _qteHitGreen;
     private bool _qteHitYellow;
     private bool _qteFailed;
-    private bool _qteActive = false; 
-
+    private bool _qteActive = false;
+    private CinemachineBrain _brain;
+    #endregion
 
     public CanvasGroup qteGroup;
-    private CinemachineBrain _brain;
 
     private void Start()
     {

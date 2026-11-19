@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: Tester
   m_EditorClassIdentifier: Assembly-CSharp::npcData
   npcName: Tester
+  imageTexture: {fileID: 2800000, guid: 03732f722f18e8648b2f08286483d830, type: 3}
+  basicDesc: basic corkboard description
+  scanDesc: information when scanning this npc goes here :D
+  reportInfoDesc: information from the report here
   startingNode: Tester
   currentPhase: 1
+  hasScannedNPC: 0

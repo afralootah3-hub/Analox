@@ -142,9 +142,9 @@ public class MenusManager : MonoBehaviour
 
     }
 
-    public void AddNpc(npcData nData)
+    public void AddNpcClue(npcData nData)
     {
-        // doing this later
+        if (allClueItems.Contains(nData)) return;
     }
 
    

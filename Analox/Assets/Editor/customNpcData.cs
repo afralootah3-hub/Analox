@@ -10,16 +10,20 @@ public class customNpcData : Editor
         // 'draw' in this instance means to visually render in the editor 
         //DrawDefaultInspector();
         serializedObject.Update();
-
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("imageTexture"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("npcName"));
-        EditorGUILayout.HelpBox("Name that will be shown during Dialog", MessageType.Info);
+        EditorGUILayout.HelpBox("^ Name that will be shown during Dialog", MessageType.Info);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("basicDesc"));
-        EditorGUILayout.HelpBox("This description is shown in the corkboard menu", MessageType.Info);
+        EditorGUILayout.HelpBox("^ Above description is shown in the corkboard menu", MessageType.Info);
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("reportInfoDesc"));
+        EditorGUILayout.HelpBox("^ Above description should be basic information of the npc pulled from the official report", MessageType.Info);
+        
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("scanDesc"));
-        EditorGUILayout.HelpBox("This is shown when the player scans this npc, and is also visible in the corkboard menu", MessageType.Info);
+        EditorGUILayout.HelpBox("^ Above is shown when the player scans this npc, and is also visible in the corkboard menu", MessageType.Info);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("startingNode"));
         EditorGUILayout.HelpBox("When writing dialog in YS script, the first node for each day must be titled \n" +
