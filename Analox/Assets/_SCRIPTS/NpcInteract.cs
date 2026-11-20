@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -28,6 +29,8 @@ public class NpcInteract : MonoBehaviour
     private PlayerController _player;
     private UiManager _ui;
     private Collider _triggerCol;
+
+    private bool _inRangeOfNPC;
 
     #endregion
 
@@ -59,7 +62,7 @@ public class NpcInteract : MonoBehaviour
     public DialogData dialogdata;
     private string startingNode;
 
-    //[System.Serializable]
+    //[System.Serializable] old stuff
     //public struct CamData
     //{
 
@@ -68,17 +71,26 @@ public class NpcInteract : MonoBehaviour
 
     //}
     //[Header("NPC Camera Rig Variables")]
-    //public CamData camdata;
+    //public CamData camdata; old stuff
 
 
     private void OnEnable()
     {
         //PlayerUI.instance.changePhase.AddListener(getStoryPhase);
+        dialogdata.npcDialogue.onDialogueComplete.AddListener(OnDialogEnd);
     }
 
     private void OnDisable()
     {
         //PlayerUI.instance.changePhase.RemoveListener(getStoryPhase);
+        dialogdata.npcDialogue.onDialogueComplete.RemoveListener(OnDialogEnd);
+    }
+
+    void OnDialogEnd()
+    {
+        Debug.Log("Dialog from " + this.name + "has ended");
+        if (_inRangeOfNPC) canInteract = true;
+
     }
 
 
@@ -94,6 +106,8 @@ public class NpcInteract : MonoBehaviour
         _ui = GameController.instance.GetComponent<UiManager>();
         _wheel = FindFirstObjectByType<ActionWheel>(FindObjectsInactive.Include);
         _triggerCol = GetComponent<SphereCollider>();
+
+       
 
     }
 
@@ -145,8 +159,11 @@ public class NpcInteract : MonoBehaviour
             setText(textdata.interactText);
             canInteract = true;
             Debug.Log(canInteract);
+            _inRangeOfNPC = true;
         }
     }
+
+   
 
     public void OnTriggerExit(Collider other)
     {
@@ -163,6 +180,8 @@ public class NpcInteract : MonoBehaviour
     {
         textdata.promptText.text = txt;
     }
+
+   
 
 
     // Update is called once per frame
@@ -211,7 +230,9 @@ public class NpcInteract : MonoBehaviour
         dialogdata.npcDialogue = FindFirstObjectByType<DialogueRunner>();
         Debug.Log("START NPC DIALOGUE");
         setText("");
-        
+
+        //_ui.isInspectingNPC = false;
+
         dayState currentState = GameController.instance.currentDay;
 
         string startingNodeName = dialogdata.npcstatecheck.checkState(currentState);
@@ -276,6 +297,7 @@ public class NpcInteract : MonoBehaviour
         if(index == 0) // first in list
         {
             StartDialogue();
+            _ui.isInspectingNPC = false;
             
         }
         else if (index == 1)

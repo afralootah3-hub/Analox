@@ -108,12 +108,15 @@ public class UiManager : MonoBehaviour
 
     private void Update()
     {
-        if(isInspectingNPC && Keyboard.current.anyKey.wasPressedThisFrame)
+        if(isInspectingNPC && (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.rightButton.wasPressedThisFrame))
         {
-            Debug.Log(Keyboard.current);
+            Debug.Log("Exiting npc inspection");
             CloseNPCPanel();
             isInspectingNPC = false;
         }
+
+        Debug.Log(isInspectingNPC);
+
 
         UpdatePrompt();
 

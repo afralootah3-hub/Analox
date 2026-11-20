@@ -74,11 +74,17 @@ public class ActionWheel : MonoBehaviour
     private void WheelLogic()
     {
         //cursorPos = Vector2.ClampMagnitude(cursorPos + Mouse.current.delta.ReadValue(), maxRadius);
+        
+        //read raw mouse movement since last frame
         Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+
+        //add movement to current pos, (scale for canvas resolution)
         cursorPos = cursorPos + (mouseDelta / _canvas.scaleFactor);
+
+        //keep cursor inside circular menu boundary for game feel
         cursorPos = Vector2.ClampMagnitude(cursorPos, maxRadius);
         
-        
+        //slices is an array of ui elements
         int selected = -1; // pick slice, -1 is cancel
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
@@ -93,20 +99,36 @@ public class ActionWheel : MonoBehaviour
             cursorDot.anchoredPosition = cursorPos;
         }
 
+        //determine which slice cursor is pointing at
+        //ignore is cursror is too close to center
         if(cursorPos.magnitude > deadZone)
         {
+
+            //calculate anlge from straigth down direction to cursorPos and return a value in range of -180- +180 (change later)
             float cursorAngle = Vector2.SignedAngle(Vector2.down, cursorPos) - 180f;
+            
+            //each slice gets an equal wedge of the circle
             float sliceSize = 360f / slices.Length;
+
+            //convert angle into a slice index
+            //substact by half to center the selection zone
+            //divide by 360 to get fraction of full circle
+            //multiply by total slices to get index
+            
             selected = Mathf.Abs((int)((cursorAngle - sliceSize / 2f) / 360f * slices.Length));
+           
+            // if index equals the total reset to 0 
             if (selected == slices.Length) selected = 0;
         }
 
+        //highlight selected slice, dim the others
         for (int i = 0; i < slices.Length; i++)
         {
             slices[i].color = (i == selected) ? highlightColor : baseColor;
         }
 
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        //on release either activate an interaction or close wheel
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             CloseWheel(selected);
         }
