@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using static GameController;
 using RangeAttribute = UnityEngine.RangeAttribute;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerController : MonoBehaviour
@@ -16,7 +17,7 @@ public class PlayerController : MonoBehaviour
 
     public enum playerState { isIdle, isMoving, isDisabled }
     [Header("READ ONLY - DEBUG")]
-    [SerializeField] private playerState currentState = playerState.isIdle; //default state
+    [SerializeField] public playerState currentState = playerState.isIdle; //default state
 
     private NavMeshAgent agent;
     private Animator playerAnimator;
@@ -116,7 +117,7 @@ public class PlayerController : MonoBehaviour
             _ui.OpenDoor(_doorInRange);
         }
 
-
+       
     }
 
     private void OnEnable()
@@ -194,6 +195,8 @@ public class PlayerController : MonoBehaviour
     {
         //  the actual logic where stuff happens when u click on it is handled in UI MANAGER  //
         // PlayerCC fires raycast and UI manager runs the logic //
+
+        if (currentState == playerState.isDisabled) return;
 
         if (_InputBlocked) return;
             Debug.Log("CLICKED");
@@ -284,6 +287,8 @@ public class PlayerController : MonoBehaviour
 
 
         // GROUND CHECK // LAST PRIORITY FOR RAYCAST
+
+        
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayerMask))
         {
