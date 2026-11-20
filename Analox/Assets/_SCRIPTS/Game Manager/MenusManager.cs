@@ -146,7 +146,7 @@ public class MenusManager : MonoBehaviour
         drawingCam.enabled = true;
         _corkMenuOpen = true;
         _playercc.setPlayerState(PlayerController.playerState.isDisabled);
-
+        PillManager.instance.pillButton.SetActive(false);
          
 
         
@@ -155,6 +155,7 @@ public class MenusManager : MonoBehaviour
 
     public void CloseCork()
     {
+        PillManager.instance.pillButton.SetActive(true);
         _playercc.setPlayerState(PlayerController.playerState.isIdle);
         _corkMenuOpen = false;
         drawingCam.enabled = false;

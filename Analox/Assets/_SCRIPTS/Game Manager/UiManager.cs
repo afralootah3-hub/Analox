@@ -142,6 +142,8 @@ public class UiManager : MonoBehaviour
         HidePrompt();
         if (_isInspecting) return;
 
+        PillManager.instance.pillButton.SetActive(false);
+
         _isInspecting = true;
         holdLight.SetActive(true);
 
@@ -304,6 +306,7 @@ public class UiManager : MonoBehaviour
         if (!_isInspecting) return;
         holdLight.SetActive(false);
 
+        PillManager.instance.pillButton.SetActive(true);
         itemName.text = "";
         itemDesc.text = "";
         scanDesc.text = "";
@@ -536,12 +539,7 @@ public class UiManager : MonoBehaviour
 
     #region NPC SCAN YARN COMMAND AND STUFF
 
-    [YarnCommand("scanNPC")]
-    public void ScanNPC(string npcName)
-    {
-        // pass the name of the npc we are scanning and display the right text for it :)
-    }
-
+  
 
     #endregion
 

@@ -29,9 +29,10 @@ public class PillManager : MonoBehaviour
     public int maxStealth = 5;
     public int currentStealth = 5;
     public TextMeshProUGUI pillAmount; //debug//
-    public CanvasGroup vignetteEffect; //debug temp effect//
+   // public CanvasGroup vignetteEffect; //debug temp effect//
     private float _sanityIncrement; // automatically calculated based on maxSanity
     public GameObject pillChoiceHolder;
+    public GameObject pillButton;
 
     ///////////////////////////////////////////
 
@@ -49,6 +50,8 @@ public class PillManager : MonoBehaviour
 
     public Camera _mainCamera;
     public RectTransform pointerTransform;
+    private DialogueRunner _dialogRunner;
+    [SerializeField] private string _pillRejectDialog;
 
     [Header("SHAKE QTE UI")]
     public RectTransform _uiHolderTransfrom;
@@ -95,12 +98,17 @@ public class PillManager : MonoBehaviour
         defaultQTEspeed = qteSpeed;
         pillChoiceHolder.SetActive(false);
         // move to onsceneload //
-
+        _dialogRunner = FindFirstObjectByType<DialogueRunner>();
        
         _mainCamera = Camera.main;
         _brain = _mainCamera.GetComponent<CinemachineBrain>();
         _restPostQTEUI = _uiHolderTransfrom.anchoredPosition;
 
+    }
+
+    public void TogglePillBottleUI(bool enable)
+    {
+        if (enable) pillButton.SetActive(true); else pillButton.SetActive(false);
     }
 
     public void Awake()
@@ -130,20 +138,20 @@ public class PillManager : MonoBehaviour
 
         Debug.Log("alpha amount is " + alphaamt);
         Debug.Log("amt is " + amt);
-        Debug.Log(vignetteEffect.alpha);
+        //Debug.Log(vignetteEffect.alpha);
         // split either 1 or -1 by 5 to equally increase alpha
         
 
         if (isReset == true) // reset it/ its cleared
         {
-            vignetteEffect.alpha = 0;
+            //vignetteEffect.alpha = 0;
             _SanityEffect.SetFloat("_Blend", 0);
             _audioSource.volume = 0;
         }
         else //if we're NOT reseting sanity
         { 
             currentSanity += amt;
-            vignetteEffect.alpha -= alphaamt;
+            //vignetteEffect.alpha -= alphaamt;
             _SanityEffect.SetFloat("_Blend", -0.2f);
             Debug.Log(_SanityEffect.GetFloat("_Blend"));
             _audioSource.volume = 1;
@@ -247,6 +255,12 @@ public class PillManager : MonoBehaviour
     /// </summary>
     public void EnableQTE()
     {
+        if(currentSanity == maxSanity)
+        {
+            beginDialogLine(_pillRejectDialog);
+            return;
+        }
+
         float cAmp = 0;
         float cFreq = 0;
         CloseQTEMenu();
@@ -307,6 +321,14 @@ public class PillManager : MonoBehaviour
         
     }
 
+    public void beginDialogLine(string dialogNode)
+    {
+        _dialogRunner.StartDialogue(dialogNode);
+        _pCC.setPlayerState(PlayerController.playerState.isDisabled);
+        pillChoiceHolder.SetActive(false);
+
+
+    }
 
 
 

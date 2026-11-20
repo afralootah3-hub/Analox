@@ -14200,7 +14200,7 @@ MonoBehaviour:
   fadeDownDuration: 0.1
   autoAdvance: 0
   autoAdvanceDelay: 1
-  typewriterStyle: 2
+  typewriterStyle: 1
   lettersPerSecond: 60
   wordsPerSecond: 5
   customTypewriter:
@@ -23169,8 +23169,8 @@ MonoBehaviour:
   maxStealth: 5
   currentStealth: 5
   pillAmount: {fileID: 0}
-  vignetteEffect: {fileID: 0}
   pillChoiceHolder: {fileID: 833637761}
+  pillButton: {fileID: 844678051}
   startPoint: {fileID: 2056687729}
   endPoint: {fileID: 74563906}
   greenZone: {fileID: 849275799}
@@ -23178,6 +23178,7 @@ MonoBehaviour:
   qteSpeed: 300
   _mainCamera: {fileID: 0}
   pointerTransform: {fileID: 471609513}
+  _pillRejectDialog: FullSanity
   _uiHolderTransfrom: {fileID: 2036933166}
   QTESettings:
     HighAmp: 6
@@ -23211,10 +23212,6 @@ MonoBehaviour:
   boardArea: {fileID: 520352137}
   boardItemsParent: {fileID: 634722747}
   dragLayer: {fileID: 634722747}
-  enableMenu:
-    IsInspectingObject: 0
-    IsSelectingPill: 0
-    IsInteractingWithNPC: 0
   _canDraw: 0
   drawingCam: {fileID: 579777376}
   drawingHolder: {fileID: 692690532}
@@ -24562,6 +24559,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 7786105558468891371}
+        m_TargetAssemblyTypeName: PillManager, Assembly-CSharp
+        m_MethodName: TogglePillBottleUI
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onDialogueComplete:
     m_PersistentCalls:
       m_Calls:
@@ -24576,6 +24585,30 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7786105558468891371}
+        m_TargetAssemblyTypeName: PillManager, Assembly-CSharp
+        m_MethodName: CloseQTEMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7786105558468891371}
+        m_TargetAssemblyTypeName: PillManager, Assembly-CSharp
+        m_MethodName: TogglePillBottleUI
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
   onUnhandledCommand:
     m_PersistentCalls:
