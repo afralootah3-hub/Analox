@@ -18,6 +18,8 @@ public class InteractableObj : MonoBehaviour
 
     public Collider doorCheckTriggerCol;
 
+    
+
     private void Awake()
     {
         itemRenderer = GetComponentInChildren<MeshRenderer>();

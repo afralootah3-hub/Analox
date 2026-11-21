@@ -6,6 +6,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 using Yarn.Unity;
 
 
@@ -67,7 +68,7 @@ public class UiManager : MonoBehaviour
     private PillManager _pillmanager;
     private List<string> itemIndex; //stores the itemID's (which is the itemName)//
     private string _scanString; //cache
-
+    public Button leaveButton, stayButton;
 
 
     #endregion
@@ -115,7 +116,7 @@ public class UiManager : MonoBehaviour
             isInspectingNPC = false;
         }
 
-        Debug.Log(isInspectingNPC);
+        //Debug.Log(isInspectingNPC);
 
 
         UpdatePrompt();

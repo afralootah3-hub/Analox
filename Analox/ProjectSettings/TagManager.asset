@@ -8,6 +8,10 @@ TagManager:
   - camHolder
   - dRunner
   - doorCheck
+  - loadZone
+  - DoorHolder
+  - stayButton
+  - leaveButton
   layers:
   - Default
   - TransparentFX
@@ -19,7 +23,7 @@ TagManager:
   - door
   - drawer
   - Map
-  - 
+  - loadDoor
   - 
   - 
   - 

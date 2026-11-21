@@ -35,6 +35,9 @@ public class ItemData : ScriptableObject
     public Transform drawerPivot;
     public Collider insideObjCol;
 
+    // tp door stuff
+
+
 
     private void Awake()
     {
