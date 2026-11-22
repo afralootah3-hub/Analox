@@ -63,4 +63,18 @@ This checks for the players SANITY LEVEL
 <<endif>>
 
 
+This updates the players evidence board, allowing the player to see an 
+image of the NPC, their basic description, AND scan information 
+
+^ you can set what these are on their npcData scriptable object. 
+
+This function takes an arguement of the NPC's GAMEOBJECT NAME. make sure the string
+EXACTLY MATCHES the name of their gameobject 
+
+<<AddNPC "Tester">>
+
+^ you should call this function ONCE throughout the entirety of the game. 
+prefrably the first time you talk to them. 
+:D
+
 ===

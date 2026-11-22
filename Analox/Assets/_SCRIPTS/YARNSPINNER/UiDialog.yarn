@@ -1,0 +1,12 @@
+﻿title: UiDialog
+---
+// This yarnscript is for tutorial/specific needs like
+// a dialog line after taking a pill, or trying to take one when sanity is high
+// dialog after failing the QTE event
+// or just anything that you don't want to link to a specific character
+===
+title: FullSanity
+---
+//called when trying to take a pill even though sanity is high
+I don't feel the need to take anything right now.
+===

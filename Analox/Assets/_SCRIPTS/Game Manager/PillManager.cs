@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Yarn.Unity;
@@ -13,6 +14,7 @@ public class PillManager : MonoBehaviour
     [SerializeField] private AudioClip _breathSound; 
     [SerializeField] private Material _SanityEffect;
     private AudioSource _audioSource;
+    ///////////////////////////////////////////
 
     [Header("This Script manages: pill tracker, quickTimeEvent activation, Sanity stuff")]
     [Space(20)]
@@ -22,11 +24,17 @@ public class PillManager : MonoBehaviour
     public int maxSanity = 5;
     // sanity increments visibility of the vignette , pill resets the vignette to 0
 
+    private int _difficultyScale; //adds currrent sanity and current stealth to scale the QTE accordingly :)
+
     public int maxStealth = 5;
     public int currentStealth = 5;
     public TextMeshProUGUI pillAmount; //debug//
-    public CanvasGroup vignetteEffect; //debug temp effect//
+   // public CanvasGroup vignetteEffect; //debug temp effect//
     private float _sanityIncrement; // automatically calculated based on maxSanity
+    public GameObject pillChoiceHolder;
+    public GameObject pillButton;
+
+    ///////////////////////////////////////////
 
     [Header("QUICK TIME EVENT SETTINGS")]
     // new qte 
@@ -35,53 +43,72 @@ public class PillManager : MonoBehaviour
 
     public RectTransform greenZone;
     public RectTransform yellowZone;
-    public float qteSpeed = 100f;
+    public float qteSpeed = 200f;
+    private float defaultQTEspeed;
 
+    ///////////////////////////////////////////
 
- 
     public Camera _mainCamera;
+    public RectTransform pointerTransform;
+    private DialogueRunner _dialogRunner;
+    [SerializeField] private string _pillRejectDialog;
+
+    [Header("SHAKE QTE UI")]
+    public RectTransform _uiHolderTransfrom;
+
+    [System.Serializable ]
+    public struct DifficultySettings
+    {
+        public float HighAmp, HighFreq, HighUI, MedAmp, MedFreq, MedUi, MildAmp, MildFreq, MildUI, BaseAmp, BaseFreq, BaseUI;
+    }
+
+    public DifficultySettings QTESettings;
+
+    #region private refs
     private PlayerController _pCC;
     private CinemachineBasicMultiChannelPerlin _cmNoise;
     private Coroutine _fadeCamRoutine;
     private float _qteDirection;
-    public RectTransform pointerTransform;
-
-    [Header("SHAKE QTE UI")]
-    public RectTransform _uiHolderTransfrom;
     private Vector2 _restPostQTEUI;
     private float _QTEshakeIntensity;
     private Coroutine _uiFadeRoutine; 
 
     private Vector3 _QteTargetPos;
-
     private bool _qteHitGreen;
     private bool _qteHitYellow;
     private bool _qteFailed;
-    private bool _qteActive = false; 
-
+    [HideInInspector] public bool _qteActive = false;
+    private CinemachineBrain _brain;
+    #endregion
 
     public CanvasGroup qteGroup;
-    private CinemachineBrain _brain;
 
     private void Start()
     {
         currentSanity = maxSanity;
         currentStealth = maxStealth;
         qteGroup.alpha = 0;
-        pillAmount.text = pillsLeft.ToString();
-        vignetteEffect.alpha = 0;
+        _pCC = FindAnyObjectByType<PlayerController>();
+        
         _SanityEffect.SetFloat("_Blend", 0);
         _audioSource = GetComponent<AudioSource>();
         _audioSource.volume = 0;
         _QteTargetPos = endPoint.localPosition;
-
+        _difficultyScale = 10; //max
+        defaultQTEspeed = qteSpeed;
+        pillChoiceHolder.SetActive(false);
         // move to onsceneload //
-
-        _pCC = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        _dialogRunner = FindFirstObjectByType<DialogueRunner>();
+       
         _mainCamera = Camera.main;
         _brain = _mainCamera.GetComponent<CinemachineBrain>();
         _restPostQTEUI = _uiHolderTransfrom.anchoredPosition;
 
+    }
+
+    public void TogglePillBottleUI(bool enable)
+    {
+        if (enable) pillButton.SetActive(true); else pillButton.SetActive(false);
     }
 
     public void Awake()
@@ -111,19 +138,20 @@ public class PillManager : MonoBehaviour
 
         Debug.Log("alpha amount is " + alphaamt);
         Debug.Log("amt is " + amt);
-        Debug.Log(vignetteEffect.alpha);
+        //Debug.Log(vignetteEffect.alpha);
         // split either 1 or -1 by 5 to equally increase alpha
+        
 
         if (isReset == true) // reset it/ its cleared
         {
-            vignetteEffect.alpha = 0;
+            //vignetteEffect.alpha = 0;
             _SanityEffect.SetFloat("_Blend", 0);
             _audioSource.volume = 0;
         }
         else //if we're NOT reseting sanity
         { 
             currentSanity += amt;
-            vignetteEffect.alpha -= alphaamt;
+            //vignetteEffect.alpha -= alphaamt;
             _SanityEffect.SetFloat("_Blend", -0.2f);
             Debug.Log(_SanityEffect.GetFloat("_Blend"));
             _audioSource.volume = 1;
@@ -179,26 +207,130 @@ public class PillManager : MonoBehaviour
 
     private void Update()
     {
-        if (Keyboard.current.pKey.wasPressedThisFrame && !_qteActive)
-        {
-            _qteActive = true;
-            pointerTransform.localPosition = startPoint.localPosition;
-            _QteTargetPos = endPoint.localPosition;
-            StartCameraShake();
-            StartUIShake();
-        }
-
-
+        Debug.Log("CURRENT SANITY IS " + currentSanity);
+        
         if (_qteActive)
         {
             StartQTE();
             
         }
-        
 
+
+        // DEBUG STUFF
+       
+        if (Keyboard.current.commaKey.wasPressedThisFrame)
+        {
+            currentSanity -= 1;
+            Debug.Log("CURRENT SANITY INCREAED " + currentSanity);
+        }
+
+    }
+
+
+    //can add animations to this
+    public void OpenQTEMenu()
+    {
+        if (_pCC.currentState == PlayerController.playerState.isDisabled) return;
+        _pCC.GetComponent<NavMeshAgent>().ResetPath();
+        // when click menu 
+        pillChoiceHolder.SetActive(true);
+        if(_pCC == null)
+        {
+             _pCC = FindFirstObjectByType<PlayerController>();
+
+        }
+        _pCC.setPlayerState(PlayerController.playerState.isDisabled);
+    }
+
+    //called by button and when qte starts
+    public void CloseQTEMenu()
+    {
+        pillChoiceHolder.SetActive(false);
+        _pCC.setPlayerState(PlayerController.playerState.isIdle);
+    }
+
+
+    /// <summary>
+    /// Called by a button to start the qte.
+    /// </summary>
+    public void EnableQTE()
+    {
+        if(currentSanity == maxSanity)
+        {
+            beginDialogLine(_pillRejectDialog);
+            return;
+        }
+
+        float cAmp = 0;
+        float cFreq = 0;
+        CloseQTEMenu();
+        _pCC.setPlayerState(PlayerController.playerState.isDisabled);
+
+        float uiShakeAmt = 0;
+
+        if (!_qteActive)
+        {
+            _difficultyScale = (currentSanity + currentStealth);
+            _qteActive = true;
+
+
+            pointerTransform.localPosition = startPoint.localPosition;
+            _QteTargetPos = endPoint.localPosition;
+
+            switch (_difficultyScale)
+            {
+                case >= 0 and <= 1:
+                    Debug.Log("Hardest QTE difficulty");
+                    cAmp = QTESettings.HighAmp;
+                    cFreq = QTESettings.HighFreq;
+                    uiShakeAmt = QTESettings.HighUI;
+                    qteSpeed += 100f;
+                    break;
+                case >= 2 and <= 4:
+                    cAmp = QTESettings.MedAmp;
+                    cFreq = QTESettings.MedFreq;
+                    uiShakeAmt = QTESettings.MedUi;
+                    Debug.Log("Medium QTE difficulty");
+                    qteSpeed += 50f;
+                    break;
+                case >= 5 and <= 8:
+                    cAmp = QTESettings.MildAmp;
+                    cFreq = QTESettings.MildFreq;
+                    uiShakeAmt = QTESettings.MildUI;
+                    Debug.Log("Mild QTE difficulty");
+                    qteSpeed = defaultQTEspeed;
+                    break;
+                case >= 9 and <= 10:
+                    Debug.Log("No difficulty, default");
+                    cAmp = QTESettings.BaseAmp;
+                    cFreq = QTESettings.BaseFreq;
+                    uiShakeAmt = QTESettings.BaseUI;
+                    qteSpeed = defaultQTEspeed;
+                    break;
+                default:
+                    Debug.LogWarning("Difficulty scale out of range!" + _difficultyScale
+                        + "\n" + "falling back to default no difficulty");
+                    qteSpeed = defaultQTEspeed;
+                    break;
+            }
+
+            StartCameraShake(cAmp, cFreq);
+            StartUIShake(uiShakeAmt);
+            
+        }
+        
+    }
+
+    public void beginDialogLine(string dialogNode)
+    {
+        _dialogRunner.StartDialogue(dialogNode);
+        _pCC.setPlayerState(PlayerController.playerState.isDisabled);
+        pillChoiceHolder.SetActive(false);
 
 
     }
+
+
 
     private void StartQTE()
     {
@@ -246,6 +378,7 @@ public class PillManager : MonoBehaviour
             Debug.Log("QTE FAIL"); //call function
             _qteFailed = true;
         }
+        _pCC.setPlayerState(PlayerController.playerState.isIdle);
         _qteActive = false;
         qteGroup.alpha = 0;
         EndCameraShake();
@@ -266,7 +399,7 @@ public class PillManager : MonoBehaviour
                 Debug.LogWarning("MISSING CINEMACHINE COMPONENTS UNABLE TO GRAB ACTIVE CAMERA");
                 return;
             }
-            }
+        }
 
 
         //

@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using Yarn.Unity;
 
 public class MenusManager : MonoBehaviour
 {
@@ -19,8 +21,8 @@ public class MenusManager : MonoBehaviour
     4. player drags image around
     5. player can draw red lines conecting evidence (WHICH SHOULD PERSIST ACROSS SCENES) -> use logic from mail game / last year midterm (render on diff 
     */
+    
 
-   
     // corkboard var // 
     // restructured later to use tags and custom inspector for easy assinging in inspector//
     public GameObject corkBoardHolder;
@@ -29,22 +31,27 @@ public class MenusManager : MonoBehaviour
     public Transform boardItemsParent;
     public RectTransform dragLayer; 
     private List<string> _clueItems; //stores everything in inventory
+
+  
     private bool _corkMenuOpen;
 
     public bool _canDraw;
-    
+
+    private PlayerController _playercc;
     public Camera drawingCam;
     public GameObject drawingHolder;
+    public Toggle paintToggle;
 
     public RectTransform itemDescTransform;
     public TextMeshProUGUI itemDescTMP;
-    public RectTransform scanDescTransform;
-    public TextMeshProUGUI scanDescTMP;
+    
+   
     public RectTransform itemDescStartPos, scanDescStartPos;
 
     // these are STORING the data recieved form ui manager and should not be assigned in inspector
     public List<ItemData> allClueItems;
     public List<npcData> allNpcData;
+    public List<CorkboardItem> allCorkItems;
 
     private void Awake()
     {
@@ -58,9 +65,29 @@ public class MenusManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this);
         }
-        itemDescStartPos = itemDescTransform;
-        scanDescStartPos = scanDescTransform;
     }
+
+    /// <summary>
+    /// disable the raycasts of all corkboard items when drawing
+    /// </summary>
+    public void ToggleAllItemRaycasts(bool isOn)
+    {
+        if(allCorkItems.Count == 0)
+        {
+            Debug.Log("CONTAINS NOTHING IN CORKITEMS");
+        }
+
+        foreach(CorkboardItem cItem in allCorkItems)
+        {
+            if(cItem != null && cItem.TryGetComponent(out RawImage rawImg))
+            {
+                if (!isOn) rawImg.raycastTarget = false; else rawImg.raycastTarget = true;
+            }
+        }
+    }
+
+
+
 
     private void Start()
     {
@@ -68,6 +95,7 @@ public class MenusManager : MonoBehaviour
         _corkMenuOpen = false;
         drawingCam.enabled = false;
         _canDraw = false;
+        _playercc = FindFirstObjectByType<PlayerController>();
        // drawingHolder.SetActive(false);
     }
 
@@ -83,6 +111,7 @@ public class MenusManager : MonoBehaviour
         {
             ToggleMenu();
             //ToggleDrawing();
+            
         }
     }
 
@@ -116,14 +145,22 @@ public class MenusManager : MonoBehaviour
         corkBoardHolder.SetActive(true);
         drawingCam.enabled = true;
         _corkMenuOpen = true;
+        _playercc.setPlayerState(PlayerController.playerState.isDisabled);
+        PillManager.instance.pillButton.SetActive(false);
+         
+
+        
 
     }
 
     public void CloseCork()
     {
+        PillManager.instance.pillButton.SetActive(true);
+        _playercc.setPlayerState(PlayerController.playerState.isIdle);
         _corkMenuOpen = false;
         drawingCam.enabled = false;
         corkBoardHolder.SetActive(false);
+        paintToggle.isOn = true;
     }
 
     public void AddObjectClue(ItemData iData)
@@ -133,22 +170,43 @@ public class MenusManager : MonoBehaviour
 
         GameObject newClue = new GameObject("Clue" + iData.ItemName.ToString(), typeof(RectTransform)); //creates the holder
         newClue.AddComponent<CorkboardItem>();
+        
         CorkboardItem cbItem = newClue.GetComponent<CorkboardItem>();
-        newClue.transform.SetParent(itemsHolder.transform, false); // set as child for now
 
+        
+        newClue.transform.SetParent(itemsHolder.transform, false); // set as child for now 
         cbItem.InitalizeObjectClue(iData); // this adds any missing things and sets up image and text stuff according to the iData
+        // ^ this handles the drag and drop stuff now 
+
+        //allCorkItems.Add(cbItem);
+    }
+
+    [YarnCommand("AddNPC")]
+    public static void AddNpcClue(GameObject npcObj)
+    {
+        npcData nData = npcObj.GetComponent<NpcInteract>().dialogdata.storyData;
+
+
+        if (MenusManager.instance.allNpcData.Contains(nData)) return; // no duplicates 
+        MenusManager.instance.allNpcData.Add(nData);
+
+        GameObject newClue = new GameObject("NPCClue" + nData.npcName.ToString(), typeof(RectTransform)); //creates the holder
+        newClue.AddComponent<CorkboardItem>();
+        CorkboardItem cbItem = newClue.GetComponent<CorkboardItem>();
+        newClue.transform.SetParent(MenusManager.instance.itemsHolder.transform, false); // set as child for now
+
+        cbItem.InitalizeNpcClue(nData); // this adds any missing things and sets up image and text stuff according to the iData
         // ^ this handles the drag and drop stuff now 
 
 
     }
 
-    public void AddNpc(npcData nData)
-    {
-        // doing this later
-    }
 
-   
 
-    
+
+
+
+
+
 
 }

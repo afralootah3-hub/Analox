@@ -8,15 +8,18 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using static GameController;
 using RangeAttribute = UnityEngine.RangeAttribute;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerController : MonoBehaviour
 {
     // handles point and click, as well as CAMERA stuff (orthographic room viewing)
 
+    public static PlayerController instance { get; private set; }
+
     public enum playerState { isIdle, isMoving, isDisabled }
     [Header("READ ONLY - DEBUG")]
-    [SerializeField] private playerState currentState = playerState.isIdle; //default state
+    [SerializeField] public playerState currentState = playerState.isIdle; //default state
 
     private NavMeshAgent agent;
     private Animator playerAnimator;
@@ -51,16 +54,27 @@ public class PlayerController : MonoBehaviour
     private LayerMask groundLayerMask;
     private LayerMask objectsLayerMask;
 
+    private LayerMask loadDoorLayerMask;
     private LayerMask doorsLayerMask;
     private LayerMask drawerLayerMask;
 
     private InteractableObj _doorInRange;
-    
 
+    private LoadRoom _loadRoom;
     private List<InteractableObj> _nearby = new List<InteractableObj>();
   
 
     // reference interactable script / scriptable obj
+
+
+    public void ReloadPlayerVariables()
+    {
+        _pActiveCam = null;
+        _pActiveCam = GameObject.FindGameObjectWithTag("camHolder").GetComponentInChildren<Camera>();
+        _cameraHolder = null;
+        _cameraHolder = GameObject.FindGameObjectWithTag("camHolder").GetComponent<Transform>();
+    }
+
 
     private void Awake()
     {
@@ -68,7 +82,17 @@ public class PlayerController : MonoBehaviour
         objectsLayerMask = LayerMask.GetMask("iObject");
         doorsLayerMask = LayerMask.GetMask("door");
         drawerLayerMask = LayerMask.GetMask("drawer");
+        loadDoorLayerMask = LayerMask.GetMask("loadDoor");
 
+
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
         //anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
 
@@ -96,6 +120,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (_pActiveCam == null) ReloadPlayerVariables();
         Ray ray = _pActiveCam.ScreenPointToRay(_pointAction.ReadValue<Vector2>()); 
 
         if(!_InputBlocked && Physics.Raycast(ray,
@@ -109,13 +134,14 @@ public class PlayerController : MonoBehaviour
             _ui.HidePrompt();
         }
 
-        Debug.Log(currentState);
+        //Debug.Log(currentState);
 
         if(_doorInRange != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             _ui.OpenDoor(_doorInRange);
         }
 
+        //Debug.Log(_InputBlocked + "" + _isRotating + fixedCamera + _cameraHolder);
 
     }
 
@@ -195,18 +221,20 @@ public class PlayerController : MonoBehaviour
         //  the actual logic where stuff happens when u click on it is handled in UI MANAGER  //
         // PlayerCC fires raycast and UI manager runs the logic //
 
+        if (currentState == playerState.isDisabled) return;
+
         if (_InputBlocked) return;
-            Debug.Log("CLICKED");
+        Debug.Log("CLICKED");
 
-            //read current screen position of mouse
-            Vector2 mouseSPos = _pointAction.ReadValue<Vector2>();
+        //read current screen position of mouse
+        Vector2 mouseSPos = _pointAction.ReadValue<Vector2>();
 
-            //ray cast onto floor
-            Ray ray = _pActiveCam.ScreenPointToRay(mouseSPos);
-            //int groundLayerMask = LayerMask.GetMask("ground");
-            //int objectsLayerMask = LayerMask.GetMask("iObject");
+        //ray cast onto floor
+        Ray ray = _pActiveCam.ScreenPointToRay(mouseSPos);
+        //int groundLayerMask = LayerMask.GetMask("ground");
+        //int objectsLayerMask = LayerMask.GetMask("iObject");
 
-            Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 2f);
+        Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 2f);
 
         // checks object FIRST before ground 
 
@@ -220,7 +248,7 @@ public class PlayerController : MonoBehaviour
             -> raycast checks what the mouse points at 
          */
 
-        if(_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit objHit, Mathf.Infinity, objectsLayerMask))
+        if (_nearby.Count > 0 && Physics.Raycast(ray, out RaycastHit objHit, Mathf.Infinity, objectsLayerMask))
         {
             InteractableObj clicked = objHit.collider.GetComponentInParent<InteractableObj>();
 
@@ -237,6 +265,34 @@ public class PlayerController : MonoBehaviour
                 return; //so we dont keep walking
             }
         }
+
+        
+        if (Physics.Raycast(ray, out RaycastHit loadHit, Mathf.Infinity, loadDoorLayerMask, QueryTriggerInteraction.Collide))
+        {
+
+            LoadRoom room = loadHit.collider.GetComponentInParent<LoadRoom>();
+            Debug.Log("HIT" + room);
+
+            if(room != null)
+            {   if (room != _loadRoom)
+                {
+                    Debug.Log("OUT OF RANGE");
+                }
+                else
+                {
+                    room.OpenDoorMenu();
+                    room = null;
+                    agent.ResetPath();
+                    return;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("HIT NOTHING");
+        }
+        
+
 
         /* turning off clicking on doors, now changing it to a button press
 
@@ -285,6 +341,8 @@ public class PlayerController : MonoBehaviour
 
         // GROUND CHECK // LAST PRIORITY FOR RAYCAST
 
+        
+
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayerMask))
         {
             agent.SetDestination(hit.point);
@@ -297,7 +355,10 @@ public class PlayerController : MonoBehaviour
 
     public void OnRotatePerformed(InputAction.CallbackContext context)
     {
-        if (_InputBlocked || _isRotating || fixedCamera || _cameraHolder == null) return; 
+        if (_InputBlocked || _isRotating || fixedCamera || _cameraHolder == null) {
+            Debug.Log(_InputBlocked + "" + _isRotating + fixedCamera + _cameraHolder);
+            
+            return; }
 
         //
 
@@ -363,6 +424,12 @@ public class PlayerController : MonoBehaviour
             _doorInRange = other.GetComponent<InteractableObj>();
         }
 
+        if (other.tag == "loadZone")
+        {
+            _loadRoom = other.GetComponent<LoadRoom>();
+            Debug.Log(_loadRoom);
+            Debug.Log("ENTERED TRIGGER OF LOADZONe");
+        }
       
 
 
@@ -380,6 +447,12 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("doorCheck"))
         {
             _doorInRange = null;
+        }
+
+        if (other.tag == "loadZone")
+        {
+            _loadRoom = null;
+            Debug.Log("EXITED LOADZONE");
         }
     }
 

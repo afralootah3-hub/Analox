@@ -21,6 +21,8 @@ public class CameraSwap : MonoBehaviour
     public CinemachineCamera mainCM_Cam;
     public CinemachineCamera swapCM_Cam;
 
+    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

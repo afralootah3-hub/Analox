@@ -10,7 +10,9 @@ public class ItemData : ScriptableObject
 
     public itemType objtype;
     public string ItemName;
+    [TextArea(2, 15)]
     public string ItemDescription;
+    [TextArea(2, 15)]
     public string ScanInformation;
     public bool wasScanned = false; // READ ONLY //
 
@@ -32,6 +34,9 @@ public class ItemData : ScriptableObject
     public bool isOpeningDrawer;
     public Transform drawerPivot;
     public Collider insideObjCol;
+
+    // tp door stuff
+
 
 
     private void Awake()

@@ -1,11 +1,12 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using Yarn.Unity;
 
-public enum iType { npc, item } //interaction type enum (unsued)
+public enum iType { npc, token, stormsOut } //interaction type enum (unsued)
 
 public class NpcInteract : MonoBehaviour
 {
@@ -16,14 +17,22 @@ public class NpcInteract : MonoBehaviour
     // vision/stealth stuff 
     public Transform eyes;
     public float viewRange = 10f;
+
+    private bool _hasScannedNPC;
+
+
+
+    #region private refs
     private Transform _playerT;
     private bool _spotting;
     private ActionWheel _wheel;
     private PlayerController _player;
     private UiManager _ui;
-
     private Collider _triggerCol;
 
+    private bool _inRangeOfNPC;
+
+    #endregion
 
     [System.Serializable]
     public struct TextData
@@ -53,7 +62,7 @@ public class NpcInteract : MonoBehaviour
     public DialogData dialogdata;
     private string startingNode;
 
-    //[System.Serializable]
+    //[System.Serializable] old stuff
     //public struct CamData
     //{
 
@@ -62,17 +71,26 @@ public class NpcInteract : MonoBehaviour
 
     //}
     //[Header("NPC Camera Rig Variables")]
-    //public CamData camdata;
+    //public CamData camdata; old stuff
 
 
     private void OnEnable()
     {
         //PlayerUI.instance.changePhase.AddListener(getStoryPhase);
+        dialogdata.npcDialogue.onDialogueComplete.AddListener(OnDialogEnd);
     }
 
     private void OnDisable()
     {
         //PlayerUI.instance.changePhase.RemoveListener(getStoryPhase);
+        dialogdata.npcDialogue.onDialogueComplete.RemoveListener(OnDialogEnd);
+    }
+
+    void OnDialogEnd()
+    {
+        Debug.Log("Dialog from " + this.name + "has ended");
+        if (_inRangeOfNPC) canInteract = true;
+
     }
 
 
@@ -88,6 +106,8 @@ public class NpcInteract : MonoBehaviour
         _ui = GameController.instance.GetComponent<UiManager>();
         _wheel = FindFirstObjectByType<ActionWheel>(FindObjectsInactive.Include);
         _triggerCol = GetComponent<SphereCollider>();
+
+       
 
     }
 
@@ -112,6 +132,23 @@ public class NpcInteract : MonoBehaviour
 
     //--------RUNTIME METHODS--------//
 
+    public void HasScannedNPC()
+    {
+        // runs when player chooses the index aligning with scan from action wheel 
+        if (_hasScannedNPC)
+        {
+            // dont waste sanity
+            //call uimanager thingy
+        }
+        else
+        {
+            _hasScannedNPC = true;
+        }
+        
+
+    }
+
+
 
 
     public void OnTriggerEnter(Collider other)
@@ -122,8 +159,11 @@ public class NpcInteract : MonoBehaviour
             setText(textdata.interactText);
             canInteract = true;
             Debug.Log(canInteract);
+            _inRangeOfNPC = true;
         }
     }
+
+   
 
     public void OnTriggerExit(Collider other)
     {
@@ -141,6 +181,8 @@ public class NpcInteract : MonoBehaviour
         textdata.promptText.text = txt;
     }
 
+   
+
 
     // Update is called once per frame
     void Update()
@@ -155,7 +197,7 @@ public class NpcInteract : MonoBehaviour
                 {
                     Debug.Log("pressed, canInteract = " + canInteract);
 
-                    if (mouseIsOverNPC())
+                    if (mouseIsOverNPC() && !_ui.isInspectingNPC)
                     {
                         Debug.Log("mouse is over npc");
                         OpenWheel();
@@ -188,6 +230,8 @@ public class NpcInteract : MonoBehaviour
         dialogdata.npcDialogue = FindFirstObjectByType<DialogueRunner>();
         Debug.Log("START NPC DIALOGUE");
         setText("");
+
+        //_ui.isInspectingNPC = false;
 
         dayState currentState = GameController.instance.currentDay;
 
@@ -253,13 +297,22 @@ public class NpcInteract : MonoBehaviour
         if(index == 0) // first in list
         {
             StartDialogue();
+            _ui.isInspectingNPC = false;
             
         }
         else if (index == 1)
         {
             Debug.Log(index);
+            _ui.OnViewNPCInfo(dialogdata.storyData);
             return;
         }
+        else if(index == 2)
+        {
+            Debug.Log(index);
+            _ui.OnScannedNPC(dialogdata.storyData);
+            return;
+        }
+        
         else if (index == -1) // out of list bounds -> exit interaction
         {
             _player.setPlayerState(PlayerController.playerState.isIdle);

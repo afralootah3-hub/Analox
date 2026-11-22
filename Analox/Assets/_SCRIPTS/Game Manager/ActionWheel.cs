@@ -74,12 +74,18 @@ public class ActionWheel : MonoBehaviour
     private void WheelLogic()
     {
         //cursorPos = Vector2.ClampMagnitude(cursorPos + Mouse.current.delta.ReadValue(), maxRadius);
+        
+        //read raw mouse movement since last frame
         Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+
+        //add movement to current pos, (scale for canvas resolution)
         cursorPos = cursorPos + (mouseDelta / _canvas.scaleFactor);
+
+        //keep cursor inside circular menu boundary for game feel
         cursorPos = Vector2.ClampMagnitude(cursorPos, maxRadius);
         
-        
-        int selected = -1; // pick slice, -1 is cancel
+        //slices is an array of ui elements
+        //int selected = -1; // pick slice, -1 is cancel
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -93,23 +99,109 @@ public class ActionWheel : MonoBehaviour
             cursorDot.anchoredPosition = cursorPos;
         }
 
+        int selected = GetHoveredSlice();
+
+        //color the selected slice with the highlight color
+        //if selected is -1 nothing gets highlighted
+        for (int i = 0; i < slices.Length; i++)
+        {
+            if(i == selected)
+            {
+                slices[i].color = highlightColor;
+            }
+            else
+            {
+                slices[i].color = baseColor;
+            }
+        }
+
+        //on release either activate an interaction or close wheel
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            CloseWheel(selected);
+        }
+
+        //determine which slice cursor is pointing at
+        //ignore is cursror is too close to center
+
+        /*
         if(cursorPos.magnitude > deadZone)
         {
+
+            //calculate anlge from straigth down direction to cursorPos and return a value in range of -180- +180 (change later)
             float cursorAngle = Vector2.SignedAngle(Vector2.down, cursorPos) - 180f;
+            
+            //each slice gets an equal wedge of the circle
             float sliceSize = 360f / slices.Length;
+
+            //convert angle into a slice index
+            //substact by half to center the selection zone
+            //divide by 360 to get fraction of full circle
+            //multiply by total slices to get index
+            
             selected = Mathf.Abs((int)((cursorAngle - sliceSize / 2f) / 360f * slices.Length));
+           
+            // if index equals the total reset to 0 
             if (selected == slices.Length) selected = 0;
         }
 
+        //highlight selected slice, dim the others
         for (int i = 0; i < slices.Length; i++)
         {
             slices[i].color = (i == selected) ? highlightColor : baseColor;
         }
 
-        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        //on release either activate an interaction or close wheel
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             CloseWheel(selected);
         }
+
+        */
+
+    }
+
+    private int GetHoveredSlice()
+    {
+        //too close to center so cancel
+        if (cursorPos.magnitude <= deadZone)
+        {
+            return -1;
+        }
+        //normalize turns the cursor pos into DIRECTION only 
+        // we only car which way the cursor points and not its distance from the center
+        Vector2 cursorDirection = cursorPos.normalized;
+
+        //starts at -1/nothing 
+        //this is the index of the closest slice
+        int closeIndex = -1;
+
+        // each slice gets a check for how well it macthes the cursor direction, 
+        // its like a leniency check, so the cursor doesn't focus on EXACTLLY matches the slices and 
+        //allows for some space 
+        float lenCheck = -2f;
+
+        //check every slice 
+        for (int i = 0; i < slices.Length; i++)
+        {
+            //direction from wheel center to this slice
+            Vector2 sliceDir = slices[i].rectTransform.anchoredPosition.normalized;
+
+            //check for leniency
+            float dot = Vector2.Dot(cursorDirection, sliceDir);
+
+            // if this slice matches the cursor direction the most out of all slices, store it as the best index
+            if(dot > lenCheck)
+            {
+                lenCheck = dot;
+                closeIndex = i;
+            }
+
+
+        }
+
+        //after checking everything return the closest index/slice
+        return closeIndex;
 
     }
 

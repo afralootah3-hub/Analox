@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 3343755823735940570}
   - component: {fileID: 92717149652702713}
   - component: {fileID: 3751831856247414300}
-  - component: {fileID: 3616966247679794433}
+  - component: {fileID: 2712265095240972877}
   m_Layer: 0
   m_Name: pCube54
   m_TagString: Untagged
@@ -237,8 +237,8 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3616966247679794433
-MeshCollider:
+--- !u!65 &2712265095240972877
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -255,7 +255,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -7244966762881372308, guid: fa487d5a86237ae42aec9e4fd8c5c048, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.38551524, y: 4.8394456, z: 2.6329389}
+  m_Center: {x: -0.00013068046, y: -0.00000024933075, z: -0.0000018699805}

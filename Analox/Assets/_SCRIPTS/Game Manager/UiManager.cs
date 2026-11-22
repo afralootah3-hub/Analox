@@ -6,6 +6,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 using Yarn.Unity;
 
 
@@ -17,7 +18,6 @@ public class UiManager : MonoBehaviour
     //      Handles     //
 
     // -> handles object inspection system
-
     #region VARIABLES
 
     [Header("UI ELEMENTS")]
@@ -44,7 +44,14 @@ public class UiManager : MonoBehaviour
     [Range(0, 1)]
     public float rotateSpeed = 200f;
 
-    //      PRIVATE REFERENCES      //
+    [Header("NPC INTERACTION STUFF")]
+    public CanvasGroup npcInspectPanel;
+    public TextMeshProUGUI scanInfoTMP;
+    public TextMeshProUGUI reportInfoTMP;
+    public bool isInspectingNPC;
+
+
+    #region ///           PRIVATE REFERENCES    not organized </3         ///
     private Renderer _inspectObjRend; // cache //
     private Transform _inspectedObj;
     private Vector3 _savedPosition;
@@ -56,21 +63,22 @@ public class UiManager : MonoBehaviour
     private bool _rbWasKinematic;
     private bool _isInspecting; //temporary bool, will be swapped to follow state machine instead
 
+    private ItemData _itemDataCache;
+    private Transform _doorTransformCache;
+    private PillManager _pillmanager;
+    private List<string> itemIndex; //stores the itemID's (which is the itemName)//
+    private string _scanString; //cache
+    
 
 
+    #endregion
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemDesc;
     public TextMeshProUGUI scanDesc;
 
     public GameObject scanButton;
 
-    private ItemData _itemDataCache;
 
-    private Transform _doorTransformCache;
-    private PillManager _pillmanager;
-    private List<string> itemIndex; //stores the itemID's (which is the itemName)//
-
-    private string _scanString; //cache
 
     [Tooltip("This is how long doors/drawers wait before closing after opening them")]
     public float doorCooldown = 5f;
@@ -85,6 +93,7 @@ public class UiManager : MonoBehaviour
         scanDesc.text = "";
         activeCam = Camera.main;
         promptCanvas.SetActive(false);
+        npcInspectPanel.gameObject.SetActive(false);
 
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _pillmanager = GetComponent<PillManager>();
@@ -100,6 +109,16 @@ public class UiManager : MonoBehaviour
 
     private void Update()
     {
+        if(isInspectingNPC && (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.rightButton.wasPressedThisFrame))
+        {
+            Debug.Log("Exiting npc inspection");
+            CloseNPCPanel();
+            isInspectingNPC = false;
+        }
+
+        //Debug.Log(isInspectingNPC);
+
+
         UpdatePrompt();
 
         // temporary, swapped to state machine later
@@ -109,8 +128,10 @@ public class UiManager : MonoBehaviour
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             ExitInspect();
+
             return;
         }
+
 
         RotatetInspectedObj();
 
@@ -122,8 +143,10 @@ public class UiManager : MonoBehaviour
         HidePrompt();
         if (_isInspecting) return;
 
+        PillManager.instance.pillButton.SetActive(false);
+
         _isInspecting = true;
-        holdLight.SetActive(true);
+        //holdLight.SetActive(true);
 
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
@@ -240,6 +263,39 @@ public class UiManager : MonoBehaviour
 
     }
 
+    #region NPC Interaction stuff
+    public void OnScannedNPC(npcData nData)
+    {
+        // pull the scan desc (AND UPDATE TO CORKBOARD INFO? Or this gets updated on  manager?? i forgot)
+
+        npcInspectPanel.gameObject.SetActive(true);
+        scanInfoTMP.text = nData.scanDesc;
+
+        isInspectingNPC = true;
+        nData.hasScannedNPC = true;
+
+    }
+
+    public void OnViewNPCInfo(npcData nData)
+    {
+        // viewing the info
+        npcInspectPanel.gameObject.SetActive(true);
+        reportInfoTMP.text = nData.reportInfoDesc;
+
+        isInspectingNPC = true;
+
+    }
+
+    public void CloseNPCPanel()
+    {
+        npcInspectPanel.gameObject.SetActive(false);
+        reportInfoTMP.text = "";
+        _playerCC.setPlayerState(PlayerController.playerState.isIdle);
+        scanInfoTMP.text = "";
+    }
+
+
+    #endregion
 
 
 
@@ -249,8 +305,9 @@ public class UiManager : MonoBehaviour
     public void ExitInspect()
     {
         if (!_isInspecting) return;
-        holdLight.SetActive(false);
+        //holdLight.SetActive(false);
 
+        PillManager.instance.pillButton.SetActive(true);
         itemName.text = "";
         itemDesc.text = "";
         scanDesc.text = "";
@@ -483,12 +540,7 @@ public class UiManager : MonoBehaviour
 
     #region NPC SCAN YARN COMMAND AND STUFF
 
-    [YarnCommand("scanNPC")]
-    public void ScanNPC(string npcName)
-    {
-        // pass the name of the npc we are scanning and display the right text for it :)
-    }
-
+  
 
     #endregion
 
