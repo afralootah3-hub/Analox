@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.ProBuilder.Shapes;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using Yarn.Unity;
@@ -23,8 +26,12 @@ public class GameController : MonoBehaviour
     public GameObject cameraPrefab;
 
     [SerializeField] private LoadRoom _loadRoomCache;
+
     
-     public string MainHouse, Apartment, Bedroom, Office, MainMenu, Credits;
+
+    public string MainHouse, Apartment, Bedroom, Office, MainMenu, Credits;
+
+    public List<Collider> lockedDoors;
 
     private void Update()
     {
@@ -115,6 +122,16 @@ public class GameController : MonoBehaviour
         }
     }
 
+
+    public void DisableDoors()
+    {
+        if (lockedDoors == null) return;
+        foreach(Collider door in lockedDoors)
+        {
+            door.enabled = false;
+        }
+    }
+
     private void OnEnable()
     {
         if(instance == this)
@@ -138,6 +155,9 @@ public class GameController : MonoBehaviour
 
         _loadRoomCache = FindFirstObjectByType<LoadRoom>();
         InsantiateCameraSetup();
+        DisableDoors();
+        if (_playerCC == null) _playerCC = FindFirstObjectByType<PlayerController>();
+        _playerCC.setPlayerState(PlayerController.playerState.isIdle);
 
         if(scene.name == MainHouse)
         {

@@ -21,7 +21,7 @@ public class MenusManager : MonoBehaviour
     4. player drags image around
     5. player can draw red lines conecting evidence (WHICH SHOULD PERSIST ACROSS SCENES) -> use logic from mail game / last year midterm (render on diff 
     */
-    public Button leaveButton, stayButton;
+    
 
     // corkboard var // 
     // restructured later to use tags and custom inspector for easy assinging in inspector//

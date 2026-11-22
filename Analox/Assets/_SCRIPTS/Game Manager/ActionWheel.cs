@@ -85,7 +85,7 @@ public class ActionWheel : MonoBehaviour
         cursorPos = Vector2.ClampMagnitude(cursorPos, maxRadius);
         
         //slices is an array of ui elements
-        int selected = -1; // pick slice, -1 is cancel
+        //int selected = -1; // pick slice, -1 is cancel
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -99,8 +99,32 @@ public class ActionWheel : MonoBehaviour
             cursorDot.anchoredPosition = cursorPos;
         }
 
+        int selected = GetHoveredSlice();
+
+        //color the selected slice with the highlight color
+        //if selected is -1 nothing gets highlighted
+        for (int i = 0; i < slices.Length; i++)
+        {
+            if(i == selected)
+            {
+                slices[i].color = highlightColor;
+            }
+            else
+            {
+                slices[i].color = baseColor;
+            }
+        }
+
+        //on release either activate an interaction or close wheel
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            CloseWheel(selected);
+        }
+
         //determine which slice cursor is pointing at
         //ignore is cursror is too close to center
+
+        /*
         if(cursorPos.magnitude > deadZone)
         {
 
@@ -132,6 +156,52 @@ public class ActionWheel : MonoBehaviour
         {
             CloseWheel(selected);
         }
+
+        */
+
+    }
+
+    private int GetHoveredSlice()
+    {
+        //too close to center so cancel
+        if (cursorPos.magnitude <= deadZone)
+        {
+            return -1;
+        }
+        //normalize turns the cursor pos into DIRECTION only 
+        // we only car which way the cursor points and not its distance from the center
+        Vector2 cursorDirection = cursorPos.normalized;
+
+        //starts at -1/nothing 
+        //this is the index of the closest slice
+        int closeIndex = -1;
+
+        // each slice gets a check for how well it macthes the cursor direction, 
+        // its like a leniency check, so the cursor doesn't focus on EXACTLLY matches the slices and 
+        //allows for some space 
+        float lenCheck = -2f;
+
+        //check every slice 
+        for (int i = 0; i < slices.Length; i++)
+        {
+            //direction from wheel center to this slice
+            Vector2 sliceDir = slices[i].rectTransform.anchoredPosition.normalized;
+
+            //check for leniency
+            float dot = Vector2.Dot(cursorDirection, sliceDir);
+
+            // if this slice matches the cursor direction the most out of all slices, store it as the best index
+            if(dot > lenCheck)
+            {
+                lenCheck = dot;
+                closeIndex = i;
+            }
+
+
+        }
+
+        //after checking everything return the closest index/slice
+        return closeIndex;
 
     }
 

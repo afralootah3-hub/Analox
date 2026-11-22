@@ -68,7 +68,7 @@ public class UiManager : MonoBehaviour
     private PillManager _pillmanager;
     private List<string> itemIndex; //stores the itemID's (which is the itemName)//
     private string _scanString; //cache
-    public Button leaveButton, stayButton;
+    
 
 
     #endregion
@@ -146,7 +146,7 @@ public class UiManager : MonoBehaviour
         PillManager.instance.pillButton.SetActive(false);
 
         _isInspecting = true;
-        holdLight.SetActive(true);
+        //holdLight.SetActive(true);
 
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
@@ -305,7 +305,7 @@ public class UiManager : MonoBehaviour
     public void ExitInspect()
     {
         if (!_isInspecting) return;
-        holdLight.SetActive(false);
+        //holdLight.SetActive(false);
 
         PillManager.instance.pillButton.SetActive(true);
         itemName.text = "";

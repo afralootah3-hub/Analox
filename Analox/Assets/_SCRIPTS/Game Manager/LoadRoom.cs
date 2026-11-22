@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -12,16 +13,23 @@ public class LoadRoom : MonoBehaviour
 
     public GameObject doorChoiceHolder;
 
-    private Button leaveButton, stayButton;
+  
+    
+
+    public Button leaveButton, stayButton;
 
     private PlayerController _playercc;
 
+    private Collider col;
     private bool canInteractDoor;
+
+    private bool _lockDoor;
 
     private void Awake()
     {
         InitalizeDoor();
         doorChoiceHolder.SetActive(false);
+        col = GetComponent<SphereCollider>();
         
     }
     private void Start()
@@ -31,8 +39,9 @@ public class LoadRoom : MonoBehaviour
     public void OpenDoorMenu()
     {
 
-        leaveButton = MenusManager.instance.leaveButton;
-        stayButton = MenusManager.instance.stayButton;
+        
+        
+
 
         _playercc.setPlayerState(PlayerController.playerState.isDisabled);
         doorChoiceHolder.SetActive(true);
@@ -42,9 +51,10 @@ public class LoadRoom : MonoBehaviour
 
 
     #region button functions
-    public void LoadPlayerPos()
+    public void Lockdoor()
     {
-        
+        col.enabled = false;
+        GameController.instance.lockedDoors.Add(col);
     }
 
     public void Update()
@@ -58,8 +68,9 @@ public class LoadRoom : MonoBehaviour
     public void EnterDoor()
     {
         //called by button and invokes method in gamecontroller
-       //  doorChoiceHolder.SetActive(false);
-      
+        //  doorChoiceHolder.SetActive(false);
+
+        if (_lockDoor) Lockdoor();
         GameController.instance.OnSceneLoad(loadTo);
     }
 
@@ -76,10 +87,11 @@ public class LoadRoom : MonoBehaviour
 
     public void InitalizeDoor() //called by gamecontroller onsceneLoad :D
     {
-        doorChoiceHolder = GameObject.FindGameObjectWithTag("DoorHolder");
+        //doorChoiceHolder = GameObject.FindGameObjectWithTag("DoorHolder");
         _playercc = FindFirstObjectByType<PlayerController>();
         doorChoiceHolder.SetActive(false);
         Debug.Log("Loaded Door");
+
 
         if (doorChoiceHolder == null || _playercc == null) Debug.LogWarning("DOOR FAILED TO GRAB COMPONENT");
     }
