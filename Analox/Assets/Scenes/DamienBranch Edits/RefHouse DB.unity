@@ -1733,7 +1733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f757b95cb30ac64ea4ca9650fd21f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  loadTo: RefScene
+  loadTo: RefScene DB
   spawnPoint: {fileID: 1328384431120515870}
   doorChoiceHolder: {fileID: 1825621378}
   leaveButton: {fileID: 331702784}
@@ -1883,6 +1883,10 @@ PrefabInstance:
     - target: {fileID: 284190242715344627, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
       propertyPath: Bedroom
       value: RefScene DB
+      objectReference: {fileID: 0}
+    - target: {fileID: 284190242715344627, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
+      propertyPath: Apartment
+      value: RefHouse DB
       objectReference: {fileID: 0}
     - target: {fileID: 284190242715344627, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
       propertyPath: MainHouse

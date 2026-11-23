@@ -11,19 +11,19 @@ title: ActOneSceneTwoDashTwo
 LENNOX: Colorful cast.
 REEVES: My thoughts exactly. How do you want to proceed?
 
--> Inform me on the women on the left with the tailored jumpsuit. ///(If you click on VOSS)
+-> Inform me on the women on the left with the tailored jumpsuit. //(If you click on VOSS)
     <<jump VOSSintro>>
 
--> Inform me of the big, scruffy guy wth the badly dyed hair. ///(If you click on DRACO)
+-> Inform me of the big, scruffy guy wth the badly dyed hair. //(If you click on DRACO)
     <<jump DRACOintro>>
 
--> Inform me on the stout man with freckles and dead eyes. ///(If you click on RIDDICK)
+-> Inform me on the stout man with freckles and dead eyes. //(If you click on RIDDICK)
     <<jump RIDDICKintro>>
 
--> Inform me on the rightmost woman, who looks like she's seasick. ///(If you click on ECHO)
+-> Inform me on the rightmost woman, who looks like she's seasick. //(If you click on ECHO)
     <<jump ECHOintro>>
 
--> No need, Eve. ///(If you choose to skip)
+-> No need, Eve. //(If you choose to skip)
     LENNOX: We can move on. I’ve read the file.
     REEVES: Very well then. You can always look in your logs if you need a refresher.
     REEVES: So if that's all; let's get started.
@@ -35,6 +35,7 @@ REEVES: My thoughts exactly. How do you want to proceed?
 
 title: VOSSintro
 ---
+<<AddNPC "VOSS">>
 REEVES: Voss Axiom, 42. She’s the COO of AN.
 LENNOX: Nova Axiom’s eldest daughter, then?
 REEVES: She is. She supposedly helped organize the party; encouraged it even, with the help of her husband.
@@ -42,7 +43,11 @@ LENNOX: Why would she even be on this list? Shouldn’t she have already been in
 REEVES: Should’ve been, yes. She refused to participate in any kind of interviews while in mourning. We had to press hard just for her to agree to come here today.
 LENNOX: Sounds like a delightful character.
 -> *Approach.*
-    VOSS: 
+    VOSS: Hm? Can I help you?
+    LENNOX: Considering this an investigation, I assume we can help each other, actually.
+    VOSS: Oh? Are you the new investigator? 
+    LENNOX: For the remainder of this case, yes.
+    VOSS: How delightful. I hope you aren't as incompetent as the others.
 -> *Move on.*
     <<jump ActOneSceneTwoDashTwo>>
     LENNOX: Let's move on.
@@ -115,44 +120,20 @@ VOSS: I see you're done with your snooping around, Lysander.
 VOSS: In which case I suppose I'm next on the chopping block?
 -> *Ask about her*
     VOSS: What business do you have to know about me? You’re here to find out what happened to my idiot brother.
-    LENNOX:
+    //LENNOX:
     -> *Persist*
+        <<jump VossQuestions>>
         VOSS: Lovely, you’re one of those.
         VOSS: What would you even want to know that isn't already globally known?
         VOSS: Eldest Daughter of Nova Axiom, PR rep, planning, syncing. 
         VOSS: There’s nothing special to it. I’m just a woman who keeps up with her job.
     -> *Let up*
         VOSS: That's what I figured.
-    -> *Pester* If scanned ///-1 sanity
-        LENNOX: Classic life you have there.
-        VOSS: What are you saying?
-        LENNOX: Husband, two children. Good job. I’d assume you’re the breadwinner, given that it's a family business n all.
-        VOSS: …I’m positive I never mentioned my children to you at any point, detective. 
-        VOSS: And even if I had, in no way are they relevant to the conversation.
-        -> *Proceed* ///-1 Sanity
-            LENNOX:  Being the pride and joy of such a large company must be extremely taxing for you.
-            VOSS: You are being extremely uncalled for.
-            VOSS: How do you even know any of these things?
-            LENNOX: Just keeping myself informed.
-            REEVES: Lysen, I'm with her. That wasn't information provided in the file. 
-            LENNOX: Don't worry about it Eve.
 
-    -> *Stop*
-        LENNOX: ...nevermind me.
-        VOSS: ...
-        VOSS: sure
-        REEVES: What the hell was that, Lysen?
-        LENNOX: ...just experimenting a bit with my approach.
-
-    -> *Threaten* [-1 Sanity]
-        LENNOX: Would it not be easier to admit your wrong now and take a plea deal.
-        LENNOX: I’d assume most children would prefer to have their mother in their life.
-        VOSS: H-How dare you…! Who do you think you are, accusing me then threatening the wellbeing of my children?
-        VOSS: I have no clue who the fuck you think you are, but I promise you, you will have so, so many more problems if you don’t fix your act. 
-        VOSS: I’m done talking to you.
-
-///interrogations
-<<if HasItem ("Watch")>>
+===
+title: VossQuestions
+---
+<<if HasItem("Wrist Watch")>>
 VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.”
 -> Drift?
     VOSS: “Precisely”
@@ -165,7 +146,7 @@ VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few y
 
 <<endif>>
 
-<<if HasItem ("Pills")>>
+<<if HasItem("Emptied pill bottle")>>
 
 VOSS: He still hasn’t thrown out the damn-
 VOSS: ...slob of a man.
@@ -177,13 +158,42 @@ VOSS: ...slob of a man.
             VOSS: Is that actually any of your business?
             -> Considering its an install that killed him, I think it’s at least fair to know if the medicine had anything to do with it.
                 VOSS: …you investigators are so, incredibly stingy. Look it up.
-
-
-<<endif>>
-<<if HasItem ("Pills_scan")>>
+<<elseif HasItem ("Pills_scanned")>>
 VOSS: Besides, you seem like you’re asking questions you already have the answer to at this point. Don’t waste my time.
 <<endif>>
 ===
+
+        //LENNOX: Classic life you have there.
+        //VOSS: What are you saying?
+        //LENNOX: Husband, two children. Good job. 
+        //LENNOX: I’d assume you’re the breadwinner, given that it's a family business n all.
+        //LENNOX: You even keep them out of the public eye, To prevent harrassment?
+        //VOSS: …I’m positive I never mentioned my children to you at any point, detective. 
+        //VOSS: And even if I had, in no way are they relevant to the conversation.
+        //-> *Proceed* //-1 Sanity
+        //    LENNOX:  Being the pride and joy of such a large company must be extremely taxing for you.
+        //    VOSS: You are being extremely uncalled for.
+        //    VOSS: How do you even know any of these things?
+        //    LENNOX: Just keeping myself informed.
+        //    REEVES: Lysen, I'm with her. That wasn't information provided in the file. 
+        //    LENNOX: Don't worry about it Eve.
+
+   // -> *Stop*
+       // LENNOX: ...nevermind me.
+        //VOSS: ...
+       // VOSS: sure
+       // REEVES: What the hell was that, Lysen?
+       // LENNOX: ...just experimenting a bit with my approach.
+
+   // -> *Threaten* [-1 Sanity]
+       // LENNOX: Would it not be easier to admit your wrong now and take a plea deal.
+       // LENNOX: I’d assume most children would prefer to have their mother in their life.
+       // VOSS: H-How dare you…! Who do you think you are, accusing me then threatening the wellbeing of my children?
+       // VOSS: I have no clue who the fuck you think you are, but I promise you, you will have so, so many more problems if you don’t fix your act. 
+       // VOSS: I’m done talking to you.
+        
+
+//interrogations
 
 title: DRACOspeak
 ---
