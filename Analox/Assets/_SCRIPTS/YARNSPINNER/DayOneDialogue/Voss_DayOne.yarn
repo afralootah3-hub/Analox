@@ -1,0 +1,137 @@
+﻿title: VossstartDay1
+---
+<<jump playtestNode>>
+This is an example/Reference of how to set up dialog
+
+The first node of Dialog MUST be named in this manner
+The Starting Node set in the NPCData scriptable object attached
+to the npcInteract
+AND 'startDay1' or 'startDay2/3/4' depending on what day this dialog is for
+
+! its best to keep all dialog for a character across days on one big YS script,
+and break it up into different days instead of multiple scripts
+
+How to check if player has an item?
+
+You can check if the player has obtained evidence that has either been
+SCANNED or NOT SCANNED using this command. 
+
+<<if HasItem("objectID")>>
+if the player has that object then anything written here
+will be run 
+
+! the objectID is the OBJECT HOLDERS NAME 
+^ the inspectable object that has the interactableObj script 
+NOT ITS CHILD 
+<<endif>>
+
+! if you want to check if the player has an item that 
+WAS SCANNED. then you run this command a little differently.
+<<if HasItem("objectID_scan")>>
+
+! this will be the same objectID but with _scan 
+^^^ do not edit the gameobject's name to include _scan,
+the scripts will automatically add it to inventory with that 
+
+<<endif>>
+
+<<jump VOSSintro>>
+===
+
+title: VOSSintro
+---
+<<AddNPC "VOSS">>
+REEVES: Voss Axiom, 42. She’s the COO of AN.
+LENNOX: Nova Axiom’s eldest daughter, then?
+REEVES: She is. She supposedly helped organize the party; encouraged it even, with the help of her husband.
+LENNOX: Why would she even be on this list? Shouldn’t she have already been interviewed?
+REEVES: Should’ve been, yes. She refused to participate in any kind of interviews while in mourning. We had to press hard just for her to agree to come here today.
+LENNOX: Sounds like a delightful character.
+-> *Approach.*
+    VOSS: Hm? Can I help you?
+    LENNOX: Considering this an investigation, I assume we can help each other, actually.
+    VOSS: Oh? Are you the new investigator? 
+    LENNOX: For the remainder of this case, yes.
+    VOSS: How delightful. I hope you aren't as incompetent as the others.
+-> *Move on.*
+    LENNOX: Let's move on.
+    <<jump ActOneSceneTwoDashTwo>>
+===
+
+title: VossSpeakstartDay1
+---
+VOSS: I see you're done with your snooping around, Lysander.
+VOSS: In which case I suppose I'm next on the chopping block?
+-> *Ask about her*
+    VOSS: What business do you have to know about me? You’re here to find out what happened to my idiot brother.
+    //LENNOX:
+    -> *Persist*
+        <<jump VossQuestions>>
+        VOSS: Lovely, you’re one of those.
+        VOSS: What would you even want to know that isn't already globally known?
+        VOSS: Eldest Daughter of Nova Axiom, PR rep, planning, syncing. 
+        VOSS: There’s nothing special to it. I’m just a woman who keeps up with her job.
+    -> *Let up*
+        VOSS: That's what I figured.
+
+===
+title: VossQuestions
+---
+<<if HasItem("Wrist Watch")>>
+VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.”
+-> Drift?
+    VOSS: “Precisely”
+    —> A gift? For what?
+        VOSS: “From what Cipher said, Draco pulled off something huge for him. That watch was a thank you. 
+        VOSS: Besides, let's be realistic. Drift couldn’t afford something like this.”
+        -> You're implying the existence of an interesting bond.
+            VOSS: “Who am I to say? Cipher always had an interesting fixation for strays. Much to the family’s dismay. 
+            VOSS: It’s never ended well, and now look at him.”
+
+<<endif>>
+
+<<if HasItem("Emptied pill bottle")>>
+
+VOSS: He still hasn’t thrown out the damn-
+VOSS: ...slob of a man.
+-> You know what these are?
+    VOSS: Of course I do; those are Cipher’s old meds.
+    –> For?
+        VOSS: His install. But he stopped needing to take them about half a year ago. Guess he never finished them until somewhat recently.
+        -> May I ask how and why you know that?
+            VOSS: Is that actually any of your business?
+            -> Considering its an install that killed him, I think it’s at least fair to know if the medicine had anything to do with it.
+                VOSS: …you investigators are so, incredibly stingy. Look it up.
+<<elseif HasItem ("Pills_scanned")>>
+VOSS: Besides, you seem like you’re asking questions you already have the answer to at this point. Don’t waste my time.
+<<endif>>
+===
+
+        //LENNOX: Classic life you have there.
+        //VOSS: What are you saying?
+        //LENNOX: Husband, two children. Good job. 
+        //LENNOX: I’d assume you’re the breadwinner, given that it's a family business n all.
+        //LENNOX: You even keep them out of the public eye, To prevent harrassment?
+        //VOSS: …I’m positive I never mentioned my children to you at any point, detective. 
+        //VOSS: And even if I had, in no way are they relevant to the conversation.
+        //-> *Proceed* //-1 Sanity
+        //    LENNOX:  Being the pride and joy of such a large company must be extremely taxing for you.
+        //    VOSS: You are being extremely uncalled for.
+        //    VOSS: How do you even know any of these things?
+        //    LENNOX: Just keeping myself informed.
+        //    REEVES: Lysen, I'm with her. That wasn't information provided in the file. 
+        //    LENNOX: Don't worry about it Eve.
+
+   // -> *Stop*
+       // LENNOX: ...nevermind me.
+        //VOSS: ...
+       // VOSS: sure
+       // REEVES: What the hell was that, Lysen?
+       // LENNOX: ...just experimenting a bit with my approach.
+
+   // -> *Threaten* [-1 Sanity]
+       // LENNOX: Would it not be easier to admit your wrong now and take a plea deal.
+       // LENNOX: I’d assume most children would prefer to have their mother in their life.
+       // VOSS: H-How dare you…! Who do you think you are, accusing me then threatening the wellbeing of my children?
+       // VOSS: I have no clue who the fuck you think you are, but I promise you, you will have so, so many more problems if you don’t fix your act. 
+       // VOSS: I’m done talking to you.
