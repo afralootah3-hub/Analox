@@ -12,6 +12,7 @@ TagManager:
   - DoorHolder
   - stayButton
   - leaveButton
+  - drawCam
   layers:
   - Default
   - TransparentFX

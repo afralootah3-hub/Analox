@@ -23,7 +23,7 @@ public class LoadRoom : MonoBehaviour
     private Collider col;
     private bool canInteractDoor;
 
-    private bool _lockDoor;
+    public bool _lockDoor;
 
     private void Awake()
     {
@@ -38,9 +38,6 @@ public class LoadRoom : MonoBehaviour
     }
     public void OpenDoorMenu()
     {
-
-        
-        
 
 
         _playercc.setPlayerState(PlayerController.playerState.isDisabled);

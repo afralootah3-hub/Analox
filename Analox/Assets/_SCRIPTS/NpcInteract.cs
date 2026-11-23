@@ -76,6 +76,7 @@ public class NpcInteract : MonoBehaviour
 
     private void OnEnable()
     {
+        if (dialogdata.npcDialogue == null) dialogdata.npcDialogue = FindFirstObjectByType<DialogueRunner>();
         //PlayerUI.instance.changePhase.AddListener(getStoryPhase);
         dialogdata.npcDialogue.onDialogueComplete.AddListener(OnDialogEnd);
     }

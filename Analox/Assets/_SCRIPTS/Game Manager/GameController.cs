@@ -158,6 +158,7 @@ public class GameController : MonoBehaviour
         DisableDoors();
         if (_playerCC == null) _playerCC = FindFirstObjectByType<PlayerController>();
         _playerCC.setPlayerState(PlayerController.playerState.isIdle);
+        MenusManager.instance.CloseCork();
 
         if(scene.name == MainHouse)
         {
