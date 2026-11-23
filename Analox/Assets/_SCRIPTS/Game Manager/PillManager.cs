@@ -20,6 +20,7 @@ public class PillManager : MonoBehaviour
     [Space(20)]
     [Header("SETTINGS")]
     public int pillsLeft;
+    public int maxPills = 5;
     public int currentSanity = 5;
     public int maxSanity = 5;
     // sanity increments visibility of the vignette , pill resets the vignette to 0
@@ -52,6 +53,9 @@ public class PillManager : MonoBehaviour
     public RectTransform pointerTransform;
     private DialogueRunner _dialogRunner;
     [SerializeField] private string _pillRejectDialog;
+    [SerializeField] private string _failQTEDialog;
+    [SerializeField] private string _yellowQTEDialog;
+    [SerializeField] private string _ranOutOfPillsDialog;
 
     [Header("SHAKE QTE UI")]
     public RectTransform _uiHolderTransfrom;
@@ -89,7 +93,7 @@ public class PillManager : MonoBehaviour
         currentStealth = maxStealth;
         qteGroup.alpha = 0;
         _pCC = FindAnyObjectByType<PlayerController>();
-        
+        pillsLeft = maxPills;
         _SanityEffect.SetFloat("_Blend", 0);
         _audioSource = GetComponent<AudioSource>();
         _audioSource.volume = 0;
@@ -99,6 +103,7 @@ public class PillManager : MonoBehaviour
         pillChoiceHolder.SetActive(false);
         // move to onsceneload //
         _dialogRunner = FindFirstObjectByType<DialogueRunner>();
+        pillAmount.text = pillsLeft.ToString();
        
         _mainCamera = Camera.main;
         _brain = _mainCamera.GetComponent<CinemachineBrain>();
@@ -132,34 +137,60 @@ public class PillManager : MonoBehaviour
     /// </summary>
     /// <param name="amt"></param>
     /// <param name="isReset"></param>
-    public void SetSanity(int amt, bool isReset) //amt doesn't matter if we're resetting
+    public void SetSanity(int amt) //amt doesn't matter if we're resetting
     {
-        float alphaamt = (amt) / 3f;
+        //float alphaamt = (amt) / 3f;
 
-        Debug.Log("alpha amount is " + alphaamt);
-        Debug.Log("amt is " + amt);
-        //Debug.Log(vignetteEffect.alpha);
-        // split either 1 or -1 by 5 to equally increase alpha
+        //Debug.Log("alpha amount is " + alphaamt);
+        //Debug.Log("amt is " + amt);
+        ////Debug.Log(vignetteEffect.alpha);
+        //// split either 1 or -1 by 5 to equally increase alpha
+
+
+        //if (isReset == true) // reset it/ its cleared
+        //{
+        //    //vignetteEffect.alpha = 0;
+        //    _SanityEffect.SetFloat("_Blend", 0);
+        //    _audioSource.volume = 0;
+        //}
+        //else //if we're NOT reseting sanity
+        //{
+        //    currentSanity += amt;
+        //    //vignetteEffect.alpha -= alphaamt;
+        //    _SanityEffect.SetFloat("_Blend", -0.2f);
+        //    Debug.Log(_SanityEffect.GetFloat("_Blend"));
+        //    _audioSource.volume = 1;
+
+        //    //debug
+        //    //_audioSource.Play();
+
+        //}
+
+        currentSanity += amt;
+
+        if(currentSanity == maxSanity)
+        {
+            _SanityEffect.SetFloat("_Blend", 0);
+        }
+        else if(currentSanity == 4)
+        {
+            _SanityEffect.SetFloat("_Blend", 0.1f);
+        }
+        else if (currentSanity == 3)
+        {
+            _SanityEffect.SetFloat("_Blend", 0.3f);
+        }
+        else if(currentSanity <= 2)
+        {
+            _SanityEffect.SetFloat("_Blend", 0.6f);
+        }
+        
         
 
-        if (isReset == true) // reset it/ its cleared
-        {
-            //vignetteEffect.alpha = 0;
-            _SanityEffect.SetFloat("_Blend", 0);
-            _audioSource.volume = 0;
-        }
-        else //if we're NOT reseting sanity
-        { 
-            currentSanity += amt;
-            //vignetteEffect.alpha -= alphaamt;
-            _SanityEffect.SetFloat("_Blend", -0.2f);
-            Debug.Log(_SanityEffect.GetFloat("_Blend"));
-            _audioSource.volume = 1;
+       
 
-            //debug
-            //_audioSource.Play();
 
-        }
+
 
     }
 
@@ -216,13 +247,6 @@ public class PillManager : MonoBehaviour
         }
 
 
-        // DEBUG STUFF
-       
-        if (Keyboard.current.commaKey.wasPressedThisFrame)
-        {
-            currentSanity -= 1;
-            Debug.Log("CURRENT SANITY INCREAED " + currentSanity);
-        }
 
     }
 
@@ -260,6 +284,14 @@ public class PillManager : MonoBehaviour
             beginDialogLine(_pillRejectDialog);
             return;
         }
+
+        if(pillsLeft == 0)
+        {
+            Debug.Log("NO PILLS LEFT CANCELLING QTE");
+            beginDialogLine(_ranOutOfPillsDialog);
+            return;
+        }
+
 
         float cAmp = 0;
         float cFreq = 0;
@@ -363,26 +395,35 @@ public class PillManager : MonoBehaviour
 
     private void CheckQTESucess()
     {
+
         if(RectTransformUtility.RectangleContainsScreenPoint(greenZone, pointerTransform.position, null))
         {
             Debug.Log("QTE SUCCESS");
             _qteHitGreen = true;
+            SetSanity(2);
         }
         else if(RectTransformUtility.RectangleContainsScreenPoint(yellowZone, pointerTransform.position, null))
         {
             Debug.Log("QTE HIT YELLOW");
+            beginDialogLine(_yellowQTEDialog);
             _qteHitYellow = true;
+            SetSanity(1);
         }
         else
         {
             Debug.Log("QTE FAIL"); //call function
             _qteFailed = true;
+            SetSanity(-1);
+            beginDialogLine(_failQTEDialog);
         }
         _pCC.setPlayerState(PlayerController.playerState.isIdle);
+        pillsLeft -= 1;
+        Debug.Log(pillsLeft);
         _qteActive = false;
         qteGroup.alpha = 0;
         EndCameraShake();
         EndUIShake();
+        pillAmount.text = pillsLeft.ToString();
 
     }
 

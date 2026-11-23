@@ -1,12 +1,32 @@
-﻿title: UiDialog
----
+﻿
 // This yarnscript is for tutorial/specific needs like
 // a dialog line after taking a pill, or trying to take one when sanity is high
 // dialog after failing the QTE event
 // or just anything that you don't want to link to a specific character
-===
+// these nodes get called through scripts.
+
+
+//IF you want to alter variables in another YScript, you can do it from this one,
+// as all YScripts share variables 
+
+// (ex if you want to update the relationship stats they have with their assitant if they fail the QTE)//
+
 title: FullSanity
 ---
 //called when trying to take a pill even though sanity is high
 I don't feel the need to take anything right now.
+===
+title: QteFail
+---
+//put dialog you want to play when the player fails a QTE 
+Placeholder line for failing QTE
+===
+title: QteYellow
+---
+//put dialog you want to play when the player hits the yellow bar on a QTE
+Placeholder line for hitting yellow bar on QTE
+===
+title: NoPills
+---
+Placeholder line for no pills left 
 ===

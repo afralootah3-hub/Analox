@@ -843,7 +843,7 @@ GameObject:
   - component: {fileID: 5299940342304108114}
   - component: {fileID: 7529539300215032319}
   m_Layer: 5
-  m_Name: RoomCanvas 1
+  m_Name: HouseCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
