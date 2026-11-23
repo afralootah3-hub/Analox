@@ -25,6 +25,9 @@ public class CameraSwap : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (mainholdpoint == null) mainholdpoint = GameObject.FindGameObjectWithTag("mainHoldPoint").GetComponent<Transform>();
+        if (playercc == null) playercc = FindFirstObjectByType<PlayerController>();
+        if (_ui == null) _ui = FindFirstObjectByType<UiManager>();
         if (other.CompareTag("Player"))
         {
             //activeCam.enabled = false;
