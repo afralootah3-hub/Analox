@@ -13,5 +13,19 @@ MonoBehaviour:
   m_Name: ECHO
   m_EditorClassIdentifier: Assembly-CSharp::npcData
   npcName: Echo
-  startingNode: ECHOintro
+  imageTexture: {fileID: 0}
+  basicDesc: Echo Proxy
+  scanDesc: 'Echo is the mentee of Riddick. He has, in some form, taught her much
+    of what she knows and understands about extensive tech. She has applied to Axiom
+    Networks before and has yet to hear back.
+
+
+    Her current studies revolve around
+    advanced biomechanics. Supposedly, some of those studies can be found somewhere
+    in the house. '
+  reportInfoDesc: "Proxy, Echo\n26 years old\nGraduate student at xxx university
+    \nOriginally from the Hammer\n\nA plus one at the party, brought by Riddick Vector.\n\nTestimonies
+    state Echo was speaking to two other attendees about school-related subjects."
+  startingNode: 
   currentPhase: 0
+  hasScannedNPC: 0

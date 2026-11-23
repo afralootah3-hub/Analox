@@ -19,14 +19,19 @@ I don't feel the need to take anything right now.
 title: QteFail
 ---
 //put dialog you want to play when the player fails a QTE 
-Placeholder line for failing QTE
+REEVES: Lennox? Whats going on over there?
+LENNOX: W-What do you mean?
+REEVES: Your hands are shaking. Is everything OK?
+LENNOX: Yeah, I'm good. Don't worry about it.
 ===
 title: QteYellow
 ---
 //put dialog you want to play when the player hits the yellow bar on a QTE
-Placeholder line for hitting yellow bar on QTE
+REEVES: Lysen? Is everything OK over there? You've been still for a while.
+LENNOX: Y-yeah, just needed a moment.
+*Damn, she noticed..*
 ===
 title: NoPills
 ---
-Placeholder line for no pills left 
+*Any more of these and I'll be out cold.* 
 ===

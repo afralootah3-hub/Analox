@@ -13,5 +13,37 @@ MonoBehaviour:
   m_Name: RIDDICK
   m_EditorClassIdentifier: Assembly-CSharp::npcData
   npcName: Riddick
-  startingNode: RIDDICKintro
+  imageTexture: {fileID: 0}
+  basicDesc: Riddick Vector
+  scanDesc: 'Riddick has a younger sister known as Ruby. There has not been any significantly
+    documented contact between the two over the past decade.
+
+
+    Public records
+    show Ruby is in the hospital comatose, and her billing is taken care of by an
+    "Anonymous Benefactor".
+
+
+    Before working at Axiom Networks, it seems as if
+    Riddick has extensive experience working with installs. '
+  reportInfoDesc: 'Vector, Riddick
+
+    37 years old
+
+    An I.T. programmer at Axiom
+    Networks
+
+    Originally from the Hammer.
+
+
+    A guest at the party, and supposedly
+    once a close friend of the victim.
+
+
+    Testimonies state Riddick was in the
+    dining room, helping a guest at the afterparty fix one of their biomods.
+
+'
+  startingNode: 
   currentPhase: 0
+  hasScannedNPC: 0
