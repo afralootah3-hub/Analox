@@ -1,0 +1,31 @@
+﻿title: DayOne_ScenesstartDay1
+---
+//This is an example of a Yarn Spinner script. Write your dialogue here!
+<<jump ActOneSceneTwoDashTwo>>
+===
+
+title: ActOneSceneTwoDashTwo
+---
+LENNOX: Colorful cast.
+REEVES: My thoughts exactly. How do you want to proceed?
+
+-> Inform me on the women on the left with the tailored jumpsuit. //(If you click on VOSS)
+    <<jump VOSSintro>>
+
+-> Inform me of the big, scruffy guy wth the badly dyed hair. //(If you click on DRACO)
+    <<jump DRACOintro>>
+
+-> Inform me on the stout man with freckles and dead eyes. //(If you click on RIDDICK)
+    <<jump RIDDICKintro>>
+
+-> Inform me on the rightmost woman, who looks like she's seasick. //(If you click on ECHO)
+    <<jump ECHOintro>>
+
+-> No need, Eve. //(If you choose to skip)
+    LENNOX: We can move on. I’ve already read the file.
+    REEVES: Very well then. You can always look in your logs if you need a refresher.
+    REEVES: So if that's all; let's get started.
+    LENNOX: Right.
+    <<Notify Fin>>
+
+===
