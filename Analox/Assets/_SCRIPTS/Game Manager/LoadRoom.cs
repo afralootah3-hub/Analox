@@ -9,7 +9,7 @@ public class LoadRoom : MonoBehaviour
     public string loadTo;
     [Header("This is where the player SPAWNS when they \n enter this room.")]
     public Transform spawnPoint;
-    public Transform roomSpawn; //if we dont need to track lastpos
+   // public Transform roomSpawn; //if we dont need to track lastpos
 
     public GameObject doorChoiceHolder;
 

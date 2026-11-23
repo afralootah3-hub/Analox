@@ -125,7 +125,7 @@ public class UiManager : MonoBehaviour
         if (!_isInspecting || _inspectedObj == null) return; //if already inspecting ignore
 
         // temp 
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame || (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.rightButton.wasPressedThisFrame) )
         {
             ExitInspect();
 
@@ -244,7 +244,7 @@ public class UiManager : MonoBehaviour
         // when click button to scan (or whatever you do)
 
         // do some animation/transition stuff and show text 
-        _pillmanager.SetSanity(-1, false);
+        _pillmanager.SetSanity(-1);
         scanDesc.text = _scanString; //set string 
         _itemDataCache.wasScanned = true; //set true so you dont need to rescan 
         scanButton.SetActive(false);
@@ -270,7 +270,7 @@ public class UiManager : MonoBehaviour
 
         npcInspectPanel.gameObject.SetActive(true);
         scanInfoTMP.text = nData.scanDesc;
-
+        _pillmanager.SetSanity(-1);
         isInspectingNPC = true;
         nData.hasScannedNPC = true;
 
@@ -538,11 +538,7 @@ public class UiManager : MonoBehaviour
 
     #endregion
 
-    #region NPC SCAN YARN COMMAND AND STUFF
-
-  
-
-    #endregion
+    
 
 
 }

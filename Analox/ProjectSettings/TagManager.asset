@@ -13,6 +13,8 @@ TagManager:
   - stayButton
   - leaveButton
   - drawCam
+  - mainHoldPoint
+  - pText
   layers:
   - Default
   - TransparentFX

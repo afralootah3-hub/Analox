@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
 
         //Debug.Log(currentState);
 
-        if(_doorInRange != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+        if(_doorInRange != null && Keyboard.current.spaceKey.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame)
         {
             _ui.OpenDoor(_doorInRange);
         }
@@ -357,6 +357,9 @@ public class PlayerController : MonoBehaviour
 
     public void OnRotatePerformed(InputAction.CallbackContext context)
     {
+        if (_cameraHolder == null) ReloadPlayerVariables();
+
+
         if (_InputBlocked || _isRotating || fixedCamera || _cameraHolder == null) {
             Debug.Log(_InputBlocked + "" + _isRotating + fixedCamera + _cameraHolder);
             
