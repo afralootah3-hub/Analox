@@ -93,6 +93,9 @@ public class MenusManager : MonoBehaviour
     {
         corkBoardHolder.SetActive(false);
         _corkMenuOpen = false;
+
+        if (drawingCam == null) drawingCam = GameObject.FindGameObjectWithTag("drawCam").GetComponent<Camera>();
+
         drawingCam.enabled = false;
         _canDraw = false;
         _playercc = FindFirstObjectByType<PlayerController>();
@@ -109,15 +112,36 @@ public class MenusManager : MonoBehaviour
     {
         if (Keyboard.current.tabKey.wasPressedThisFrame)
         {
+            if (!_corkMenuOpen && PlayerController.instance.currentState == PlayerController.playerState.isDisabled)
+            {
+                //if menu isn't open but we're trying to open don't
+                Debug.LogWarning("ATTEMPTING TO OPEN WHILE PLAYER IS DISABLED");
+                return;
+                
+            }
+
             ToggleMenu();
             //ToggleDrawing();
+
             
+
+            if (_playercc == null) _playercc = FindFirstObjectByType<PlayerController>();
         }
     }
 
     public void ToggleMenu()
     {
-        if (_corkMenuOpen) CloseCork(); else OpenCork();
+        if (_corkMenuOpen)
+        {
+            PlayerController.instance.setPlayerState(PlayerController.playerState.isIdle);
+            CloseCork();
+        }
+        else
+        {
+            OpenCork();
+            PlayerController.instance.setPlayerState(PlayerController.playerState.isDisabled);
+            
+        }
     }
 
     public void ToggleDrawing()
@@ -143,6 +167,7 @@ public class MenusManager : MonoBehaviour
     public void OpenCork()
     {
         corkBoardHolder.SetActive(true);
+        if (drawingCam == null) drawingCam = GameObject.FindGameObjectWithTag("drawCam").GetComponent<Camera>();
         drawingCam.enabled = true;
         _corkMenuOpen = true;
         _playercc.setPlayerState(PlayerController.playerState.isDisabled);

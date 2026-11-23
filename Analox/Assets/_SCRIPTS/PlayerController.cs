@@ -223,6 +223,8 @@ public class PlayerController : MonoBehaviour
 
         if (currentState == playerState.isDisabled) return;
 
+        if (_pActiveCam == null) _pActiveCam = Camera.main;
+
         if (_InputBlocked) return;
         Debug.Log("CLICKED");
 

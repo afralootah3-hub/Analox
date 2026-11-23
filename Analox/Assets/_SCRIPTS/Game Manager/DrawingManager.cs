@@ -46,13 +46,17 @@ public class DrawingManager : MonoBehaviour
 
     void Update()
     {
-        
+            
            Drawing();
 
         Debug.Log(MenusManager.instance._canDraw);
         
 
-
+        if(drawingCam == null)
+        {
+            drawingCam = GameObject.FindGameObjectWithTag("drawCam").GetComponent<Camera>();
+            return;
+        }
 
     }
 
@@ -109,8 +113,8 @@ public class DrawingManager : MonoBehaviour
         _lineRenderer.SetPosition(1, mousePos);
         _lastPos = mousePos;
 
-        _lineRenderer.startWidth = 0.05f;
-        _lineRenderer.endWidth = 0.05f;
+        //_lineRenderer.startWidth = 0.05f;
+        //_lineRenderer.endWidth = 0.05f;
     }
 
     // change this to an eraser and detect if theres a line renderer within the trigger zone and if there is destory it
