@@ -66,11 +66,11 @@ VOSS: In which case I suppose I'm next on the chopping block?
     VOSS: What business do you have to know about me? You’re here to find out what happened to my idiot brother.
     //LENNOX:
     -> *Persist*
-        <<jump VossQuestions>>
         VOSS: Lovely, you’re one of those.
         VOSS: What would you even want to know that isn't already globally known?
         VOSS: Eldest Daughter of Nova Axiom, PR rep, planning, syncing. 
         VOSS: There’s nothing special to it. I’m just a woman who keeps up with her job.
+        <<jump VossQuestions>>
     -> *Let up*
         VOSS: That's what I figured.
 
@@ -81,7 +81,7 @@ title: VossQuestions
 VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.”
 -> Drift?
     VOSS: “Precisely”
-    —> A gift? For what?
+    -> A gift? For what?
         VOSS: “From what Cipher said, Draco pulled off something huge for him. That watch was a thank you. 
         VOSS: Besides, let's be realistic. Drift couldn’t afford something like this.”
         -> You're implying the existence of an interesting bond.
