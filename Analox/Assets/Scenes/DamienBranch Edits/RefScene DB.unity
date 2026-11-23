@@ -12160,6 +12160,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3539394573878452916, guid: e7c7a7cf47d8da947b86dfc85dd531ef, type: 3}
+      propertyPath: loadTo
+      value: RefHouse DB
+      objectReference: {fileID: 0}
+    - target: {fileID: 3539394573878452916, guid: e7c7a7cf47d8da947b86dfc85dd531ef, type: 3}
       propertyPath: stayButton
       value: 
       objectReference: {fileID: 8604601909888548987}
