@@ -5,9 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class Buttons : MonoBehaviour
 {
+    public string startScene;
     public void Play()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(startScene);
     }
     
 
