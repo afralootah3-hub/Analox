@@ -1,28 +1,27 @@
-﻿title: AnaloxstartDay1
+title: AnaloxstartDay1
 ---
-**Quick note for those playing:
-**Not all of the characters have interrogation dialog for reading pleasure
-**Please keep this in mind
+Quick note for those playing:
+Not all of the characters have interrogation dialog for reading pleasure
+Please keep this in mind
 <<jump ActOneSceneTwoDashTwo>>
 ===
 
 title: ActOneSceneTwoDashTwo
 ---
-At the manor, LENNOX enters the foyer, seeing four individuals sitting in different positions in the room
 LENNOX: Colorful cast.
 REEVES: My thoughts exactly. How do you want to proceed?
 
 -> Inform me on the women on the left with the tailored jumpsuit. ///(If you click on VOSS)
-    <<jump vossIntro>>
+    <<jump VOSSintro>>
 
--> Inform me of the big, scruffy guy wth the badly dyed hair. (If you click on DRACO)
-    ///<<jump dracoIntro>>
+-> Inform me of the big, scruffy guy wth the badly dyed hair. ///(If you click on DRACO)
+    <<jump DRACOintro>>
 
 -> Inform me on the stout man with freckles and dead eyes. ///(If you click on RIDDICK)
-   <<jump riddickIntro>>
+    <<jump RIDDICKintro>>
 
 -> Inform me on the rightmost woman, who looks like she's seasick. ///(If you click on ECHO)
-    <<jump echoIntro>>
+    <<jump ECHOintro>>
 
 -> No need, Eve. ///(If you choose to skip)
     LENNOX: We can move on. I’ve read the file.
@@ -34,7 +33,7 @@ REEVES: My thoughts exactly. How do you want to proceed?
 
 ===
 
-title: vossIntro
+title: VOSSintro
 ---
 REEVES: Voss Axiom, 42. She’s the COO of AN.
 LENNOX: Nova Axiom’s eldest daughter, then?
@@ -43,13 +42,13 @@ LENNOX: Why would she even be on this list? Shouldn’t she have already been in
 REEVES: Should’ve been, yes. She refused to participate in any kind of interviews while in mourning. We had to press hard just for her to agree to come here today.
 LENNOX: Sounds like a delightful character.
 -> *Approach.*
-    VOSS:
+    VOSS: 
 -> *Move on.*
-<<
+    <<jump ActOneSceneTwoDashTwo>>
     LENNOX: Let's move on.
 ===
 
-title: dracoIntro
+title: DRACOintro
 ---
 REEVES: Dragomir “Draco” Drift, 35.
 LENNOX: …Please tell me the name is a joke?
@@ -60,12 +59,18 @@ LENNOX: So…the victim invited a street rat off the street to a party of elites
 REEVES: LENNOX.
 LENNOX: …moving on.
 -> *Approach.*
-    DRACO: 
+    DRACO: Well howdy there.
+    LENNOX: ...hello to you to. I'll be taking over the case for the next few days.
+    DRACO: Cool. Pleasure to see the new face.
+    DRACO: And a handsome one at that.
+    LENNOX: ...moving on.
+    <<jump ActOneSceneTwoDashTwo>>
 -> *Move on.*
+    <<jump ActOneSceneTwoDashTwo>>
     LENNOX: Let's move on.
 ===
 
-title: riddickIntro
+title: RIDDICKintro
 ---
 REEVES: Riddick Vector, 37. 
 LENNOX: He looks excited to be here.
@@ -74,12 +79,15 @@ LENNOX: How so?
 REEVES: You and I both know that's not for us to know unless told by the suspect.
 LENNOX: *…not if I have anything to say about it.*
 -> *Approach.*
-    RIDDICK:
+    RIDDICK: Afternoon, sir.
+    LENNOX: Afternoon. You'll be in my care the next three days.
+    RIDDICK: Ah. Good to know.
 -> *Move on.*
+    <<jump ActOneSceneTwoDashTwo>>
     LENNOX: Let's move on.
 ===
 
-title: echoIntro
+title: ECHOintro
 ---
 REEVES: Echo Proxy, 26.
 LENNOX: Seems a little young to attend a 40 year old’s little celebration.
@@ -87,8 +95,11 @@ REEVES: Young, sure, but she's rather adept, it seems like. She was a top studen
 LENNOX: You don’t say. Think she’s a prospective hire?
 REEVES: I guess we’ll have to see.
 -> *Approach.*
-    ECHO:
+    ECHO: O-oh...good afternoon.
+    LENNOX: Miss Proxy, I take it? I'm the investigator takign over.
+    ECHO: ....I-I see...pleasure to meet you then..
 -> *Move on.*
+    <<jump ActOneSceneTwoDashTwo>>
     LENNOX: Let's move on.
 ===
 
@@ -98,7 +109,7 @@ REEVES: Are you ready to get to the interrogations?
 LENNOX: Ready as ever.
 ===
 
-title: vossSpeakDay1
+title: VOSSspeak
 ---
 VOSS: I see you're done with your snooping around, Lysander.
 VOSS: In which case I suppose I'm next on the chopping block?
@@ -112,15 +123,19 @@ VOSS: In which case I suppose I'm next on the chopping block?
         VOSS: There’s nothing special to it. I’m just a woman who keeps up with her job.
     -> *Let up*
         VOSS: That's what I figured.
--> *Pester* If scanned ///-1 sanity
-    LENNOX: Classic life you have there.
-    VOSS: What are you saying?
-    LENNOX: Husband, two children. Good job. I’d assume you’re the breadwinner, given that it's a family business n all.
-    VOSS: …I’m positive I never mentioned my children to you at any point, detective. And even if I had, in no way are they relevant to the conversation.
-    -> *Proceed* ///-1 Sanity
-        LENNOX:  Being the pride and joy of such a large company must be extremely taxing for you.
-        VOSS: Y-You're being incredibly uncalled for, young man. Cut  it out.
-
+    -> *Pester* If scanned ///-1 sanity
+        LENNOX: Classic life you have there.
+        VOSS: What are you saying?
+        LENNOX: Husband, two children. Good job. I’d assume you’re the breadwinner, given that it's a family business n all.
+        VOSS: …I’m positive I never mentioned my children to you at any point, detective. 
+        VOSS: And even if I had, in no way are they relevant to the conversation.
+        -> *Proceed* ///-1 Sanity
+            LENNOX:  Being the pride and joy of such a large company must be extremely taxing for you.
+            VOSS: You are being extremely uncalled for.
+            VOSS: How do you even know any of these things?
+            LENNOX: Just keeping myself informed.
+            REEVES: Lysen, I'm with her. That wasn't information provided in the file. 
+            LENNOX: Don't worry about it Eve.
 
     -> *Stop*
         LENNOX: ...nevermind me.
@@ -136,22 +151,45 @@ VOSS: In which case I suppose I'm next on the chopping block?
         VOSS: I have no clue who the fuck you think you are, but I promise you, you will have so, so many more problems if you don’t fix your act. 
         VOSS: I’m done talking to you.
 
+///interrogations
+<<if HasItem ("Watch")>>
+VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.”
+-> Drift?
+    VOSS: “Precisely”
+    —> A gift? For what?
+        VOSS: “From what Cipher said, Draco pulled off something huge for him. That watch was a thank you. 
+        VOSS: Besides, let's be realistic. Drift couldn’t afford something like this.”
+        -> You're implying the existence of an interesting bond.
+            VOSS: “Who am I to say? Cipher always had an interesting fixation for strays. Much to the family’s dismay. 
+            VOSS: It’s never ended well, and now look at him.”
+
+<<endif>>
+
+<<if HasItem ("Pills")>>
+
+VOSS: He still hasn’t thrown out the damn-
+VOSS: ...slob of a man.
+-> You know what these are?
+    VOSS: Of course I do; those are Cipher’s old meds.
+    –> For?
+        VOSS: His install. But he stopped needing to take them about half a year ago. Guess he never finished them until somewhat recently.
+        -> May I ask how and why you know that?
+            VOSS: Is that actually any of your business?
+            -> Considering its an install that killed him, I think it’s at least fair to know if the medicine had anything to do with it.
+                VOSS: …you investigators are so, incredibly stingy. Look it up.
+
+
+<<endif>>
+<<if HasItem ("Pills_scan")>>
+VOSS: Besides, you seem like you’re asking questions you already have the answer to at this point. Don’t waste my time.
+<<endif>>
 ===
 
-title: dracoSpeakDay1
+title: DRACOspeak
 ---
 DRACO: Well! Looks like the hotshot is back. 
 DRACO: Had enough fun looking about the area? I know I sure had fun waiting.
 
-===
-
-title: vossITG
----
-
-===
-
-title: dracoITG
----
 ===
 
 title: ActOneSceneThreeDBF
