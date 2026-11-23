@@ -13,6 +13,23 @@ MonoBehaviour:
   m_Name: VOSS
   m_EditorClassIdentifier: Assembly-CSharp::npcData
   npcName: Voss
+  imageTexture: {fileID: 0}
+  basicDesc: Voss Axiom
+  scanDesc: 'Voss has a husband and two children she has kept out of the eyes of
+    the media.
+
+
+    There is a record stating how she feels about becoming CEO for
+    AN. Her answer was rather negative.
+
+
+    There is also records of her discrediting
+    or  responding somewhat hostile for subjects related to her brother.'
+  reportInfoDesc: "Axiom, Voss. \n42 years old\nCOO for Axiom Networks\nOriginally
+    from The Furnace.\n\nA guest at the party, and the victim's older sister.\n\nTestimonies
+    claim she was present in the dining room speaking with the mother of the deceased
+    during the time of death."
+  startingNode: VossSpeak
   imageTexture: {fileID: 2800000, guid: ffe6979da30e8a64f8990c162b9d628b, type: 3}
   basicDesc: 
   scanDesc: 

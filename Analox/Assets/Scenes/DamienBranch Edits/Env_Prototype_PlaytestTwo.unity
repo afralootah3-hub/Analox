@@ -1276,7 +1276,7 @@ MonoBehaviour:
   type: 0
   eyes: {fileID: 0}
   viewRange: 10
-  InitialConvoNode: 
+  InitialConvoNode: RIDDICKintro
   textdata:
     promptText: {fileID: 1230193751}
     interactText: Speak (E)
@@ -3456,7 +3456,7 @@ MonoBehaviour:
   type: 0
   eyes: {fileID: 0}
   viewRange: 10
-  InitialConvoNode: 
+  InitialConvoNode: DRACOintro
   textdata:
     promptText: {fileID: 1230193751}
     interactText: Speak (E)
@@ -4087,7 +4087,7 @@ MonoBehaviour:
   type: 0
   eyes: {fileID: 0}
   viewRange: 10
-  InitialConvoNode: 
+  InitialConvoNode: ECHOintro
   textdata:
     promptText: {fileID: 1230193751}
     interactText: Speak (E)
@@ -7747,7 +7747,7 @@ MonoBehaviour:
   type: 0
   eyes: {fileID: 0}
   viewRange: 10
-  InitialConvoNode: 
+  InitialConvoNode: VOSSintro
   textdata:
     promptText: {fileID: 1230193751}
     interactText: Speak (E)
@@ -21869,7 +21869,7 @@ Transform:
   m_GameObject: {fileID: 6089899088445764354}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -64.4, y: 2.07011, z: 49.29}
+  m_LocalPosition: {x: -22.62, y: 1.5, z: 16.5}
   m_LocalScale: {x: 1.038222, y: 1.038222, z: 1.038222}
   m_ConstrainProportionsScale: 0
   m_Children: []
