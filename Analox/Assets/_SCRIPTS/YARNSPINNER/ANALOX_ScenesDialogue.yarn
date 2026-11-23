@@ -10,25 +10,26 @@ title: ActOneSceneTwoDashTwo
 ---
 At the manor, LENNOX enters the foyer, seeing four individuals sitting in different positions in the room
 LENNOX: Colorful cast.
-REEVES: My thoughts exactly. How do you want to proceed
+REEVES: My thoughts exactly. How do you want to proceed?
 
-///-> Inform me on the women on the left with the tailored jumpsuit. ///(If you click on VOSS)
-    ///<<jump vossIntro>>
+-> Inform me on the women on the left with the tailored jumpsuit. ///(If you click on VOSS)
+    <<jump vossIntro>>
 
-///-> Inform me of the big, scruffy guy wth the badly dyed hair. (If you click on DRACO)
+-> Inform me of the big, scruffy guy wth the badly dyed hair. (If you click on DRACO)
     ///<<jump dracoIntro>>
 
-///-> Inform me on the stout man with freckles and dead eyes. ///(If you click on RIDDICK)
-   /// <<jump riddickIntro>>
+-> Inform me on the stout man with freckles and dead eyes. ///(If you click on RIDDICK)
+   <<jump riddickIntro>>
 
-///-> Inform me on the rightmost woman, who looks like she's seasick. ///(If you click on ECHO)
-    ///<<jump echoIntro>>
+-> Inform me on the rightmost woman, who looks like she's seasick. ///(If you click on ECHO)
+    <<jump echoIntro>>
 
-///-> No need, Eve. ///(If you choose to skip)
+-> No need, Eve. ///(If you choose to skip)
     LENNOX: We can move on. I’ve read the file.
     REEVES: Very well then. You can always look in your logs if you need a refresher.
     REEVES: So if that's all; let's get started.
     LENNOX: Right.
+    <<Notify Fin>>
 
 
 ===
@@ -44,6 +45,7 @@ LENNOX: Sounds like a delightful character.
 -> *Approach.*
     VOSS:
 -> *Move on.*
+<<
     LENNOX: Let's move on.
 ===
 
@@ -91,6 +93,64 @@ REEVES: I guess we’ll have to see.
 ===
 
 title: ActOneSceneThreeITG
+---
+REEVES: Are you ready to get to the interrogations?
+LENNOX: Ready as ever.
+===
+
+title: vossSpeakDay1
+---
+VOSS: I see you're done with your snooping around, Lysander.
+VOSS: In which case I suppose I'm next on the chopping block?
+-> *Ask about her*
+    VOSS: What business do you have to know about me? You’re here to find out what happened to my idiot brother.
+    LENNOX:
+    -> *Persist*
+        VOSS: Lovely, you’re one of those.
+        VOSS: What would you even want to know that isn't already globally known?
+        VOSS: Eldest Daughter of Nova Axiom, PR rep, planning, syncing. 
+        VOSS: There’s nothing special to it. I’m just a woman who keeps up with her job.
+    -> *Let up*
+        VOSS: That's what I figured.
+-> *Pester* If scanned ///-1 sanity
+    LENNOX: Classic life you have there.
+    VOSS: What are you saying?
+    LENNOX: Husband, two children. Good job. I’d assume you’re the breadwinner, given that it's a family business n all.
+    VOSS: …I’m positive I never mentioned my children to you at any point, detective. And even if I had, in no way are they relevant to the conversation.
+    -> *Proceed* ///-1 Sanity
+        LENNOX:  Being the pride and joy of such a large company must be extremely taxing for you.
+        VOSS: Y-You're being incredibly uncalled for, young man. Cut  it out.
+
+
+    -> *Stop*
+        LENNOX: ...nevermind me.
+        VOSS: ...
+        VOSS: sure
+        REEVES: What the hell was that, Lysen?
+        LENNOX: ...just experimenting a bit with my approach.
+
+    -> *Threaten* [-1 Sanity]
+        LENNOX: Would it not be easier to admit your wrong now and take a plea deal.
+        LENNOX: I’d assume most children would prefer to have their mother in their life.
+        VOSS: H-How dare you…! Who do you think you are, accusing me then threatening the wellbeing of my children?
+        VOSS: I have no clue who the fuck you think you are, but I promise you, you will have so, so many more problems if you don’t fix your act. 
+        VOSS: I’m done talking to you.
+
+===
+
+title: dracoSpeakDay1
+---
+DRACO: Well! Looks like the hotshot is back. 
+DRACO: Had enough fun looking about the area? I know I sure had fun waiting.
+
+===
+
+title: vossITG
+---
+
+===
+
+title: dracoITG
 ---
 ===
 
