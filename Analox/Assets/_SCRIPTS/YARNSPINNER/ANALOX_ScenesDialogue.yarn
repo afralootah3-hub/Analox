@@ -29,6 +29,7 @@ REEVES: My thoughts exactly. How do you want to proceed?
     REEVES: Very well then. You can always look in your logs if you need a refresher.
     REEVES: So if that's all; let's get started.
     LENNOX: Right.
+    <<Notify Fin>>
 
 
 ===
