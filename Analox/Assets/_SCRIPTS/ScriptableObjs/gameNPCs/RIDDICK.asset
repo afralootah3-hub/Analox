@@ -45,5 +45,10 @@ MonoBehaviour:
 
 '
   startingNode: 
+  imageTexture: {fileID: 2800000, guid: 541a02e038ad03047a945189cdc2af10, type: 3}
+  basicDesc: 
+  scanDesc: 
+  reportInfoDesc: 
+  startingNode: RIDDICKintro
   currentPhase: 0
   hasScannedNPC: 0
