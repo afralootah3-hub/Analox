@@ -78,6 +78,7 @@ public class UiManager : MonoBehaviour
 
     public GameObject scanButton;
 
+    
 
 
     [Tooltip("This is how long doors/drawers wait before closing after opening them")]
@@ -425,7 +426,7 @@ public class UiManager : MonoBehaviour
     #region opening doors stuff
     public void OpenDoor(InteractableObj intOBJ)
     {
-
+        if (intOBJ == null) return;
         if (intOBJ.isOpeningDoor) return;
 
         

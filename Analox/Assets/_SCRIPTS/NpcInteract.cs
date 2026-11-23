@@ -20,7 +20,8 @@ public class NpcInteract : MonoBehaviour
 
     private bool _hasScannedNPC;
 
-
+    [Header("this is the conversation you have with reeves when you choose the info option :)")]
+    public string InitialConvoNode;
 
     #region private refs
     private Transform _playerT;
@@ -304,7 +305,8 @@ public class NpcInteract : MonoBehaviour
         else if (index == 1)
         {
             Debug.Log(index);
-            _ui.OnViewNPCInfo(dialogdata.storyData);
+            //_ui.OnViewNPCInfo(dialogdata.storyData);
+            beginDialogLine(InitialConvoNode);
             return;
         }
         else if(index == 2)
@@ -414,7 +416,14 @@ public class NpcInteract : MonoBehaviour
     {
         dialogdata.storyData.dataReset();
     }
-   
 
+
+    public void beginDialogLine(string dialogNode)
+    {
+        dialogdata.npcDialogue.StartDialogue(dialogNode);
+        _player.setPlayerState(PlayerController.playerState.isDisabled);
+
+
+    }
 
 }
