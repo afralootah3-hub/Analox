@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DRAFT/AFRA/RefTest.unity
     guid: 4b6c9a937eb65d3448f735dffd72f63f
+  - enabled: 1
+    path: Assets/Scenes/DamienBranch Edits/RefScene DB.unity
+    guid: 558e9be917a3cac4faa744c30b8d6314
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

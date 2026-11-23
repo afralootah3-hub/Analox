@@ -133,7 +133,7 @@ VOSS: In which case I suppose I'm next on the chopping block?
 ===
 title: VossQuestions
 ---
-<<if HasItem ("Watch")>>
+<<if HasItem("Wrist Watch")>>
 VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.”
 -> Drift?
     VOSS: “Precisely”
@@ -146,7 +146,7 @@ VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few y
 
 <<endif>>
 
-<<if HasItem ("Pills")>>
+<<if HasItem("Emptied pill bottle")>>
 
 VOSS: He still hasn’t thrown out the damn-
 VOSS: ...slob of a man.
