@@ -18,10 +18,13 @@ MonoBehaviour:
     for some time.
   ScanInformation: Acetomenaphine..in an identical fashion to my own. Why does Cipher
     have these?
-  wasScanned: 1
+  wasScanned: 0
+  imageTexture: {fileID: 2800000, guid: e24da887cce31f54096ee6e1b6a2b826, type: 3}
+  clueTitle: 
   doorPivot: {fileID: 0}
   isOpen: 0
   isOpeningDoor: 0
+  openAngle: -128
   closedRot: {x: 0, y: 0, z: 0, w: 0}
   drawerIsOpen: 0
   isOpeningDrawer: 0
