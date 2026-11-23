@@ -6,6 +6,8 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
+using Yarn.Unity;
 
 
 public class UiManager : MonoBehaviour
@@ -16,6 +18,7 @@ public class UiManager : MonoBehaviour
     //      Handles     //
 
     // -> handles object inspection system
+    #region VARIABLES
 
     [Header("UI ELEMENTS")]
     [Space(20)]
@@ -28,20 +31,28 @@ public class UiManager : MonoBehaviour
     private bool _visible; //debug temp var
     // this is basic pop up stuff, but you can add animation stuff to this script //
 
+    private MenusManager _menusManager;
 
     [Header("Object Inspection")]
     public CanvasGroup inspectPanel;
-    public float fadeDuration = .3f; // <- this animates a fade in, can be changed for smth cooler
+    public float fadeDuration = .3f; // <- this animates a fade in, can be changed for smth cooler (UNUSED RN)
     public float scaleMult = 3f;
+    public Transform holdpoint;
+    public GameObject holdLight;
 
     [Tooltip("Degress of Rotation")]
     [Range(0, 1)]
-    public float rotateSpeed = 200f; 
-    
-    //      PRIVATE REFERENCES      //
+    public float rotateSpeed = 200f;
+
+    [Header("NPC INTERACTION STUFF")]
+    public CanvasGroup npcInspectPanel;
+    public TextMeshProUGUI scanInfoTMP;
+    public TextMeshProUGUI reportInfoTMP;
+    public bool isInspectingNPC;
+
+
+    #region ///           PRIVATE REFERENCES    not organized </3         ///
     private Renderer _inspectObjRend; // cache //
-    public Transform holdpoint;
-    public GameObject holdLight; 
     private Transform _inspectedObj;
     private Vector3 _savedPosition;
     private Transform _savedParent;
@@ -52,20 +63,28 @@ public class UiManager : MonoBehaviour
     private bool _rbWasKinematic;
     private bool _isInspecting; //temporary bool, will be swapped to follow state machine instead
 
+    private ItemData _itemDataCache;
+    private Transform _doorTransformCache;
+    private PillManager _pillmanager;
+    private List<string> itemIndex; //stores the itemID's (which is the itemName)//
+    private string _scanString; //cache
+    
+
+
+    #endregion
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI itemDesc;
     public TextMeshProUGUI scanDesc;
 
-    public GameObject scanButton; 
+    public GameObject scanButton;
 
-    private ItemData _itemDataCache;
+    
 
-    private Transform _doorTransformCache;
-    private PillManager _pillmanager;
-    private List<string> itemIndex; //stores the itemID's (which is the itemName)//
 
-    private string _scanString; //cache
+    [Tooltip("This is how long doors/drawers wait before closing after opening them")]
+    public float doorCooldown = 5f;
 
+    #endregion
 
     private void Awake()
     {
@@ -75,10 +94,11 @@ public class UiManager : MonoBehaviour
         scanDesc.text = "";
         activeCam = Camera.main;
         promptCanvas.SetActive(false);
+        npcInspectPanel.gameObject.SetActive(false);
 
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _pillmanager = GetComponent<PillManager>();
-
+        _menusManager = GetComponent<MenusManager>();
 
 
     }
@@ -90,20 +110,32 @@ public class UiManager : MonoBehaviour
 
     private void Update()
     {
-        UpdatePrompt(); 
+        if(isInspectingNPC && (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.rightButton.wasPressedThisFrame))
+        {
+            Debug.Log("Exiting npc inspection");
+            CloseNPCPanel();
+            isInspectingNPC = false;
+        }
+
+        //Debug.Log(isInspectingNPC);
+
+
+        UpdatePrompt();
 
         // temporary, swapped to state machine later
         if (!_isInspecting || _inspectedObj == null) return; //if already inspecting ignore
 
         // temp 
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (Keyboard.current.escapeKey.wasPressedThisFrame || (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.rightButton.wasPressedThisFrame) )
         {
             ExitInspect();
+
             return;
         }
 
+
         RotatetInspectedObj();
-    
+
     }
 
     #region object inspection stuff
@@ -112,8 +144,10 @@ public class UiManager : MonoBehaviour
         HidePrompt();
         if (_isInspecting) return;
 
+        PillManager.instance.pillButton.SetActive(false);
+
         _isInspecting = true;
-        holdLight.SetActive(true);
+        //holdLight.SetActive(true);
 
         //disable player input HERE
         _inspectedObj = targetOBJ.transform;
@@ -131,7 +165,7 @@ public class UiManager : MonoBehaviour
 
         _inspectObjRend.shadowCastingMode = ShadowCastingMode.Off; // turn off cast shadows to not cast shadows on the ground 
         _inspectObjRend.receiveShadows = false; //also recieving shadows 
-        
+
 
         itemName.text = _itemDataCache.ItemName;
         itemDesc.text = _itemDataCache.ItemDescription;
@@ -143,6 +177,8 @@ public class UiManager : MonoBehaviour
         //{
         //    itemIndex.Add(_itemDataCache.ItemName);  //add to list
         //}
+
+        _menusManager.AddObjectClue(_itemDataCache); // menus manager handles duplicates (hopefully)
 
         if (_itemDataCache.wasScanned)
         {
@@ -161,13 +197,13 @@ public class UiManager : MonoBehaviour
                 Debug.Log("added item to inventory (not scanned)");
                 PlayerUI.instance.addItem(_itemDataCache.ItemName);
             }
-            
+
         }
 
 
         // add object to list to inventory 
 
-            _savedRB = targetOBJ.GetComponent<Rigidbody>();
+        _savedRB = targetOBJ.GetComponent<Rigidbody>();
 
         if (_savedRB != null)
         {
@@ -189,7 +225,7 @@ public class UiManager : MonoBehaviour
         targetOBJ.transform.localRotation = Quaternion.identity;
         targetOBJ.transform.localScale = _savedScale * scaleMult;
 
-        
+
         // show cursor and do some cool transition to inspection (idk) 
 
         //Cursor.lockState = CursorLockMode.None;
@@ -209,7 +245,7 @@ public class UiManager : MonoBehaviour
         // when click button to scan (or whatever you do)
 
         // do some animation/transition stuff and show text 
-        _pillmanager.SetSanity(-1, false);
+        _pillmanager.SetSanity(-1);
         scanDesc.text = _scanString; //set string 
         _itemDataCache.wasScanned = true; //set true so you dont need to rescan 
         scanButton.SetActive(false);
@@ -218,7 +254,7 @@ public class UiManager : MonoBehaviour
 
         if (PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
         {
-            
+
             Debug.Log("updated inventory index to have updated altered itemID");
             PlayerUI.instance._inventoryItems.Remove(_itemDataCache.ItemName);
 
@@ -228,6 +264,39 @@ public class UiManager : MonoBehaviour
 
     }
 
+    #region NPC Interaction stuff
+    public void OnScannedNPC(npcData nData)
+    {
+        // pull the scan desc (AND UPDATE TO CORKBOARD INFO? Or this gets updated on  manager?? i forgot)
+
+        npcInspectPanel.gameObject.SetActive(true);
+        scanInfoTMP.text = nData.scanDesc;
+        _pillmanager.SetSanity(-1);
+        isInspectingNPC = true;
+        nData.hasScannedNPC = true;
+
+    }
+
+    public void OnViewNPCInfo(npcData nData)
+    {
+        // viewing the info
+        npcInspectPanel.gameObject.SetActive(true);
+        reportInfoTMP.text = nData.reportInfoDesc;
+
+        isInspectingNPC = true;
+
+    }
+
+    public void CloseNPCPanel()
+    {
+        npcInspectPanel.gameObject.SetActive(false);
+        reportInfoTMP.text = "";
+        _playerCC.setPlayerState(PlayerController.playerState.isIdle);
+        scanInfoTMP.text = "";
+    }
+
+
+    #endregion
 
 
 
@@ -237,8 +306,9 @@ public class UiManager : MonoBehaviour
     public void ExitInspect()
     {
         if (!_isInspecting) return;
-        holdLight.SetActive(false);
+        //holdLight.SetActive(false);
 
+        PillManager.instance.pillButton.SetActive(true);
         itemName.text = "";
         itemDesc.text = "";
         scanDesc.text = "";
@@ -248,7 +318,7 @@ public class UiManager : MonoBehaviour
         _inspectObjRend.receiveShadows = true; //recieving shadows on
 
         // clear cache//
-        _inspectObjRend = null; 
+        _inspectObjRend = null;
 
         _isInspecting = false;
         SetPanel(false);
@@ -275,7 +345,7 @@ public class UiManager : MonoBehaviour
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = true;
 
-       
+
 
     }
 
@@ -302,7 +372,7 @@ public class UiManager : MonoBehaviour
             mouseY * rotateSpeed * Time.deltaTime, Space.World);
         */
 
-        
+
 
         // only rotate while dragging with left mouse button (clikc and dragged)
         // isPressed is true every frame the button stays down
@@ -325,36 +395,6 @@ public class UiManager : MonoBehaviour
         _inspectedObj.Rotate(cam.right, delta.y * rotateSpeed, Space.World);
 
     }
-
-    public void OpenDoor(ItemData doorData)
-    {
-
-        if (doorData.isOpeningDoor) return;
-
-        doorData.isOpeningDoor = true;
-
-        Quaternion targetRot;
-
-        if (doorData.isOpen)
-        {
-            targetRot = doorData.closedRot;
-        }
-        else
-        {
-            targetRot = Quaternion.Euler(0, -128, 0);
-        }
-
-        doorData.isOpen = !doorData.isOpen;
-
-        // call routine
-        StartCoroutine(RotateDoor(doorData, targetRot, 2f));
-
-        Debug.Log("CLICKED ON DOOR OPENING IT YAY");
-         
-
-
-    }
-
     public void OpenDrawer(ItemData drawerData)
     {
         Debug.Log(drawerData.isOpeningDrawer);
@@ -383,23 +423,59 @@ public class UiManager : MonoBehaviour
 
     }
 
-    private IEnumerator RotateDoor(ItemData door, Quaternion targetRot, float duration)
+    #region opening doors stuff
+    public void OpenDoor(InteractableObj intOBJ)
+    {
+        if (intOBJ == null) return;
+        if (intOBJ.isOpeningDoor) return;
+
+        
+        // call routine
+        StartCoroutine(OpenDoorCor(intOBJ));
+
+
+
+
+    }
+
+    private IEnumerator OpenDoorCor(InteractableObj door)
     {
         door.isOpeningDoor = true;
-        Quaternion startRot = door.doorPivot.localRotation;
+
+        Quaternion openRot = door.closedRot * Quaternion.Euler(0, door.itemdata.openAngle, 0);
+
+        yield return StartCoroutine(RotateDoor(door.transform, openRot, 3f));
+        yield return new WaitForSeconds(doorCooldown);
+        yield return StartCoroutine(RotateDoor(door.transform, door.closedRot, 3f));
+        door.isOpeningDoor = false;
+        
+
+    } 
+
+    private IEnumerator RotateDoor(Transform pivot, Quaternion targetRot, float duration)
+    {
+       
+        Quaternion startRot = pivot.localRotation;
         float t = 0f; 
 
         while (t < 1f)
         {
             t += Time.deltaTime / duration;
-            door.doorPivot.localRotation = Quaternion.Slerp(startRot, targetRot, Mathf.SmoothStep(0f, 1f, t));
+            pivot.localRotation = Quaternion.Slerp(startRot, targetRot, Mathf.SmoothStep(0f, 1f, t));
             yield return null;
         }
 
-        door.doorPivot.localRotation = targetRot;
-        door.isOpeningDoor = false;
+        pivot.localRotation = targetRot;
+        
+
+        
 
     }
+
+
+
+    #endregion
+
 
     private IEnumerator OpenDrawer(ItemData drawer, Vector3 targetPos, float duration)
     {
@@ -462,4 +538,8 @@ public class UiManager : MonoBehaviour
     }
 
     #endregion
+
+    
+
+
 }

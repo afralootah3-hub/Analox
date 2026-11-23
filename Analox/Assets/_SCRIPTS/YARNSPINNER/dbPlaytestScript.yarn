@@ -1,0 +1,107 @@
+﻿title: TesterstartDay1
+---
+<<jump playtestNode>>
+This is an example/Reference of how to set up dialog
+
+The first node of Dialog MUST be named in this manner
+The Starting Node set in the NPCData scriptable object attached
+to the npcInteract
+AND 'startDay1' or 'startDay2/3/4' depending on what day this dialog is for
+
+! its best to keep all dialog for a character across days on one big YS script,
+and break it up into different days instead of multiple scripts
+
+How to check if player has an item?
+
+You can check if the player has obtained evidence that has either been
+SCANNED or NOT SCANNED using this command. 
+
+<<if HasItem("objectID")>>
+if the player has that object then anything written here
+will be run 
+
+! the objectID is the OBJECT HOLDERS NAME 
+^ the inspectable object that has the interactableObj script 
+NOT ITS CHILD 
+<<endif>>
+
+! if you want to check if the player has an item that 
+WAS SCANNED. then you run this command a little differently.
+<<if HasItem("objectID_scan")>>
+
+! this will be the same objectID but with _scan 
+^^^ do not edit the gameobject's name to include _scan,
+the scripts will automatically add it to inventory with that 
+
+<<endif>>
+
+<<jump playtestNode>>
+===
+title: playtestNode
+---
+Hello, welcome to ANALOX testing grounds.
+Please enjoy, and when you're done, leave us a piece of feedback.
+///pills
+<<if HasItem("Pills")>>
+
+I see you've found the pills!
+
+<<endif>>
+
+
+<<if HasItem("Pills_scan")>>
+
+They seem to be rather old, don't they.
+I wonder what they were for...
+
+<<endif>>
+
+///watch
+<<if HasItem("Watch")>>
+
+WOW, thats a really nice watch.
+You'd get a lump sum with that.
+
+<<endif>>
+
+<<if HasItem("Watch_scan")>>
+
+...On second thougt, given who it belongs to...
+I think i'd like to keep my life...
+
+<<endif>>
+
+///chip driver
+<<if HasItem("SDCARD")>>
+
+That's the culprit of the murder, no?
+Seems rather small.
+
+<<endif>>
+
+<<if HasItem("SDCARD_scan")>>
+
+That driver is a tiny but mighty thing...
+
+<<endif>>
+
+This checks for the players SANITY LEVEL 
+// The value of CheckSanity(x) x should always just be 0 (it doesn't matter)
+// and then use any operator (just like a regular if statement)
+// == >= <= !=
+
+<<if CheckSanity(0) == 5>>
+    player sanity is equal to 5
+<<endif>>
+
+<<if CheckSanity(0) != 5>>
+    Hey..you seem a bit shaky...are you OK...?
+<<endif>>
+
+<<if CheckSanity(0) == 0>>
+    You...you need help.
+    Like, medical help.
+<<endif>>
+
+
+===

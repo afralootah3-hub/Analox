@@ -9,7 +9,7 @@ public class customNPC_Interact : Editor
     {
         //this built-in method 'draws' the inspector as it normally would be viewed
         // 'draw' in this instance means to visually render in the editor 
-        //DrawDefaultInspector();
+        DrawDefaultInspector();
 
         serializedObject.Update(); // this built-in method on this obj will continue to 'draw' the editor code within this OnInspectorGUI Method
 
@@ -56,6 +56,8 @@ public class customNPC_Interact : Editor
             //for an editor script if we're using an IF statement with GUILayout as the condition
             // then the editor will GENERATE that button as opposed to check to see if the condition 
         }
+
+
 
         //---ESSENTIAL LINE OF CODE TO ENSURE WE CAN EDIT THE PROPERTIES/VARIABLES OF OUR CLASS---//
         //-without this we cant add any data to our variables-//

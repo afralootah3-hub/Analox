@@ -1,0 +1,170 @@
+﻿title: AnaloxstartDay1
+---
+**Quick note for those playing:
+**Not all of the characters have interrogation dialog for reading pleasure
+**Please keep this in mind
+<<jump ActOneSceneTwoDashTwo>>
+===
+
+title: ActOneSceneTwoDashTwo
+---
+At the manor, LENNOX enters the foyer, seeing four individuals sitting in different positions in the room
+LENNOX: Colorful cast.
+REEVES: My thoughts exactly. How do you want to proceed?
+
+-> Inform me on the women on the left with the tailored jumpsuit. ///(If you click on VOSS)
+    <<jump vossIntro>>
+
+-> Inform me of the big, scruffy guy wth the badly dyed hair. (If you click on DRACO)
+    ///<<jump dracoIntro>>
+
+-> Inform me on the stout man with freckles and dead eyes. ///(If you click on RIDDICK)
+   <<jump riddickIntro>>
+
+-> Inform me on the rightmost woman, who looks like she's seasick. ///(If you click on ECHO)
+    <<jump echoIntro>>
+
+-> No need, Eve. ///(If you choose to skip)
+    LENNOX: We can move on. I’ve read the file.
+    REEVES: Very well then. You can always look in your logs if you need a refresher.
+    REEVES: So if that's all; let's get started.
+    LENNOX: Right.
+    <<Notify Fin>>
+
+
+===
+
+title: vossIntro
+---
+REEVES: Voss Axiom, 42. She’s the COO of AN.
+LENNOX: Nova Axiom’s eldest daughter, then?
+REEVES: She is. She supposedly helped organize the party; encouraged it even, with the help of her husband.
+LENNOX: Why would she even be on this list? Shouldn’t she have already been interviewed?
+REEVES: Should’ve been, yes. She refused to participate in any kind of interviews while in mourning. We had to press hard just for her to agree to come here today.
+LENNOX: Sounds like a delightful character.
+-> *Approach.*
+    VOSS:
+-> *Move on.*
+<<
+    LENNOX: Let's move on.
+===
+
+title: dracoIntro
+---
+REEVES: Dragomir “Draco” Drift, 35.
+LENNOX: …Please tell me the name is a joke?
+REEVES: Lysen.
+LENNOX: Sorry, proceed.
+REEVES: …They’re listed as a freelancer, though there isn’t any info for what. Originally from the anvil. They were pretty high on the invite list, though not being from any type of money.
+LENNOX: So…the victim invited a street rat off the street to a party of elites. How…generous.
+REEVES: LENNOX.
+LENNOX: …moving on.
+-> *Approach.*
+    DRACO: 
+-> *Move on.*
+    LENNOX: Let's move on.
+===
+
+title: riddickIntro
+---
+REEVES: Riddick Vector, 37. 
+LENNOX: He looks excited to be here.
+REEVES: Vector’s from the steel, works directly with AN as a programmer of sorts. Apparently, was rather close to the deceased. 
+LENNOX: How so?
+REEVES: You and I both know that's not for us to know unless told by the suspect.
+LENNOX: *…not if I have anything to say about it.*
+-> *Approach.*
+    RIDDICK:
+-> *Move on.*
+    LENNOX: Let's move on.
+===
+
+title: echoIntro
+---
+REEVES: Echo Proxy, 26.
+LENNOX: Seems a little young to attend a 40 year old’s little celebration.
+REEVES: Young, sure, but she's rather adept, it seems like. She was a top student at Shield.
+LENNOX: You don’t say. Think she’s a prospective hire?
+REEVES: I guess we’ll have to see.
+-> *Approach.*
+    ECHO:
+-> *Move on.*
+    LENNOX: Let's move on.
+===
+
+title: ActOneSceneThreeITG
+---
+REEVES: Are you ready to get to the interrogations?
+LENNOX: Ready as ever.
+===
+
+title: vossSpeakDay1
+---
+VOSS: I see you're done with your snooping around, Lysander.
+VOSS: In which case I suppose I'm next on the chopping block?
+-> *Ask about her*
+    VOSS: What business do you have to know about me? You’re here to find out what happened to my idiot brother.
+    LENNOX:
+    -> *Persist*
+        VOSS: Lovely, you’re one of those.
+        VOSS: What would you even want to know that isn't already globally known?
+        VOSS: Eldest Daughter of Nova Axiom, PR rep, planning, syncing. 
+        VOSS: There’s nothing special to it. I’m just a woman who keeps up with her job.
+    -> *Let up*
+        VOSS: That's what I figured.
+-> *Pester* If scanned ///-1 sanity
+    LENNOX: Classic life you have there.
+    VOSS: What are you saying?
+    LENNOX: Husband, two children. Good job. I’d assume you’re the breadwinner, given that it's a family business n all.
+    VOSS: …I’m positive I never mentioned my children to you at any point, detective. And even if I had, in no way are they relevant to the conversation.
+    -> *Proceed* ///-1 Sanity
+        LENNOX:  Being the pride and joy of such a large company must be extremely taxing for you.
+        VOSS: Y-You're being incredibly uncalled for, young man. Cut  it out.
+
+
+    -> *Stop*
+        LENNOX: ...nevermind me.
+        VOSS: ...
+        VOSS: sure
+        REEVES: What the hell was that, Lysen?
+        LENNOX: ...just experimenting a bit with my approach.
+
+    -> *Threaten* [-1 Sanity]
+        LENNOX: Would it not be easier to admit your wrong now and take a plea deal.
+        LENNOX: I’d assume most children would prefer to have their mother in their life.
+        VOSS: H-How dare you…! Who do you think you are, accusing me then threatening the wellbeing of my children?
+        VOSS: I have no clue who the fuck you think you are, but I promise you, you will have so, so many more problems if you don’t fix your act. 
+        VOSS: I’m done talking to you.
+
+===
+
+title: dracoSpeakDay1
+---
+DRACO: Well! Looks like the hotshot is back. 
+DRACO: Had enough fun looking about the area? I know I sure had fun waiting.
+
+===
+
+title: vossITG
+---
+
+===
+
+title: dracoITG
+---
+===
+
+title: ActOneSceneThreeDBF
+---
+
+===
+
+title: ActOneSceneFour
+---
+LENNOX: Is that all for the day?
+REEVES: Seems so. You’re free to return home for the day.
+LENNOX: Excellent.
+LENNOX: You, there. This is a crime scene. Take your smokes elsewhere.
+???: Relax there, young blood. It ain’t gonna hurt nobody.
+LENNOX: What exactly brings you here, Mr.Sync?
+===

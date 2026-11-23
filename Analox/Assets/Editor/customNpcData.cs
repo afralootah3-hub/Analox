@@ -10,15 +10,25 @@ public class customNpcData : Editor
         // 'draw' in this instance means to visually render in the editor 
         //DrawDefaultInspector();
         serializedObject.Update();
-
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("imageTexture"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("npcName"));
-        EditorGUILayout.HelpBox("Name that will be shown during Dialog", MessageType.Info);
+        EditorGUILayout.HelpBox("^ Name that will be shown during Dialog", MessageType.Info);
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("basicDesc"));
+        EditorGUILayout.HelpBox("^ Above description is shown in the corkboard menu", MessageType.Info);
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("reportInfoDesc"));
+        EditorGUILayout.HelpBox("^ Above description should be basic information of the npc pulled from the official report", MessageType.Info);
+        
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("scanDesc"));
+        EditorGUILayout.HelpBox("^ Above is shown when the player scans this npc, and is also visible in the corkboard menu", MessageType.Info);
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("startingNode"));
         EditorGUILayout.HelpBox("When writing dialog in YS script, the first node for each day must be titled \n" +
             "startingNode + startDay1 or whichever day the dialog is"
-            +"  \n OTHERWISE DIALOG WON'T RUN AS INTENDED", MessageType.Warning);
+            +"  \n OTHERWISE DIALOG WON'T RUN AS INTENDED \n EXAMPLE: StartingNode is named Bob, the YS node is then called BobstartDay1", MessageType.Warning);
 
         serializedObject.ApplyModifiedProperties();
 
