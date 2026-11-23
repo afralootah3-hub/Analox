@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: DRACO
   m_EditorClassIdentifier: Assembly-CSharp::npcData
   npcName: Draco
+  imageTexture: {fileID: 2800000, guid: 77589a05558a8b246a798782933e02ea, type: 3}
+  basicDesc: 
+  scanDesc: 
+  reportInfoDesc: 
   startingNode: DRACOintro
   currentPhase: 0
+  hasScannedNPC: 0

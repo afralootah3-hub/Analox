@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: VOSS
   m_EditorClassIdentifier: Assembly-CSharp::npcData
   npcName: Voss
+  imageTexture: {fileID: 2800000, guid: ffe6979da30e8a64f8990c162b9d628b, type: 3}
+  basicDesc: 
+  scanDesc: 
+  reportInfoDesc: 
   startingNode: VOSSintro
   currentPhase: 1
+  hasScannedNPC: 0
