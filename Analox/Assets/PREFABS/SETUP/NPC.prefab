@@ -130,6 +130,7 @@ MonoBehaviour:
   type: 0
   eyes: {fileID: 6727827617409267169}
   viewRange: 10
+  InitialConvoNode: testInfoNode
   textdata:
     promptText: {fileID: 0}
     interactText: Interact?

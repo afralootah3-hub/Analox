@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -21,8 +22,8 @@ public class MenusManager : MonoBehaviour
     4. player drags image around
     5. player can draw red lines conecting evidence (WHICH SHOULD PERSIST ACROSS SCENES) -> use logic from mail game / last year midterm (render on diff 
     */
-    
 
+    private Coroutine notifRoutine;
     // corkboard var // 
     // restructured later to use tags and custom inspector for easy assinging in inspector//
     public GameObject corkBoardHolder;
@@ -32,10 +33,12 @@ public class MenusManager : MonoBehaviour
     public RectTransform dragLayer; 
     private List<string> _clueItems; //stores everything in inventory
 
-  
+    private TextMeshProUGUI notifTMP;
+    private CanvasGroup notifCanvasGrp;
     private bool _corkMenuOpen;
 
     public bool _canDraw;
+    public float notificationDuration = 6f;
 
     private PlayerController _playercc;
     public Camera drawingCam;
@@ -94,6 +97,13 @@ public class MenusManager : MonoBehaviour
         corkBoardHolder.SetActive(false);
         _corkMenuOpen = false;
 
+       
+        notifTMP = GameObject.FindGameObjectWithTag("notif").GetComponent<TextMeshProUGUI>();
+        notifCanvasGrp = GameObject.FindGameObjectWithTag("notifGrp").GetComponent<CanvasGroup>();
+
+        if(notifCanvasGrp != null)
+        notifCanvasGrp.alpha = 0;
+
         if (drawingCam == null) drawingCam = GameObject.FindGameObjectWithTag("drawCam").GetComponent<Camera>();
 
         drawingCam.enabled = false;
@@ -127,6 +137,15 @@ public class MenusManager : MonoBehaviour
 
             if (_playercc == null) _playercc = FindFirstObjectByType<PlayerController>();
         }
+
+        if(notifCanvasGrp == null || notifTMP == null)
+        {
+            notifTMP = GameObject.FindGameObjectWithTag("notif").GetComponent<TextMeshProUGUI>();
+            //notifCanvasGrp.alpha = 0;
+            notifCanvasGrp = GameObject.FindGameObjectWithTag("notifGrp").GetComponent<CanvasGroup>();
+            return;
+        }
+
     }
 
     public void ToggleMenu()
@@ -143,6 +162,8 @@ public class MenusManager : MonoBehaviour
             
         }
     }
+
+    
 
     public void ToggleDrawing()
     {
@@ -181,6 +202,7 @@ public class MenusManager : MonoBehaviour
     public void CloseCork()
     {
         PillManager.instance.pillButton.SetActive(true);
+        if (_playercc == null) _playercc = FindFirstObjectByType<PlayerController>();
         _playercc.setPlayerState(PlayerController.playerState.isIdle);
         _corkMenuOpen = false;
         drawingCam.enabled = false;
@@ -226,6 +248,51 @@ public class MenusManager : MonoBehaviour
 
     }
 
+    [YarnCommand("Notify")]
+    public static void ShowNotification(string notification)
+    {
+        if(MenusManager.instance.notifTMP == null || MenusManager.instance.notifCanvasGrp == null)
+        {
+            MenusManager.instance.notifTMP = GameObject.FindGameObjectWithTag("notif").GetComponent<TextMeshProUGUI>();
+            MenusManager.instance.notifCanvasGrp = GameObject.FindGameObjectWithTag("notifGrp").GetComponent<CanvasGroup>();
+        }
+
+        MenusManager.instance.notifTMP.text = notification;
+
+        MenusManager.instance.StartNotifRoutine();
+
+
+    }
+
+    public void StartNotifRoutine()
+    {
+        if(notifRoutine != null)
+        {
+            StopCoroutine(notifRoutine);
+        }
+
+        notifRoutine = StartCoroutine(ShowNotification());
+
+    }
+
+
+    public IEnumerator ShowNotification()
+    {
+        notifCanvasGrp.alpha = 1;
+        float elapsed = 0f;
+        float duration = notificationDuration;
+        while(elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            notifCanvasGrp.alpha = Mathf.Lerp(1, 0, elapsed);
+            yield return null;
+        }
+
+        notifCanvasGrp.alpha = 0;
+        notifRoutine = null;
+
+
+    }
 
 
 

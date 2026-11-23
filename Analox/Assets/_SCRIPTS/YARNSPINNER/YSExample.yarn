@@ -1,6 +1,6 @@
 ﻿title: BobstartDay1
 ---
-<<jump testNode>>
+<<jump test2>>
 This is an example/Reference of how to set up dialog
 
 The first node of Dialog MUST be named in this manner
@@ -76,5 +76,19 @@ EXACTLY MATCHES the name of their gameobject
 ^ you should call this function ONCE throughout the entirety of the game. 
 prefrably the first time you talk to them. 
 :D
+===
+title: test2
+---
+This lets you show a notification :)
+<<Notify "Hello :D">>
+
+===
+title: testInfoNode
+---
+you can call the node whatever you want, 
+this would be what plays when the player chooses the info option 
+when interacting with an npc 
+
+you can set which node plays by editing the InitalConvoNode on their NPCInteract script in the inspector :)
 
 ===

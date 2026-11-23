@@ -84,8 +84,9 @@ public class LoadRoom : MonoBehaviour
 
     public void InitalizeDoor() //called by gamecontroller onsceneLoad :D
     {
-        //doorChoiceHolder = GameObject.FindGameObjectWithTag("DoorHolder");
+        doorChoiceHolder = GameObject.FindGameObjectWithTag("DoorHolder");
         _playercc = FindFirstObjectByType<PlayerController>();
+
         doorChoiceHolder.SetActive(false);
         Debug.Log("Loaded Door");
 
