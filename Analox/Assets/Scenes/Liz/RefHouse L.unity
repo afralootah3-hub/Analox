@@ -1999,6 +1999,10 @@ PrefabInstance:
       value: RefHouse DB
       objectReference: {fileID: 0}
     - target: {fileID: 284190242715344627, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
+      propertyPath: IntroNode
+      value: testIntroSequence
+      objectReference: {fileID: 0}
+    - target: {fileID: 284190242715344627, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
       propertyPath: MainHouse
       value: RefHouse DB
       objectReference: {fileID: 0}
