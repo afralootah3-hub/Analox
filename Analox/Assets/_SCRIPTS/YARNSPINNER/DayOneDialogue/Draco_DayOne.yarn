@@ -1,10 +1,5 @@
-﻿title: DracostartDay1
----
-This is an example of a Yarn Spinner script. Write your dialogue here!
-<<jump DRACOintro>>
-===
-
-title: DRACOintro
+﻿
+title: DRACOintrostartDay1
 ---
 REEVES: Dragomir “Draco” Drift, 35.
 LENNOX: …Please tell me the name is a joke?
@@ -26,7 +21,7 @@ LENNOX: …moving on.
     LENNOX: Let's move on.
 ===
 
-title: DracoSpeakstart
+title: DracoSpeakstartDay1
 ---
 //LENNOX:
 -> *Ask about them.*
