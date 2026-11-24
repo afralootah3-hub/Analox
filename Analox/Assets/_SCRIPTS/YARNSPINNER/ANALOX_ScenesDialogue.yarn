@@ -33,9 +33,7 @@
 
 //===
 
-
-
-title: DRACOintrog
+title: DRACOintro2
 ---
 REEVES: Dragomir “Draco” Drift, 35.
 LENNOX: …Please tell me the name is a joke?
@@ -57,7 +55,7 @@ LENNOX: …moving on.
     LENNOX: Let's move on.
 ===
 
-title: RIDDICKintro
+title: RIDDICKintro2
 ---
 REEVES: Riddick Vector, 37. 
 LENNOX: He looks excited to be here.
@@ -70,11 +68,11 @@ LENNOX: *…not if I have anything to say about it.*
     LENNOX: Afternoon. You'll be in my care the next three days.
     RIDDICK: Ah. Good to know.
 -> *Move on.*
-    <<jump ActOneSceneTwoDashTwo>>
+   // <<jump ActOneSceneTwoDashTwo>>
     LENNOX: Let's move on.
 ===
 
-title: ECHOintro
+title: ECHOintro2
 ---
 REEVES: Echo Proxy, 26.
 LENNOX: Seems a little young to attend a 40 year old’s little celebration.
@@ -86,27 +84,16 @@ REEVES: I guess we’ll have to see.
     LENNOX: Miss Proxy, I take it? I'm the investigator takign over.
     ECHO: ....I-I see...pleasure to meet you then..
 -> *Move on.*
-    <<jump ActOneSceneTwoDashTwo>>
+    //<<jump ActOneSceneTwoDashTwo>>
     LENNOX: Let's move on.
 ===
 
-title: ActOneSceneThreeITG
+title: ActOneSceneThreeITG3
 ---
 REEVES: Are you ready to get to the interrogations?
 LENNOX: Ready as ever.
 ===
 
-
-        
-
-//interrogations
-
-title: DRACOspeak
----
-DRACO: Well! Looks like the hotshot is back. 
-DRACO: Had enough fun looking about the area? I know I sure had fun waiting.
-
-===
 
 title: ActOneSceneThreeDBF
 ---
