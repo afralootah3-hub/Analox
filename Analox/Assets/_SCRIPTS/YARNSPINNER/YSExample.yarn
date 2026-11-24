@@ -82,6 +82,12 @@ title: test2
 This lets you show a notification :)
 <<Notify "Hello :D">>
 
+This lets you change the players sanity.
+IF you want to increase sanity, it should be a positive integer. and if you want to decrease it should
+be a negative integer. (1 or -1) 
+! keep in mind that sanity goes from 0-5, 0 being the lowest (bad) 
+<<UpdateSanity -1>>
+
 ===
 title: testInfoNode
 ---
