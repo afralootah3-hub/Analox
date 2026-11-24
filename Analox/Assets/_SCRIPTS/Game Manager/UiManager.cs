@@ -187,6 +187,9 @@ public class UiManager : MonoBehaviour
             scanButton.SetActive(false);
 
             scanDesc.text = _scanString;
+
+          
+
         }
         else
         {
@@ -195,6 +198,7 @@ public class UiManager : MonoBehaviour
             if (!PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
             {
                 Debug.Log("added item to inventory (not scanned)");
+                MenusManager.instance.notifPopUp("Updated corkboard \n [TAB]");
                 PlayerUI.instance.addItem(_itemDataCache.ItemName);
             }
 
@@ -254,7 +258,7 @@ public class UiManager : MonoBehaviour
 
         if (PlayerUI.instance._inventoryItems.Contains(_itemDataCache.ItemName))
         {
-
+            MenusManager.instance.notifPopUp("Updated corkboard \n [TAB]");
             Debug.Log("updated inventory index to have updated altered itemID");
             PlayerUI.instance._inventoryItems.Remove(_itemDataCache.ItemName);
 
@@ -268,11 +272,13 @@ public class UiManager : MonoBehaviour
     public void OnScannedNPC(npcData nData)
     {
         // pull the scan desc (AND UPDATE TO CORKBOARD INFO? Or this gets updated on  manager?? i forgot)
-
+        
         npcInspectPanel.gameObject.SetActive(true);
         scanInfoTMP.text = nData.scanDesc;
-        _pillmanager.SetSanity(-1);
         isInspectingNPC = true;
+        if (nData.hasScannedNPC) return;
+        MenusManager.instance.notifPopUp("Updated corkboard \n [TAB]");
+        _pillmanager.SetSanity(-1);
         nData.hasScannedNPC = true;
 
     }

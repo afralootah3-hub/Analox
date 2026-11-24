@@ -57,6 +57,13 @@ public class PillManager : MonoBehaviour
     [SerializeField] private string _yellowQTEDialog;
     [SerializeField] private string _ranOutOfPillsDialog;
 
+    private bool ranOutTime = false;
+
+    [SerializeField] private Slider _qteTimerSlider;
+    [SerializeField] private int currentSlider;
+    public float qteTimerDuration = 10f;
+    public float qteTimerSpeed = 5f;
+
     [Header("SHAKE QTE UI")]
     public RectTransform _uiHolderTransfrom;
 
@@ -128,6 +135,7 @@ public class PillManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(this);
         }
+        
     }
 
     #region sanity
@@ -284,6 +292,24 @@ public class PillManager : MonoBehaviour
         _pCC.setPlayerState(PlayerController.playerState.isIdle);
     }
 
+    public void startQTETimer()
+    {
+        
+
+        if(_qteTimerSlider.value > 0)
+        {
+            _qteTimerSlider.value -= (Time.deltaTime * qteTimerSpeed);
+            Debug.Log(_qteTimerSlider.value);
+        }
+        else
+        {
+            _qteTimerSlider.value = 0;
+            
+        }
+
+    }
+    
+
 
     /// <summary>
     /// Called by a button to start the qte.
@@ -308,7 +334,7 @@ public class PillManager : MonoBehaviour
         float cFreq = 0;
         CloseQTEMenu();
         _pCC.setPlayerState(PlayerController.playerState.isDisabled);
-
+        _qteTimerSlider.value = qteTimerDuration;
         float uiShakeAmt = 0;
 
         if (!_qteActive)
@@ -379,7 +405,7 @@ public class PillManager : MonoBehaviour
     private void StartQTE()
     {
         qteGroup.alpha = 1;
-        
+        startQTETimer();
 
         // ping pong across bar 
 
@@ -402,19 +428,26 @@ public class PillManager : MonoBehaviour
             CheckQTESucess();
         }
 
+        if(_qteTimerSlider.value <= 0)
+        {
+            ranOutTime = true;
+            Debug.Log("Time ran out");
+            CheckQTESucess();
+            return;
+        }
 
     }
 
     private void CheckQTESucess()
     {
 
-        if(RectTransformUtility.RectangleContainsScreenPoint(greenZone, pointerTransform.position, null))
+        if(RectTransformUtility.RectangleContainsScreenPoint(greenZone, pointerTransform.position, null) && !ranOutTime)
         {
             Debug.Log("QTE SUCCESS");
             _qteHitGreen = true;
             SetSanity(2);
         }
-        else if(RectTransformUtility.RectangleContainsScreenPoint(yellowZone, pointerTransform.position, null))
+        else if(RectTransformUtility.RectangleContainsScreenPoint(yellowZone, pointerTransform.position, null) && !ranOutTime)
         {
             Debug.Log("QTE HIT YELLOW");
             
@@ -428,6 +461,9 @@ public class PillManager : MonoBehaviour
             _qteFailed = true;
             beginDialogLine(_failQTEDialog);
         }
+
+
+
         _pCC.setPlayerState(PlayerController.playerState.isIdle);
         pillsLeft -= 1;
         Debug.Log(pillsLeft);
@@ -437,6 +473,7 @@ public class PillManager : MonoBehaviour
         EndUIShake();
         pillAmount.text = pillsLeft.ToString();
         Debug.Log(currentSanity);
+        _qteTimerSlider.value = qteTimerDuration;
     }
 
     public void StartCameraShake(float amplitude = 1f, float frequency = 1f)
