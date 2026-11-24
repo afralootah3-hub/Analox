@@ -58,6 +58,7 @@
 //     //<<jump ActOneSceneTwoDashTwo>>
 // ===
 
+<<<<<<< HEAD
 // title: VossSpeakstartDay1
 // ---
 // VOSS: I see you're done with your snooping around, Lysander.
@@ -107,12 +108,64 @@
 //             VOSS: I know he just wanted to help someone who didn't have the means.
 //             VOSS: It feels as if him having a big heart got him targeted and killed.
 //             VOSS: As stupid as he was…Cipher didn’t deserve that. At all.
+=======
+title: VossSpeakstartDay1
+---
+VOSS: I see you're done with your snooping around, Lysander.
+VOSS: In which case I suppose I'm next on the chopping block?
+-> *Ask about her*
+    VOSS: What business do you have to know about me? You’re here to find out what happened to my idiot brother.
+    //LENNOX:
+    -> *Persist.*
+        VOSS: Lovely, you’re one of those.
+        VOSS: What would you even want to know that isn't already globally known?
+        VOSS: Eldest Daughter of Nova Axiom, PR rep, planning, syncing. 
+        VOSS: There’s nothing special to it. I’m just a woman who keeps up with her job.
+    -> *Let up.*
+        VOSS: That's what I figured.
+-> *Ask about the party.*
+    -> *Location.*
+        VOSS: What do you mean by my location.
+        LENNOX: I want to hear from you directly where you were during the party.
+        VOSS: I was speaking to my mother and Cipher in the dining room. 
+        VOSS: We were discussing logistics about Cipher taking the new position.
+        LENNOX: I see.
+        -> What of when he passed on, then?
+            VOSS: ...I was franyly taken aback.
+            VOSS: I watched him take a sip of his drink then choke.
+            VOSS: He dropped his glass, scratched at his neck, then fell to the ground.
+            VOSS: It was...
+            VOSS: ..I-I don't have words.
+            -> And afterwards?
+                VOSS: I didn't stay for "an afterwards".
+                VOSS: I just, left.
+-> *Ask about the victim.*
+    LENNOX: Tell me abourt Cipher.
+    VOSS: Don't you have a file for that?
+    LENNOX: I believe personal relationships matter here as well.
+    VOSS: ...as a person, he's stupid. Reckless, and impulsive.
+    VOSS: But he has a heart of gold. Which is rare to see in this city.
+    VOSS: Always wanting to help those who couldn't help themselves.
+    VOSS: Had mom not wanted to retire, I'm sure he would've kept on with what he was doing.
+    -> Who was Cipher to you?
+        VOSS: …How do you mean?
+        LENNOX: Beyond being your brother; What did he mean to you?
+        VOSS: Sometimes, it's done him a lot of good, others, not so much. 
+        VOSS: The last stupid thing he did…he was trying to make up for it. 
+        -> Stupid thing?
+            VOSS: Monumentally. 
+            VOSS: He never told me the specifics, but I trusted him. 
+            VOSS: I know he just wanted to help someone who didn't have the means.
+            VOSS: It feels as if him having a big heart got him targeted and killed.
+            VOSS: As stupid as he was…Cipher didn’t deserve that. At all.
+>>>>>>> parent of 10640fa (Merge pull request #46 from afralootah3-hub/Damien's-Branch)
 
 
 
 // ===
 title: VossQuestions
 ---
+<<<<<<< HEAD
 // <<if HasItem("Wrist Watch")>>
 // -> *Show her the wrist watch.*
 //     VOSS: Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.
@@ -124,6 +177,35 @@ title: VossQuestions
 //             -> You're implying the existence of an interesting bond.
 //                 VOSS: Who am I to say? Cipher always had an interesting fixation for strays. Much to the family’s dismay. 
 //                 VOSS: It’s never ended well, and now look at him.
+=======
+<<if HasItem("Wrist Watch")>>
+-> *Show her the wrist watch.*
+    VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.”
+    -> Drift?
+        VOSS: “Precisely”
+        -> A gift? For what?
+            VOSS: “From what Cipher said, Draco pulled off something huge for him. That watch was a thank you. 
+            VOSS: Besides, let's be realistic. Drift couldn’t afford something like this.”
+            -> You're implying the existence of an interesting bond.
+                VOSS: “Who am I to say? Cipher always had an interesting fixation for strays. Much to the family’s dismay. 
+                VOSS: It’s never ended well, and now look at him.”
+
+<<endif>>
+
+<<if HasItem("Emptied pill bottle")>>
+-> *Show her the emptied pill bottle.*
+    VOSS: He still hasn’t thrown out the damn-
+    VOSS: ...slob of a man.
+    -> You know what these are?
+        VOSS: Of course I do; those are Cipher’s old meds.
+        –> For?
+            VOSS: His install. But he stopped needing to take them about half a year ago. Guess he never finished them until somewhat recently.
+            -> May I ask how and why you know that?
+                VOSS: Is that actually any of your business?
+                -> Considering its an install that killed him, I think it’s at least fair to know if the medicine had anything to do with it.
+                    VOSS: …you investigators are so, incredibly stingy. Look it up.
+<<endif>>
+>>>>>>> parent of 10640fa (Merge pull request #46 from afralootah3-hub/Damien's-Branch)
 ===
 // <<endif>>
 

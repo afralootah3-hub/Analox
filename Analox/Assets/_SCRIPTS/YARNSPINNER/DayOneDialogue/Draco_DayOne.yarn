@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿title: DracostartDay1w
 ---
 // This is an example of a Yarn Spinner script. Write your dialogue here!
@@ -83,3 +84,9 @@
 // <<endif>>
 // ===
 
+=======
+﻿title: Draco_DayOne
+---
+This is an example of a Yarn Spinner script. Write your dialogue here!
+===
+>>>>>>> parent of 10640fa (Merge pull request #46 from afralootah3-hub/Damien's-Branch)
