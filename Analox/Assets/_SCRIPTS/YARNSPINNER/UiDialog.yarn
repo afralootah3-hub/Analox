@@ -13,12 +13,10 @@
 
 title: FullSanity
 ---
-//called when trying to take a pill even though sanity is high
 I don't feel the need to take anything right now.
 ===
 title: QteFail
 ---
-//put dialog you want to play when the player fails a QTE 
 REEVES: Lennox? Whats going on over there?
 LENNOX: W-What do you mean?
 REEVES: Your hands are shaking. Is everything OK?
@@ -26,7 +24,6 @@ LENNOX: Yeah, I'm good. Don't worry about it.
 ===
 title: QteYellow
 ---
-//put dialog you want to play when the player hits the yellow bar on a QTE
 REEVES: Lysen? Is everything OK over there? You've been still for a while.
 LENNOX: Y-yeah, just needed a moment.
 *Damn, she noticed..*

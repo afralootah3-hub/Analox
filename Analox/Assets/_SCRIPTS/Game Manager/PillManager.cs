@@ -130,7 +130,7 @@ public class PillManager : MonoBehaviour
         }
     }
 
-    #region Yarn Commands
+    #region sanity
 
     /// <summary>
     /// AMT SHOULD ONLY BE EITHER 1 or -1. if bool is true then amt does not matter
@@ -168,13 +168,13 @@ public class PillManager : MonoBehaviour
 
         currentSanity += amt;
 
-        if(currentSanity == maxSanity)
+        if(currentSanity >= maxSanity)
         {
             _SanityEffect.SetFloat("_Blend", 0);
         }
         else if(currentSanity == 4)
         {
-            _SanityEffect.SetFloat("_Blend", 0.1f);
+            _SanityEffect.SetFloat("_Blend", 0.05f);
         }
         else if (currentSanity == 3)
         {
@@ -199,6 +199,14 @@ public class PillManager : MonoBehaviour
     {
         return PillManager.instance.currentSanity;
     }
+
+    [YarnCommand("UpdateSanity")]
+    public static void UpdateSanity(int sanity)
+    {
+        PillManager.instance.SetSanity(sanity);
+    }
+
+
 
     #endregion
    
@@ -355,6 +363,7 @@ public class PillManager : MonoBehaviour
 
     public void beginDialogLine(string dialogNode)
     {
+        if (_dialogRunner == null) _dialogRunner = FindFirstObjectByType<DialogueRunner>();
         _dialogRunner.StartDialogue(dialogNode);
         _pCC.setPlayerState(PlayerController.playerState.isDisabled);
         pillChoiceHolder.SetActive(false);
@@ -405,6 +414,7 @@ public class PillManager : MonoBehaviour
         else if(RectTransformUtility.RectangleContainsScreenPoint(yellowZone, pointerTransform.position, null))
         {
             Debug.Log("QTE HIT YELLOW");
+            
             beginDialogLine(_yellowQTEDialog);
             _qteHitYellow = true;
             SetSanity(1);
@@ -413,7 +423,6 @@ public class PillManager : MonoBehaviour
         {
             Debug.Log("QTE FAIL"); //call function
             _qteFailed = true;
-            SetSanity(-1);
             beginDialogLine(_failQTEDialog);
         }
         _pCC.setPlayerState(PlayerController.playerState.isIdle);
@@ -424,7 +433,7 @@ public class PillManager : MonoBehaviour
         EndCameraShake();
         EndUIShake();
         pillAmount.text = pillsLeft.ToString();
-
+        Debug.Log(currentSanity);
     }
 
     public void StartCameraShake(float amplitude = 1f, float frequency = 1f)
