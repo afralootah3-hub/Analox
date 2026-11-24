@@ -26,7 +26,7 @@ LENNOX: …moving on.
     LENNOX: Let's move on.
 ===
 
-title: DracoSpeakstart
+title: DracoSpeakstartDay11
 ---
 //LENNOX:
 -> *Ask about them.*
@@ -60,8 +60,6 @@ title: DracoSpeakstart
     LENNOX: ..however?
     DRACO: Lets just say trouble was extremely attracted to 'im.
     DRACO: He could never get away no matter how much he tried.
-
-
 ===
 
 title: DracoQuestions
@@ -81,5 +79,13 @@ title: DracoQuestions
                 DRACO: It should probably be around somewhere but don't take my word for that.
 
 <<endif>>
+===
+
+title: DracoReturn
+---
+DRACO: Well look whose back!
+DRACO: To whom do I owe the pleasure?
+-> *Back off.*
+    DRACO: Aw? Leaving already? That's no fun!
 ===
 

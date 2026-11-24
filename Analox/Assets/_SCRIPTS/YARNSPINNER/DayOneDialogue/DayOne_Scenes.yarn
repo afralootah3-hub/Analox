@@ -15,11 +15,11 @@ REEVES: My thoughts exactly. How do you want to proceed?
 -> Inform me of the big, scruffy guy wth the badly dyed hair. //(If you click on DRACO)
     <<jump DRACOintro>>
 
--> Inform me on the stout man with freckles and dead eyes. //(If you click on RIDDICK)
-    <<jump RIDDICKintro>>
+//-> Inform me on the stout man with freckles and dead eyes. //(If you click on RIDDICK)
+    //<<jump RIDDICKintro>>
 
--> Inform me on the rightmost woman, who looks like she's seasick. //(If you click on ECHO)
-    <<jump ECHOintro>>
+//-> Inform me on the rightmost woman, who looks like she's seasick. //(If you click on ECHO)
+    //<<jump ECHOintro>>
 
 -> No need, Eve. //(If you choose to skip)
     LENNOX: We can move on. I’ve already read the file.

@@ -107,9 +107,6 @@ VOSS: In which case I suppose I'm next on the chopping block?
             VOSS: I know he just wanted to help someone who didn't have the means.
             VOSS: It feels as if him having a big heart got him targeted and killed.
             VOSS: As stupid as he was…Cipher didn’t deserve that. At all.
-
-
-
 ===
 title: VossQuestions
 ---
@@ -140,6 +137,13 @@ title: VossQuestions
                 -> Considering its an install that killed him, I think it’s at least fair to know if the medicine had anything to do with it.
                     VOSS: …you investigators are so, incredibly stingy. Look it up.
 <<endif>>
+===
+
+title: VossReturn
+---
+VOSS: Can I help you, Lysander?
+-> *Back off.
+    VOSS: Hm. How annoying.
 ===
 
         //LENNOX: Classic life you have there.
