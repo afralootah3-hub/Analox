@@ -266,6 +266,9 @@ public class PillManager : MonoBehaviour
         _pCC.GetComponent<NavMeshAgent>().ResetPath();
         // when click menu 
         pillChoiceHolder.SetActive(true);
+        _qteHitGreen = false;
+        _qteFailed = false;
+        _qteHitYellow = false;
         if(_pCC == null)
         {
              _pCC = FindFirstObjectByType<PlayerController>();
@@ -287,7 +290,7 @@ public class PillManager : MonoBehaviour
     /// </summary>
     public void EnableQTE()
     {
-        if(currentSanity == maxSanity)
+        if(currentSanity >= maxSanity)
         {
             beginDialogLine(_pillRejectDialog);
             return;
@@ -324,7 +327,7 @@ public class PillManager : MonoBehaviour
                     cAmp = QTESettings.HighAmp;
                     cFreq = QTESettings.HighFreq;
                     uiShakeAmt = QTESettings.HighUI;
-                    qteSpeed += 100f;
+                    qteSpeed += 300f;
                     break;
                 case >= 2 and <= 4:
                     cAmp = QTESettings.MedAmp;

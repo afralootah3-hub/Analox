@@ -25,6 +25,8 @@ public class NpcInteract : MonoBehaviour
     [Header("This is the node that has the choices for interrogation \n like asking about certain objects")]
     public string QuestioningNode;
 
+    [Header("This is the node that plays when the player chooses the interrogation node \n but they have no items in their inventory \n \n this can be the same across all NPC's")]
+    public string EmptyInventoryNode;
 
     #region private refs
     private Transform _playerT;
@@ -321,6 +323,13 @@ public class NpcInteract : MonoBehaviour
         else if(index == 3)
         {
             Debug.Log(index);
+            //only run if player inventory length is not 0
+            if(PlayerUI.instance._inventoryItems.Count == 0)
+            {
+                beginDialogLine(EmptyInventoryNode);
+                return;
+            }
+
             beginDialogLine(QuestioningNode);
             //do smth
             return;

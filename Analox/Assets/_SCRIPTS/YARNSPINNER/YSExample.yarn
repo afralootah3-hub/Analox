@@ -117,3 +117,12 @@ when interacting with an npc
 you can set which node plays by editing the InitalConvoNode on their NPCInteract script in the inspector :)
 
 ===
+title: testQuestionNode
+---
+This is called when the player chooses to interrogate. 
+This SHOULD only appear if the player has at least ONE thing in their inventory
+
+I'd suggest using the yarncommand for checking if the player has certain items, and if they do, 
+letting them choose a dialog option to question the npc about. 
+
+===

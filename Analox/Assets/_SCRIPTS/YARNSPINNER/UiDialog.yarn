@@ -32,3 +32,8 @@ title: NoPills
 ---
 *Any more of these and I'll be out cold.* 
 ===
+title: NoItemsInInventory
+---
+Placeholder line if the player chooses to interrogate a suspect on the action wheel
+but they don't have anything in their inventory.
+===
