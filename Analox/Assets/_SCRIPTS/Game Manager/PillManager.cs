@@ -392,6 +392,8 @@ public class PillManager : MonoBehaviour
 
     public void beginDialogLine(string dialogNode)
     {
+
+        if (_pCC == null) _pCC = FindFirstObjectByType<PlayerController>(); 
         if (_dialogRunner == null) _dialogRunner = FindFirstObjectByType<DialogueRunner>();
         _dialogRunner.StartDialogue(dialogNode);
         _pCC.setPlayerState(PlayerController.playerState.isDisabled);

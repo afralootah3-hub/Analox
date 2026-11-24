@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
     public void ReloadPlayerVariables()
     {
         _pActiveCam = null;
-        _pActiveCam = GameObject.FindGameObjectWithTag("camHolder").GetComponentInChildren<Camera>();
+        _pActiveCam = Camera.main;
         _cameraHolder = null;
         _cameraHolder = GameObject.FindGameObjectWithTag("camHolder").GetComponent<Transform>();
     }
