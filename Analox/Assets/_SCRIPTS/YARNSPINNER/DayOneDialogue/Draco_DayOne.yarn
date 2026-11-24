@@ -1,85 +1,85 @@
-﻿title: DracostartDay1
+﻿title: DracostartDay1w
 ---
-This is an example of a Yarn Spinner script. Write your dialogue here!
-<<jump DRACOintro>>
+// This is an example of a Yarn Spinner script. Write your dialogue here!
+// <<jump DRACOintro>>
 ===
 
-title: DRACOintro
----
-REEVES: Dragomir “Draco” Drift, 35.
-LENNOX: …Please tell me the name is a joke?
-REEVES: Lysen.
-LENNOX: Sorry, proceed.
-REEVES: …They’re listed as a freelancer, though there isn’t any info for what. Originally from the anvil. They were pretty high on the invite list, though not being from any type of money.
-LENNOX: So…the victim invited a street rat off the street to a party of elites. How…generous.
-REEVES: LENNOX.
-LENNOX: …moving on.
--> *Approach.*
-    DRACO: Well howdy there.
-    LENNOX: ...hello to you to. I'll be taking over the case for the next few days.
-    DRACO: Cool. Pleasure to see the new face.
-    DRACO: And a handsome one at that.
-    LENNOX: ...moving on.
-    //<<jump ActOneSceneTwoDashTwo>>
--> *Move on.*
-    //<<jump ActOneSceneTwoDashTwo>>
-    LENNOX: Let's move on.
-===
+// title: DRACOintro
+// ---
+// REEVES: Dragomir “Draco” Drift, 35.
+// LENNOX: …Please tell me the name is a joke?
+// REEVES: Lysen.
+// LENNOX: Sorry, proceed.
+// REEVES: …They’re listed as a freelancer, though there isn’t any info for what. Originally from the anvil. They were pretty high on the invite list, though not being from any type of money.
+// LENNOX: So…the victim invited a street rat off the street to a party of elites. How…generous.
+// REEVES: LENNOX.
+// LENNOX: …moving on.
+// -> *Approach.*
+//     DRACO: Well howdy there.
+//     LENNOX: ...hello to you to. I'll be taking over the case for the next few days.
+//     DRACO: Cool. Pleasure to see the new face.
+//     DRACO: And a handsome one at that.
+//     LENNOX: ...moving on.
+//     //<<jump ActOneSceneTwoDashTwo>>
+// -> *Move on.*
+//     //<<jump ActOneSceneTwoDashTwo>>
+//     LENNOX: Let's move on.
+// ===
 
-title: DracoSpeakstart
----
-//LENNOX:
--> *Ask about them.*
-    DRACO: Ah, the hotshot wants to know about little ‘ol me now?
-    -> *Persist*
-        LENNOX: I’m going to ask you to please cut the act and just answer the question.
-        DRACO: Me oh my. Sure, pretty boy.
-        DRACO: I’m what you might call a…free spirit. Working for my hide and my hide only.
-        DRACO: Unless, of course, someone is willing to put in a little risk for a maaajor reward~
-        DRACO: In which case, I’m your guy!
-    -> *Stop*
-        LENNOX: You know, never mind. Maybe I don’t want to know.
-        DRACO: Suit yourself.
+// title: DracoSpeakstart
+// ---
+// //LENNOX:
+// -> *Ask about them.*
+//     DRACO: Ah, the hotshot wants to know about little ‘ol me now?
+//     -> *Persist*
+//         LENNOX: I’m going to ask you to please cut the act and just answer the question.
+//         DRACO: Me oh my. Sure, pretty boy.
+//         DRACO: I’m what you might call a…free spirit. Working for my hide and my hide only.
+//         DRACO: Unless, of course, someone is willing to put in a little risk for a maaajor reward~
+//         DRACO: In which case, I’m your guy!
+//     -> *Stop*
+//         LENNOX: You know, never mind. Maybe I don’t want to know.
+//         DRACO: Suit yourself.
 
--> *Ask about the party.*
-    LENNOX: Where were you during the party?
-    DRACO: I was out front, smoking a pipe. 
-    -> That it?
-        DRACO: Hey, a guy can't enjoy a smoke by their lonesome?
-        -> Did you see Cipher when they died?
-            DRACO: Naw. I heard the commotion inside, bust the door open and walked in to see him on the ground. 
-            DRACO: It was pretty painful stuff.
-            -> Really? You seem to not be that concerned.
-                DRACO: He ain't the first dead body I've seen in this biz.
-                DRACO: But I've already said too much.
--> *Ask about the victim.*
-    LENNOX: Who was Cipher, in your opinion?
-    DRACO: He was one ambitious guy. 
-    DRACO: Helped me out a ton when I started freelancing. He's pretty respectable in that regard. 
-    DRACO: However...
-    LENNOX: ..however?
-    DRACO: Lets just say trouble was extremely attracted to 'im.
-    DRACO: He could never get away no matter how much he tried.
+// -> *Ask about the party.*
+//     LENNOX: Where were you during the party?
+//     DRACO: I was out front, smoking a pipe. 
+//     -> That it?
+//         DRACO: Hey, a guy can't enjoy a smoke by their lonesome?
+//         -> Did you see Cipher when they died?
+//             DRACO: Naw. I heard the commotion inside, bust the door open and walked in to see him on the ground. 
+//             DRACO: It was pretty painful stuff.
+//             -> Really? You seem to not be that concerned.
+//                 DRACO: He ain't the first dead body I've seen in this biz.
+//                 DRACO: But I've already said too much.
+// -> *Ask about the victim.*
+//     LENNOX: Who was Cipher, in your opinion?
+//     DRACO: He was one ambitious guy. 
+//     DRACO: Helped me out a ton when I started freelancing. He's pretty respectable in that regard. 
+//     DRACO: However...
+//     LENNOX: ..however?
+//     DRACO: Lets just say trouble was extremely attracted to 'im.
+//     DRACO: He could never get away no matter how much he tried.
 
 
-===
+// ===
 
-title: DracoQuestions
----
-<<if HasItem("Wrist Watch")>>
--> *Pull out the wrist watch.*
-    DRACO: Oi! That’s my precious girl!! Didn’t realize I left her in the bedroom after my nap.
-    -> Oh? Why would she be there?
-        DRACO: Ah. I got hammered a few hours into the party then passed out somewhere in the bathroom. 
-        DRACO: Woke up in the bed so I assume Ci tucked me in all nice n sweet…though...
-        DRACO: the bottle I was sippin’ from went missin’ before I could finish it.
-        -> Do you remember what it was you were drinking?
-            DRACO: Considerin it basically burnt my liver wide open, ‘course I do.  
-            –> ...well?
-                DRACO: OH! You actually want the name of it. It was a brand called ‘Fairy Dust’. 
-                DRACO: They make a mean absinthe. Asked Ci if I could take it off his hands and he didn’t care less.
-                DRACO: It should probably be around somewhere but don't take my word for that.
+// title: DracoQuestions
+// ---
+// <<if HasItem("Wrist Watch")>>
+// -> *Pull out the wrist watch.*
+//     DRACO: Oi! That’s my precious girl!! Didn’t realize I left her in the bedroom after my nap.
+//     -> Oh? Why would she be there?
+//         DRACO: Ah. I got hammered a few hours into the party then passed out somewhere in the bathroom. 
+//         DRACO: Woke up in the bed so I assume Ci tucked me in all nice n sweet…though...
+//         DRACO: the bottle I was sippin’ from went missin’ before I could finish it.
+//         -> Do you remember what it was you were drinking?
+//             DRACO: Considerin it basically burnt my liver wide open, ‘course I do.  
+//             –> ...well?
+//                 DRACO: OH! You actually want the name of it. It was a brand called ‘Fairy Dust’. 
+//                 DRACO: They make a mean absinthe. Asked Ci if I could take it off his hands and he didn’t care less.
+//                 DRACO: It should probably be around somewhere but don't take my word for that.
 
-<<endif>>
-===
+// <<endif>>
+// ===
 
