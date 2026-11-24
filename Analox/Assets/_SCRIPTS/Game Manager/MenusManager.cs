@@ -275,6 +275,19 @@ public class MenusManager : MonoBehaviour
 
     }
 
+    public void notifPopUp(string notif)
+    {
+        if(notifTMP == null || notifCanvasGrp == null)
+        {
+            notifTMP = GameObject.FindGameObjectWithTag("notif").GetComponent<TextMeshProUGUI>();
+            notifCanvasGrp = GameObject.FindGameObjectWithTag("notifGrp").GetComponent<CanvasGroup>();
+        }
+        
+            
+        notifTMP.text = notif;
+        StartNotifRoutine();
+    }
+
 
     public IEnumerator ShowNotification()
     {
