@@ -31,6 +31,8 @@ public class ActionWheel : MonoBehaviour
     private Canvas _canvas;
     private NavMeshAgent _agent;
 
+    
+
     private void Start()
     {
         _canvas = GetComponentInParent<Canvas>();
