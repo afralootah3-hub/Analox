@@ -81,12 +81,31 @@ title: test2
 ---
 This lets you show a notification :)
 <<Notify "Hello :D">>
+The notification plays right after the command! and doesn't only play at the end of dialog
+
 
 This lets you change the players sanity.
 IF you want to increase sanity, it should be a positive integer. and if you want to decrease it should
 be a negative integer. (1 or -1) 
 ! keep in mind that sanity goes from 0-5, 0 being the lowest (bad) 
 <<UpdateSanity -1>>
+
+This is a check if the player has entered a certain room.
+Currently this only checks for Bedroom
+
+Don't change the string "Bedroom", but you can change the boolean to false if you need
+
+<<if CheckEnter("Bedroom") == true>>
+    The player has entered the bedroom.
+    Here you would have the npc's node jump to the dialog they'd have if you 
+    entered the bedroom
+<<endif>>
+
+<<if CheckEnter("Bedroom") == false>>
+    The player has NOT entered the bedroom.
+    Here you would have the npc's node jump to the dialog they'd have if you 
+    entered the bedroom
+<<endif>>
 
 ===
 title: testInfoNode

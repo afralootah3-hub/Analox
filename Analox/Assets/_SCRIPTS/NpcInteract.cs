@@ -22,6 +22,9 @@ public class NpcInteract : MonoBehaviour
 
     [Header("this is the conversation you have with reeves when you choose the info option :)")]
     public string InitialConvoNode;
+    [Header("This is the node that has the choices for interrogation \n like asking about certain objects")]
+    public string QuestioningNode;
+
 
     #region private refs
     private Transform _playerT;
@@ -315,6 +318,13 @@ public class NpcInteract : MonoBehaviour
             _ui.OnScannedNPC(dialogdata.storyData);
             return;
         }
+        else if(index == 3)
+        {
+            Debug.Log(index);
+            beginDialogLine(QuestioningNode);
+            //do smth
+            return;
+        }
         
         else if (index == -1) // out of list bounds -> exit interaction
         {
@@ -425,5 +435,21 @@ public class NpcInteract : MonoBehaviour
 
 
     }
+
+    [YarnFunction("CheckEnter")]
+    public static bool HasEnteredRoom(string roomName)
+    {
+        if(roomName == "Bedroom")
+        {
+            if (GameController.instance.enterC.enteredBedroom) return true;
+            else return false;
+        }
+        else
+        {
+            return false;
+
+        }
+    }
+
 
 }

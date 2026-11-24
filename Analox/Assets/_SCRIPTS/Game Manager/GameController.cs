@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -12,8 +13,14 @@ public enum dayState { day1, day2, day3, gameEnd}
 public class GameController : MonoBehaviour
 {
     public static GameController instance { get; set; }
-    [Space(20)]
+    
     //public GameObject playerRig;
+    [Serializable]
+    public struct enteredCheck
+    {
+        public bool enteredBedroom;
+    }
+    public enteredCheck enterC;
 
     public dayState currentDay;
 
@@ -152,6 +159,9 @@ public class GameController : MonoBehaviour
     {
         if (scene.name == MainMenu) return;
         if (scene.name == Credits) return;
+
+        if (scene.name == Bedroom) enterC.enteredBedroom = true;
+
 
         _loadRoomCache = FindFirstObjectByType<LoadRoom>();
         InsantiateCameraSetup();
