@@ -37,3 +37,7 @@ title: NoItemsInInventory
 Placeholder line if the player chooses to interrogate a suspect on the action wheel
 but they don't have anything in their inventory.
 ===
+title: testIntroSequence
+---
+intro sequence plays
+===

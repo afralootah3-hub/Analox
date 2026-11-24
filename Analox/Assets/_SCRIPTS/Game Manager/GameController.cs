@@ -20,6 +20,10 @@ public class GameController : MonoBehaviour
     {
         public bool enteredBedroom;
     }
+
+    public string IntroNode;
+    public bool firstEntry;
+
     public enteredCheck enterC;
 
     public dayState currentDay;
@@ -160,8 +164,11 @@ public class GameController : MonoBehaviour
         if (scene.name == MainMenu) return;
         if (scene.name == Credits) return;
 
-        if (scene.name == Bedroom) enterC.enteredBedroom = true;
-
+        if (scene.name == Bedroom)
+        {
+            enterC.enteredBedroom = true;
+            firstEntry = true;
+        }
 
         _loadRoomCache = FindFirstObjectByType<LoadRoom>();
         InsantiateCameraSetup();
@@ -172,6 +179,10 @@ public class GameController : MonoBehaviour
 
         if(scene.name == MainHouse)
         {
+            if (!firstEntry) PillManager.instance.beginDialogLine(IntroNode);
+            
+
+
             if (_hasSavedPosition)
             {
                 MovePlayerTo(lastPlayerSpawn);
