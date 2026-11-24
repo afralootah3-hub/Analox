@@ -907,7 +907,7 @@ MonoBehaviour:
   eyes: {fileID: 2010908634}
   viewRange: 10
   InitialConvoNode: DRACOintro
-  QuestioningNode: 
+  QuestioningNode: DracoQuestions
   EmptyInventoryNode: 
   textdata:
     promptText: {fileID: 186672701}
