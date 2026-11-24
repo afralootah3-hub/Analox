@@ -73,8 +73,8 @@ VOSS: In which case I suppose I'm next on the chopping block?
     -> *Let up.*
         VOSS: That's what I figured.
 -> *Ask about the party.*
-    -> *Location.*
-        VOSS: What do you mean by my location.
+        LENNOX: Where were you located during the after party?
+        VOSS: Wouldn't that be in one of your little files?
         LENNOX: I want to hear from you directly where you were during the party.
         VOSS: I was speaking to my mother and Cipher in the dining room. 
         VOSS: We were discussing logistics about Cipher taking the new position.
@@ -115,15 +115,15 @@ title: VossQuestions
 ---
 <<if HasItem("Wrist Watch")>>
 -> *Show her the wrist watch.*
-    VOSS: “Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.”
+    VOSS: Oh. That old thing? It was a gift Cipher gave to the sleazeball a few years back.
     -> Drift?
-        VOSS: “Precisely”
+        VOSS: Precisely
         -> A gift? For what?
-            VOSS: “From what Cipher said, Draco pulled off something huge for him. That watch was a thank you. 
-            VOSS: Besides, let's be realistic. Drift couldn’t afford something like this.”
+            VOSS: From what Cipher said, Draco pulled off something huge for him. That watch was a thank you. 
+            VOSS: Besides, let's be realistic. Drift couldn’t afford something like this.
             -> You're implying the existence of an interesting bond.
-                VOSS: “Who am I to say? Cipher always had an interesting fixation for strays. Much to the family’s dismay. 
-                VOSS: It’s never ended well, and now look at him.”
+                VOSS: Who am I to say? Cipher always had an interesting fixation for strays. Much to the family’s dismay. 
+                VOSS: It’s never ended well, and now look at him.
 
 <<endif>>
 
