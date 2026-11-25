@@ -26,7 +26,7 @@ public class NpcInteract : MonoBehaviour
     public string QuestioningNode;
 
     [Header("This is the node that plays when the player chooses the interrogation node \n but they have no items in their inventory \n \n this can be the same across all NPC's")]
-    public string EmptyInventoryNode;
+    public string EmptyInventoryNode = "NoItemsInInventory";
 
     #region private refs
     private Transform _playerT;
@@ -97,6 +97,7 @@ public class NpcInteract : MonoBehaviour
     {
         Debug.Log("Dialog from " + this.name + "has ended");
         if (_inRangeOfNPC) canInteract = true;
+        if (_wheel.isOpen) _wheel.CloseWheel(-1);
 
     }
 
@@ -165,7 +166,7 @@ public class NpcInteract : MonoBehaviour
             //prompt interaction pops up 
             setText(textdata.interactText);
             canInteract = true;
-            Debug.Log(canInteract);
+            Debug.Log("player entered collider of " + this.name);
             _inRangeOfNPC = true;
         }
     }
@@ -179,6 +180,7 @@ public class NpcInteract : MonoBehaviour
             //reset everything
             setText("");
             canInteract = false;
+            _inRangeOfNPC = false;
         }
     }
 
@@ -338,6 +340,7 @@ public class NpcInteract : MonoBehaviour
         else if (index == -1) // out of list bounds -> exit interaction
         {
             _player.setPlayerState(PlayerController.playerState.isIdle);
+            _wheel.CloseWheel(-1);
             Debug.Log(index);
             return;
         }
@@ -439,9 +442,11 @@ public class NpcInteract : MonoBehaviour
 
     public void beginDialogLine(string dialogNode)
     {
+        if (_wheel.isOpen) _wheel.CloseWheel(-1);
+        canInteract = false;
         dialogdata.npcDialogue.StartDialogue(dialogNode);
-        _player.setPlayerState(PlayerController.playerState.isDisabled);
-
+        PlayerController.instance.setPlayerState(PlayerController.playerState.isDisabled);
+       
 
     }
 

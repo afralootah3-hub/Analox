@@ -37,7 +37,6 @@ the scripts will automatically add it to inventory with that
 
 <<jump VOSSintro>>
 ===
-
 title: VOSSintro
 ---
 <<AddNPC "VOSS">>
