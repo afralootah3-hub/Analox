@@ -169,7 +169,7 @@ MonoBehaviour:
   viewRange: 10
   InitialConvoNode: VOSSintro
   QuestioningNode: VossQuestions
-  EmptyInventoryNode: 
+  EmptyInventoryNode: NoItemsInInventory
   textdata:
     promptText: {fileID: 186672701}
     interactText: Interact?
@@ -922,9 +922,9 @@ MonoBehaviour:
   type: 0
   eyes: {fileID: 2010908634}
   viewRange: 10
-  InitialConvoNode: DRACOintro
+  InitialConvoNode: DRACOintrostartDay1
   QuestioningNode: DracoQuestions
-  EmptyInventoryNode: 
+  EmptyInventoryNode: NoItemsInInventory
   textdata:
     promptText: {fileID: 186672701}
     interactText: Interact?
@@ -1046,7 +1046,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 692496354375182014, guid: 0d4ac2745554fc04e820f131b6bbe6c6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 637.57605
+      value: 639.1
       objectReference: {fileID: 0}
     - target: {fileID: 692496354375182014, guid: 0d4ac2745554fc04e820f131b6bbe6c6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1220,7 +1220,7 @@ Transform:
   m_GameObject: {fileID: 7074556955564146418}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.19, z: -2.98}
+  m_LocalPosition: {x: -0.07, y: -2.19, z: -9.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1727,38 +1727,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1340375822729306444, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -30.018982
-      objectReference: {fileID: 0}
-    - target: {fileID: 1340375822729306444, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 11.383331
-      objectReference: {fileID: 0}
-    - target: {fileID: 1340375822729306444, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -8.980137
-      objectReference: {fileID: 0}
-    - target: {fileID: 1340375822729306444, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.7070087
-      objectReference: {fileID: 0}
-    - target: {fileID: 1340375822729306444, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.1011593
-      objectReference: {fileID: 0}
-    - target: {fileID: 1340375822729306444, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.6928761
-      objectReference: {fileID: 0}
-    - target: {fileID: 1340375822729306444, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.09913719
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412693511180752594, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: m_TagString
-      value: pText
-      objectReference: {fileID: 0}
     - target: {fileID: 1630308546144843133, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -1898,14 +1866,6 @@ PrefabInstance:
     - target: {fileID: 7420236727372140581, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8341860690841375410, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: field of view
-      value: 26.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8341860690841375410, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
-      propertyPath: near clip plane
-      value: 19.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

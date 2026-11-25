@@ -254,7 +254,7 @@ public class PillManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("CURRENT SANITY IS " + currentSanity);
+        //Debug.Log("CURRENT SANITY IS " + currentSanity);
         
         if (_qteActive)
         {

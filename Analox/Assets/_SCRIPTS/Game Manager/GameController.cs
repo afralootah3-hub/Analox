@@ -46,8 +46,8 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if (!TryGetPlayerCC()) return;
-
+        //if (!TryGetPlayerCC()) return;
+        if(_playerCC == null) _playerCC = PlayerController.instance;
 
         //if (GameObject.FindGameObjectWithTag("camHolder") == null)
         //{
@@ -90,7 +90,7 @@ public class GameController : MonoBehaviour
             return true;
         }
 
-        _playerCC = FindFirstObjectByType<PlayerController>();
+        _playerCC = PlayerController.instance;
         if(_playerCC == null)
         {
             Debug.LogWarning("NO PLAYER CONTROLLER FOUND");
@@ -173,6 +173,8 @@ public class GameController : MonoBehaviour
         _loadRoomCache = FindFirstObjectByType<LoadRoom>();
         InsantiateCameraSetup();
         DisableDoors();
+        Debug.Log("player cc is " + _playerCC);
+        PlayerController.instance.setPlayerState(PlayerController.playerState.isIdle);
         if (_playerCC == null) _playerCC = FindFirstObjectByType<PlayerController>();
         _playerCC.setPlayerState(PlayerController.playerState.isIdle);
         MenusManager.instance.CloseCork();

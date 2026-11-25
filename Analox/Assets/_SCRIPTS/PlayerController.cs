@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 using static GameController;
 using RangeAttribute = UnityEngine.RangeAttribute;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerController : MonoBehaviour
@@ -113,7 +114,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _ui = GameController.instance.GetComponent<UiManager>();
-
+        
         // this will later be moved to ONSCENELOAD //
         //_cameraHolder = GameObject.FindWithTag("camHolder").transform;
     }
@@ -145,17 +146,25 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
         playerActions.Enable();
         _clickAction.performed += OnClickPerformed;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("LOADED SCENE " + scene.name);
+        setPlayerState(playerState.isIdle);
     }
 
     private void OnDisable()
     {
         playerActions.Disable();
         _clickAction.performed -= OnClickPerformed;
-
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     //          PLAYER STATE MACHINE        //

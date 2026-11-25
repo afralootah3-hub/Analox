@@ -151,9 +151,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NpcInteract
   type: 0
+  eyes: {fileID: 0}
+  viewRange: 10
+  InitialConvoNode: 
+  QuestioningNode: 
+  EmptyInventoryNode: NoItemsInInventory
   textdata:
     promptText: {fileID: 0}
-    interactText: speak
+    interactText: interact
   canInteract: 0
   dialogdata:
     npcDialogue: {fileID: 0}
