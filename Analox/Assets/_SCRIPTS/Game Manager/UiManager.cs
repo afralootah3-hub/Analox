@@ -48,7 +48,10 @@ public class UiManager : MonoBehaviour
     public CanvasGroup npcInspectPanel;
     public TextMeshProUGUI scanInfoTMP;
     public TextMeshProUGUI reportInfoTMP;
+
+    public CanvasGroup npcScanDesc;
     public bool isInspectingNPC;
+    public GameObject scanNpcButton;
 
 
     #region ///           PRIVATE REFERENCES    not organized </3         ///
@@ -64,6 +67,7 @@ public class UiManager : MonoBehaviour
     private bool _isInspecting; //temporary bool, will be swapped to follow state machine instead
 
     private ItemData _itemDataCache;
+    private npcData _npcDataCache;
     private Transform _doorTransformCache;
     private PillManager _pillmanager;
     private List<string> itemIndex; //stores the itemID's (which is the itemName)//
@@ -96,6 +100,7 @@ public class UiManager : MonoBehaviour
         promptCanvas.SetActive(false);
         npcInspectPanel.gameObject.SetActive(false);
 
+
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _pillmanager = GetComponent<PillManager>();
         _menusManager = GetComponent<MenusManager>();
@@ -105,7 +110,7 @@ public class UiManager : MonoBehaviour
     private void Start()
     {
         if (scanDesc == null || itemDesc == null || itemName == null) Debug.LogWarning("MISSING COMPONENT IN INSPECTOR");
-
+        if (npcScanDesc == null) Debug.LogWarning("MISSING NPCSCANDESC IN INSPECTOR");
     }
 
     private void Update()
@@ -269,10 +274,10 @@ public class UiManager : MonoBehaviour
     }
 
     #region NPC Interaction stuff
-    public void OnScannedNPC(npcData nData)
+    public void OnScannedNPC() //called by button 
     {
         // pull the scan desc (AND UPDATE TO CORKBOARD INFO? Or this gets updated on  manager?? i forgot)
-        
+        /*
         npcInspectPanel.gameObject.SetActive(true);
         scanInfoTMP.text = nData.scanDesc;
         isInspectingNPC = true;
@@ -280,25 +285,60 @@ public class UiManager : MonoBehaviour
         MenusManager.instance.notifPopUp("Updated corkboard \n [TAB]");
         _pillmanager.SetSanity(-1);
         nData.hasScannedNPC = true;
+        */
+
+        // when hit the button to scan display text, and later add some cool animations or smth 
+        if (_npcDataCache == null) return;
+        if (_npcDataCache.hasScannedNPC) return;
+        isInspectingNPC = true;
+        MenusManager.instance.notifPopUp("Updated corkboard! \n [TAB]");
+        _pillmanager.SetSanity(-1);
+        scanInfoTMP.text = _npcDataCache.scanDesc;
+        npcScanDesc.alpha = 1; // make it visible
+        scanNpcButton.SetActive(false); //get rid of button
+        _npcDataCache.hasScannedNPC = true;
 
     }
+    
+
 
     public void OnViewNPCInfo(npcData nData)
     {
         // viewing the info
-        npcInspectPanel.gameObject.SetActive(true);
-        reportInfoTMP.text = nData.reportInfoDesc;
+        // save cache for running OnScan
+        _npcDataCache = nData;
 
+
+        npcInspectPanel.gameObject.SetActive(true);
+        reportInfoTMP.text = _npcDataCache.reportInfoDesc;
+        
         isInspectingNPC = true;
+
+        if (_npcDataCache.hasScannedNPC)
+        {
+            scanInfoTMP.text = _npcDataCache.scanDesc;
+            npcScanDesc.alpha = 1; // make it visible
+            scanNpcButton.SetActive(false); //get rid of button
+        }
+        else
+        {
+            npcScanDesc.alpha = 0;
+        }
+
 
     }
 
+
+
+
     public void CloseNPCPanel()
     {
+        _npcDataCache = null;
         npcInspectPanel.gameObject.SetActive(false);
         reportInfoTMP.text = "";
         _playerCC.setPlayerState(PlayerController.playerState.isIdle);
         scanInfoTMP.text = "";
+        npcScanDesc.alpha = 0;
     }
 
 
