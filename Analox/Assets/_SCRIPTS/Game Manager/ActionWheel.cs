@@ -55,7 +55,7 @@ public class ActionWheel : MonoBehaviour
 
     public void CloseWheel(int selected)
     {
-        if (isOpen == false) return;
+       if (isOpen == false) return;
 
         //gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.None;

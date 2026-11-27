@@ -20,14 +20,6 @@ public class NpcInteract : MonoBehaviour
 
     private bool _hasScannedNPC;
 
-    [Header("this is the conversation you have with reeves when you choose the info option :)")]
-    public string InitialConvoNode;
-    [Header("This is the node that has the choices for interrogation \n like asking about certain objects")]
-    public string QuestioningNode;
-
-    [Header("This is the node that plays when the player chooses the interrogation node \n but they have no items in their inventory \n \n this can be the same across all NPC's")]
-    public string EmptyInventoryNode = "NoItemsInInventory";
-
     #region private refs
     private Transform _playerT;
     private bool _spotting;
@@ -140,25 +132,7 @@ public class NpcInteract : MonoBehaviour
 
     //--------RUNTIME METHODS--------//
 
-    public void HasScannedNPC()
-    {
-        // runs when player chooses the index aligning with scan from action wheel 
-        if (_hasScannedNPC)
-        {
-            // dont waste sanity
-            //call uimanager thingy
-        }
-        else
-        {
-            _hasScannedNPC = true;
-        }
-        
-
-    }
-
-
-
-
+    
     public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -303,30 +277,33 @@ public class NpcInteract : MonoBehaviour
     {
         
 
-        if(index == 0) // first in list
+        if(index == 0) // leave 
+        {
+            Debug.Log(index);
+            //_ui.OnScannedNPC(dialogdata.storyData);
+            //_player.setPlayerState(PlayerController.playerState.isIdle);
+            //_wheel.CloseWheel(-1);
+            return;
+
+            
+        }
+        else if (index == 1) //speak
         {
             StartDialogue();
             _ui.isInspectingNPC = false;
-            
         }
-        else if (index == 1)
+        else if(index == 2) // info
         {
             Debug.Log(index);
-            //_ui.OnViewNPCInfo(dialogdata.storyData);
-            beginDialogLine(InitialConvoNode);
+            _ui.OnViewNPCInfo(dialogdata.storyData);
+            //beginDialogLine(ReportInfoNode); //change to startday1
             return;
         }
-        else if(index == 2)
-        {
-            Debug.Log(index);
-            _ui.OnScannedNPC(dialogdata.storyData);
-            return;
-        }
-        else if(index == 3)
+        /* else if (index == 3) old ask about section
         {
             Debug.Log(index);
             //only run if player inventory length is not 0
-            if(PlayerUI.instance._inventoryItems.Count == 0)
+            if (PlayerUI.instance._inventoryItems.Count == 0)
             {
                 beginDialogLine(EmptyInventoryNode);
                 return;
@@ -336,7 +313,8 @@ public class NpcInteract : MonoBehaviour
             //do smth
             return;
         }
-        
+        */
+
         else if (index == -1) // out of list bounds -> exit interaction
         {
             _player.setPlayerState(PlayerController.playerState.isIdle);
@@ -359,7 +337,7 @@ public class NpcInteract : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, viewRange);
     }
 
-
+    #region Yarncommands
     /// <summary>
     /// 'sets' the $dialogPhase variable in YarnSpinner script
     /// </summary>
@@ -432,7 +410,21 @@ public class NpcInteract : MonoBehaviour
     //          YarnCommands for NPC and player Sprite Changes      //
     //written later
 
+    [YarnFunction("CheckEnter")]
+    public static bool HasEnteredRoom(string roomName)
+    {
+        if(roomName == "Bedroom")
+        {
+            if (GameController.instance.enterC.enteredBedroom) return true;
+            else return false;
+        }
+        else
+        {
+            return false;
 
+        }
+    }
+    #endregion
 
     public void OnApplicationQuit()
     {
@@ -450,20 +442,6 @@ public class NpcInteract : MonoBehaviour
 
     }
 
-    [YarnFunction("CheckEnter")]
-    public static bool HasEnteredRoom(string roomName)
-    {
-        if(roomName == "Bedroom")
-        {
-            if (GameController.instance.enterC.enteredBedroom) return true;
-            else return false;
-        }
-        else
-        {
-            return false;
-
-        }
-    }
 
 
 }

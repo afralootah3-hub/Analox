@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77fc68443e5f484fafe19255f2aaaf8, type: 3}
+  m_Name: VOSScopy
+  m_EditorClassIdentifier: Assembly-CSharp::npcData
+  npcName: Voss
+  imageTexture: {fileID: 0}
+  basicDesc: Voss Axiom
+  scanDesc: 'Voss has a husband and two children she has kept out of the eyes of
+    the media.
+
+
+    There is a record stating how she feels about becoming CEO for
+    AN. Her answer was rather negative.
+
+
+    There is also records of her discrediting
+    or  responding somewhat hostile for subjects related to her brother.'
+  reportInfoDesc: "Axiom, Voss. \n42 years old\nCOO for Axiom Networks\nOriginally
+    from The Furnace.\n\nA guest at the party, and the victim's older sister.\n\nTestimonies
+    claim she was present in the dining room speaking with the mother of the deceased
+    during the time of death."
+  startingNode: vossCopy2
+  currentPhase: 1
+  hasScannedNPC: 0

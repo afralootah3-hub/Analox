@@ -1,5 +1,6 @@
-﻿title: BobstartDay1
+﻿title: vossCopy2startDay1
 ---
+<<jump test3>>
 <<jump test2>>
 This is an example/Reference of how to set up dialog
 
@@ -119,10 +120,27 @@ you can set which node plays by editing the InitalConvoNode on their NPCInteract
 ===
 title: testQuestionNode
 ---
-This is called when the player chooses to interrogate. 
-This SHOULD only appear if the player has at least ONE thing in their inventory
+REWORKED
+===
+title: test3
+---
+<<declare $next_node = "">>
+this is how to setup interrogation/asking about an item 
+Tester: Is there something you wanted to ask me about
+// now call the yarncommand!
+<<showDropdown GAMEMANAGER "Bob">>
+<<jump {$next_node}>>
+===
+title: Bob_showObjHolder
+---
+wow you have ObjHolder
+===
+title: Bob_showObjHolder_scan
+---
+you have ObjHolder and its scanned
 
-I'd suggest using the yarncommand for checking if the player has certain items, and if they do, 
-letting them choose a dialog option to question the npc about. 
-
+===
+title: Bob_leave
+---
+Lennox: Nevermind
 ===

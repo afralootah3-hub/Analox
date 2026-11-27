@@ -12,13 +12,13 @@ EditorBuildSettings:
     path: Assets/Scenes/PrototypeScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/DRAFT/AFRA/RefScene.unity
+    path: Assets/Scenes/DRAFT/AFRA/V01/RefScene.unity
     guid: 8fdbfdd212e02b543b133100422bb58f
   - enabled: 1
-    path: Assets/Scenes/DRAFT/AFRA/RefHouse.unity
+    path: Assets/Scenes/DRAFT/AFRA/V01/RefHouse.unity
     guid: 9a62794f10aa010438009fe40847823f
   - enabled: 1
-    path: Assets/Scenes/DRAFT/AFRA/RefTest.unity
+    path: Assets/Scenes/DRAFT/AFRA/V01/RefTest.unity
     guid: 4b6c9a937eb65d3448f735dffd72f63f
   - enabled: 1
     path: Assets/Scenes/DamienBranch Edits/RefScene DB.unity
