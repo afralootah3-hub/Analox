@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2307129697879710830
 Transform:
   m_ObjectHideFlags: 0
@@ -130,7 +130,9 @@ MonoBehaviour:
   type: 0
   eyes: {fileID: 6727827617409267169}
   viewRange: 10
-  InitialConvoNode: testInfoNode
+  ReportInfoNode: 
+  QuestioningNode: 
+  EmptyInventoryNode: NoItemsInInventory
   textdata:
     promptText: {fileID: 0}
     interactText: Interact?

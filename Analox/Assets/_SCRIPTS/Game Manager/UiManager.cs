@@ -13,9 +13,9 @@ using Yarn.Unity;
 public class UiManager : MonoBehaviour
 {
     // MUST BE AND STAY ATTACHED TO GAMECONTROLLER GAMEOBJECT //
+    
 
-
-    //      Handles     //
+    
 
     // -> handles object inspection system
     #region VARIABLES
@@ -53,6 +53,17 @@ public class UiManager : MonoBehaviour
     public bool isInspectingNPC;
     public GameObject scanNpcButton;
 
+    [Header("YARNSPINNER DROP DOWN MENU VARS")]
+    [SerializeField] private GameObject _dropPanel;
+    [SerializeField] private TMP_Dropdown _dropDownTMP;
+    [SerializeField] private InMemoryVariableStorage _variableStorage;
+
+    private string chosenNode; //what option the player picks from dropdown
+    
+    //node names in the same order as dropdown entries
+    private List<string> nodeNames = new List<string>(); 
+
+    
 
     #region ///           PRIVATE REFERENCES    not organized </3         ///
     private Renderer _inspectObjRend; // cache //
@@ -99,7 +110,8 @@ public class UiManager : MonoBehaviour
         activeCam = Camera.main;
         promptCanvas.SetActive(false);
         npcInspectPanel.gameObject.SetActive(false);
-
+        _dropPanel.SetActive(false);
+        _dropDownTMP.onValueChanged.AddListener(OnDropdownChanged);
 
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _pillmanager = GetComponent<PillManager>();
@@ -111,6 +123,80 @@ public class UiManager : MonoBehaviour
     {
         if (scanDesc == null || itemDesc == null || itemName == null) Debug.LogWarning("MISSING COMPONENT IN INSPECTOR");
         if (npcScanDesc == null) Debug.LogWarning("MISSING NPCSCANDESC IN INSPECTOR");
+    }
+
+    /*  Dropdown logic
+        1. yarn runs this command <<showDropDown GAMEMANAGER "NPCprefix">> 
+             the prefix is just what the yarnspinner nodes start with, like npc name 
+        2. build a dropdown based on the players inventory
+             each item is paired with the name of the yarn node that should play if the 
+             player picks the option, built from Npc prefix: "name" + "_show" + "objectname"
+        3. The method is a coroutine, so yarn waits for it to finish, it shows panel then
+            pauses on WaitUntil, keeping the YS script paused on the command
+
+                ^ this just makes it easier than individually assigning a node per item
+                    manually here
+        4. when the player picks smth, OnDropDownChanged stores the matching node in chosen node
+            and ends the WaitUntil
+
+        5. the method hides the panel and writes chosenNode into the YS variable $next_node
+            yarn then handles everything after that with a jump command 
+    */
+
+    [YarnCommand("showDropdown")]
+    public IEnumerator ShowInventoryDropdown(string npcPrefix)
+    {
+        //reset from earlier uses
+        chosenNode = null;
+        nodeNames.Clear();
+
+        List<string> labels = new List<string>();
+
+        //index 0 is a placeholder
+        // a drop down doesn't fire its change event when you pick the entry that's already
+        // selected, so this placeholder makes sure the first real item always counts as a change
+        labels.Add("Choose..");
+        nodeNames.Add("");
+
+        //one entry per item, label is itemID which is just its name
+        // organize it by npcprefix_show_itemname
+        foreach(string itemID in PlayerUI.instance._inventoryItems)
+        {
+            labels.Add(itemID);
+            nodeNames.Add(npcPrefix + "_show" + itemID);
+        }
+
+        //this should always be the last entry for convinience of the player
+        labels.Add("Never mind");
+        nodeNames.Add(npcPrefix + "_leave");
+
+        // rebuild the dropdown each time and select the placeholder without firing change event
+        _dropDownTMP.ClearOptions();
+        _dropDownTMP.AddOptions(labels);
+        _dropDownTMP.SetValueWithoutNotify(0);
+        _dropDownTMP.RefreshShownValue();
+
+        _dropPanel.SetActive(true);
+
+        //yarn stays stuck until chosen note is set, because theres a <<jump>> that we don't want
+        // to fire immediately until the player decides which node to go to
+        yield return new WaitUntil(() => chosenNode != null);
+
+        //send the node to yarnspinner so it automatically knows what node to jump to
+        _dropPanel.SetActive(false);
+        _variableStorage.SetValue("$next_node", chosenNode);
+    
+    }
+
+    private void OnDropdownChanged(int index)
+    {
+        if(index == 0) //ignore placeholder
+        {
+            return;
+        }
+
+        //look up the node name for picked entry, this also ends the WaitUntil
+        chosenNode = nodeNames[index];
     }
 
     private void Update()

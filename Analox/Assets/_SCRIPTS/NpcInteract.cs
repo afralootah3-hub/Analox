@@ -20,14 +20,6 @@ public class NpcInteract : MonoBehaviour
 
     private bool _hasScannedNPC;
 
-    [Header("this is the conversation you have with reeves when you choose the info option :)")]
-    public string ReportInfoNode;
-    [Header("This is the node that has the choices for interrogation \n like asking about certain objects")]
-    public string QuestioningNode;
-
-    [Header("This is the node that plays when the player chooses the interrogation node \n but they have no items in their inventory \n \n this can be the same across all NPC's")]
-    public string EmptyInventoryNode = "NoItemsInInventory";
-
     #region private refs
     private Transform _playerT;
     private bool _spotting;
@@ -289,8 +281,8 @@ public class NpcInteract : MonoBehaviour
         {
             Debug.Log(index);
             //_ui.OnScannedNPC(dialogdata.storyData);
-            _player.setPlayerState(PlayerController.playerState.isIdle);
-            _wheel.CloseWheel(-1);
+            //_player.setPlayerState(PlayerController.playerState.isIdle);
+            //_wheel.CloseWheel(-1);
             return;
 
             
