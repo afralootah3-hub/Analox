@@ -8,6 +8,8 @@ public class DrawingManager : MonoBehaviour
 
     private LineRenderer _lineRenderer;
     private Vector3 _lastPos;
+
+    
     
 
     //ad a new point to the current strokes linerender at the given world pos

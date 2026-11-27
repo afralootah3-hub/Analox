@@ -47,9 +47,20 @@ public class MenusManager : MonoBehaviour
 
     public RectTransform itemDescTransform;
     public TextMeshProUGUI itemDescTMP;
+
+    [Header("Sidebar stuff")]
+    [SerializeField] private RectTransform sideBarRECT;
+    [SerializeField] private RectTransform _sBEndPos;
+    [SerializeField] private float _sideBDuration = 0.3f;
+    [SerializeField] private float _SideBspeed = 2f;
+
+    private Vector2 _sBStartPos;
+    private Vector2 _sbClosedPos;
+    private Coroutine _slideRoutine;
+    private bool _sideBarIsOpen;
+
     
    
-    public RectTransform itemDescStartPos, scanDescStartPos;
 
     // these are STORING the data recieved form ui manager and should not be assigned in inspector
     public List<ItemData> allClueItems;
@@ -58,6 +69,10 @@ public class MenusManager : MonoBehaviour
 
     private void Awake()
     {
+        _sBStartPos = sideBarRECT.anchoredPosition;
+        _sbClosedPos = _sBEndPos.anchoredPosition;
+        //sideBarRECT.anchoredPosition = _sbClosedPos;
+
         if (instance != null && instance != this)
         {
             Destroy(this.gameObject);
@@ -96,7 +111,7 @@ public class MenusManager : MonoBehaviour
     {
         corkBoardHolder.SetActive(false);
         _corkMenuOpen = false;
-
+        
        
         notifTMP = GameObject.FindGameObjectWithTag("notif").GetComponent<TextMeshProUGUI>();
         notifCanvasGrp = GameObject.FindGameObjectWithTag("notifGrp").GetComponent<CanvasGroup>();
@@ -162,9 +177,6 @@ public class MenusManager : MonoBehaviour
             
         }
     }
-
-    
-
     public void ToggleDrawing()
     {
         if (_canDraw)
@@ -180,6 +192,46 @@ public class MenusManager : MonoBehaviour
             _canDraw = true;
             //PillManager.instance._mainCamera = Camera.main;
         }
+    }
+
+    // called by the toggle ui obj
+    public void ToggleSideBar()
+    {
+
+        _sideBarIsOpen = !_sideBarIsOpen;
+        Vector2 destination = _sbClosedPos;
+
+        if (_sideBarIsOpen)
+        {
+            destination = _sBStartPos;
+        }
+
+        if (_slideRoutine != null) StopCoroutine(_slideRoutine);
+
+        _slideRoutine = StartCoroutine(MoveSideBar(destination));
+        
+
+    }
+
+    private IEnumerator MoveSideBar(Vector2 destination)
+    {
+        Vector2 startPos = sideBarRECT.anchoredPosition;
+        float elapsed = 0f;
+
+        while (elapsed < _sideBDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / _sideBDuration);
+            float easeT = Mathf.SmoothStep(0f, 1f, t);
+            //interpolate 
+            sideBarRECT.anchoredPosition = Vector2.Lerp(startPos, destination, easeT);
+            yield return null;
+        }
+
+        //snap
+        sideBarRECT.anchoredPosition = destination;
+        _slideRoutine = null;
+
     }
 
 

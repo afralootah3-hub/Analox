@@ -168,7 +168,7 @@ public class CorkboardItem : MonoBehaviour , IBeginDragHandler, IDragHandler, IE
     {
         Debug.Log("Pointer exit fired");
         MenusManager.instance.itemDescTMP.text = "";
-        MenusManager.instance.itemDescTransform = MenusManager.instance.itemDescStartPos;
+        
     }
 
    
