@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -10,7 +11,7 @@ using UnityEngine.SceneManagement;
 using Yarn.Unity;
 
 public enum dayState { day1, day2, day3, gameEnd}
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviour, IDataHandler
 {
     public static GameController instance { get; set; }
     
@@ -43,6 +44,9 @@ public class GameController : MonoBehaviour
     public string MainHouse, Apartment, Bedroom, Office, MainMenu, Credits;
 
     public List<Collider> lockedDoors;
+
+    [Header("FOR SAVING DATA \n DRAG IN EVERY SINGLE CLUE ITEM THAT EXISTS \n OTHERWISE IT WONT GET SAVED")]
+    public List<ItemData> allItems;
 
     private void Update()
     {
@@ -263,8 +267,31 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene(sceneToLoad);
     }
 
-    
+    public void SaveData(ref GameData data)
+    {
+        data.scannedItems.Clear();
 
-
+        foreach(ItemData item in allItems)
+        {
+            if (item.wasScanned)
+            {
+                data.scannedItems.Add(item.ItemName);
+            }
+        }
+    }
+    public void LoadData(GameData data)
+    {
+       foreach(ItemData item in allItems)
+        {
+            if (data.scannedItems.Contains(item.name))
+            {
+                item.wasScanned = true;
+            }
+            else
+            {
+                item.wasScanned = false;
+            }
+        }
+    }
 
 }

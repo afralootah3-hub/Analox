@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DrawingManager : MonoBehaviour
+public class DrawingManager : MonoBehaviour, IDataHandler
 {
     public Camera drawingCam;
     public GameObject brushRed;
@@ -131,4 +131,48 @@ public class DrawingManager : MonoBehaviour
 
     }
 
+    public void LoadData(GameData data)
+    {
+       foreach(Transform child in strokeContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+       //rebuild each stroke saved
+       foreach(StrokesData stroke in data.strokes)
+        {
+            GameObject brushInstance = Instantiate(brushRed);
+            brushInstance.transform.SetParent(strokeContainer.transform);
+
+            LineRenderer line = brushInstance.GetComponent<LineRenderer>();
+            line.useWorldSpace = true;
+            line.sortingLayerName = "Map";
+            line.sortingOrder = 1;
+            line.positionCount = stroke.points.Count;
+            line.SetPositions(stroke.points.ToArray());
+
+        }
+
+
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.strokes.Clear();
+
+        //only look at strokes within the container (in case theres any other line renderers in scene)
+        LineRenderer[] lines = strokeContainer.GetComponentsInChildren<LineRenderer>();
+
+        foreach(LineRenderer line in lines)
+        { 
+            StrokesData stroke = new StrokesData();
+            Vector3[] positions = new Vector3[line.positionCount];
+            line.GetPositions(positions);
+            stroke.points.AddRange(positions);
+
+            data.strokes.Add(stroke);
+
+        }
+
+    }
 }
