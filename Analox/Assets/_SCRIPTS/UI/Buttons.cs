@@ -8,9 +8,10 @@ public class Buttons : MonoBehaviour
     public string startScene;
     public void Play()
     {
+        DataManager.instance.PlayGame();
         SceneManager.LoadScene(startScene);
     }
-    
+
 
     public void Exit()
     {

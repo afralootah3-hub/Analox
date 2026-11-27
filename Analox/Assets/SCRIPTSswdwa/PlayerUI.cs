@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using Yarn.Unity;
 
 
-public class PlayerUI : MonoBehaviour
+public class PlayerUI : MonoBehaviour, IDataHandler
 {
     // changing this to evidence log stuff
 
@@ -108,8 +108,25 @@ public class PlayerUI : MonoBehaviour
         //checks if player has oranges in 
         return PlayerUI.instance._inventoryItems.Contains(itemChecked);
     }
+    public void SaveData(ref GameData data)
+    {
+        data.inventory.Clear();
 
+        foreach(string itemID in _inventoryItems)
+        {
+            data.inventory.Add(itemID);
+        }
+    }
 
+    public void LoadData(GameData data)
+    {
+        _inventoryItems.Clear();
+
+        foreach(string itemID in data.inventory)
+        {
+            _inventoryItems.Add(itemID);
+        }
+    }
 
 }
 

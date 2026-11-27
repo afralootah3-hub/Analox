@@ -23,6 +23,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DamienBranch Edits/RefScene DB.unity
     guid: 558e9be917a3cac4faa744c30b8d6314
+  - enabled: 1
+    path: Assets/Scenes/DRAFT/AFRA/StartMenu1.unity
+    guid: 372cc989914f5904099913f63087b995
+  - enabled: 1
+    path: Assets/Scenes/DRAFT/AFRA/RefHouse A.unity
+    guid: 69e3d02c3e1af384b9661d77eb4d2fcf
+  - enabled: 1
+    path: Assets/Scenes/DRAFT/AFRA/RefScene A.unity
+    guid: d38c21142adfd0746a960754a968a8a6
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

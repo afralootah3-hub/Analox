@@ -12,7 +12,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDataHandler
 {
     // handles point and click, as well as CAMERA stuff (orthographic room viewing)
 
@@ -470,9 +470,17 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /////////// CAMERA SHAKE / EFFECTS ///////////////
-    ///
+    public void LoadData(GameData data)
+    {
+        transform.position = data.playerPos;
+    }
 
-    
+    public void SaveData(ref GameData data)
+    {
+        data.playerPos = transform.position;
+    }
+
+
+
 
 }
