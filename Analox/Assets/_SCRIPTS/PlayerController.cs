@@ -66,7 +66,11 @@ public class PlayerController : MonoBehaviour, IDataHandler
 
     private LoadRoom _loadRoom;
     private List<InteractableObj> _nearby = new List<InteractableObj>();
+
   
+    
+
+
 
     // reference interactable script / scriptable obj
 
@@ -77,6 +81,9 @@ public class PlayerController : MonoBehaviour, IDataHandler
         _pActiveCam = Camera.main;
         _cameraHolder = null;
         _cameraHolder = GameObject.FindGameObjectWithTag("camHolder").GetComponent<Transform>();
+      
+
+
     }
 
 
@@ -123,11 +130,11 @@ public class PlayerController : MonoBehaviour, IDataHandler
     }
 
 
-    #region ANIMATION
+    #region ANIMATION HERE
 
 
 
-    #endregion
+    #endregion 
 
     private void Update()
     {
@@ -207,6 +214,11 @@ public class PlayerController : MonoBehaviour, IDataHandler
 
 
 
+    }
+
+    private void OnHitGround()
+    {
+        // invoke method in uimanager everytime we hit the navmesh ground layer 
     }
 
     public void setPlayerInput(bool disabled)
@@ -364,6 +376,7 @@ public class PlayerController : MonoBehaviour, IDataHandler
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, groundLayerMask))
         {
             agent.SetDestination(hit.point);
+            _ui.ShowCursorPrompt(hit.point);
         }
 
 
