@@ -13,7 +13,6 @@ using Yarn.Unity;
 public class UiManager : MonoBehaviour
 {
     // MUST BE AND STAY ATTACHED TO GAMECONTROLLER GAMEOBJECT //
-    
 
     
 
@@ -120,7 +119,7 @@ public class UiManager : MonoBehaviour
         npcInspectPanel.gameObject.SetActive(false);
         _dropPanel.SetActive(false);
         _dropDownTMP.onValueChanged.AddListener(OnDropdownChanged);
-
+        
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _pillmanager = GetComponent<PillManager>();
         _menusManager = GetComponent<MenusManager>();

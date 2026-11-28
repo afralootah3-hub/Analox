@@ -178,8 +178,8 @@ public class GameController : MonoBehaviour, IDataHandler
         InsantiateCameraSetup();
         DisableDoors();
         Debug.Log("player cc is " + _playerCC);
-        PlayerController.instance.setPlayerState(PlayerController.playerState.isIdle);
         if (_playerCC == null) _playerCC = FindFirstObjectByType<PlayerController>();
+        PlayerController.instance.setPlayerState(PlayerController.playerState.isIdle);
         _playerCC.setPlayerState(PlayerController.playerState.isIdle);
         MenusManager.instance.CloseCork();
 

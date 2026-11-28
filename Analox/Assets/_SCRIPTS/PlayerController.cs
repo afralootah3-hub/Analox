@@ -19,9 +19,13 @@ public class PlayerController : MonoBehaviour, IDataHandler
 
     public static PlayerController instance { get; private set; }
 
-    public enum pSpriteDir { right, left, up, down}
-    [SerializeField] public pSpriteDir spriteDirection = pSpriteDir.up;
-    public enum playerState { isIdle, isDisabled }
+    [Header("ANIMATOR STUFF")]
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Transform _spriteTransform;
+    private Vector3 facingDir = Vector3.back;
+    [SerializeField] private float _moveThreshold = 0.1f;
+
+    public enum playerState { isIdle, isMoving, isDisabled }
     [Header("READ ONLY - DEBUG")]
     [SerializeField] public playerState currentState = playerState.isIdle; //default state
 
@@ -94,6 +98,8 @@ public class PlayerController : MonoBehaviour, IDataHandler
         doorsLayerMask = LayerMask.GetMask("door");
         drawerLayerMask = LayerMask.GetMask("drawer");
         loadDoorLayerMask = LayerMask.GetMask("loadDoor");
+        
+       
 
 
         if (instance != null && instance != this)
@@ -106,7 +112,7 @@ public class PlayerController : MonoBehaviour, IDataHandler
         DontDestroyOnLoad(gameObject);
         //anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-
+        agent.updateRotation = false;
         agent.speed = moveSpeed;
         
         if(playerActions == null)
@@ -130,11 +136,7 @@ public class PlayerController : MonoBehaviour, IDataHandler
     }
 
 
-    #region ANIMATION HERE
-
-
-
-    #endregion 
+    
 
     private void Update()
     {
@@ -151,7 +153,7 @@ public class PlayerController : MonoBehaviour, IDataHandler
         {
             _ui.HidePrompt();
         }
-
+        AnimateSprite();
         //Debug.Log(currentState);
 
         if(_doorInRange != null)
@@ -162,6 +164,49 @@ public class PlayerController : MonoBehaviour, IDataHandler
         //Debug.Log(_InputBlocked + "" + _isRotating + fixedCamera + _cameraHolder);
 
     }
+    #region ANIMATION HERE
+
+    private void AnimateSprite()
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        Vector3 camForward = cam.transform.forward;
+        camForward.y = 0f;
+        camForward.Normalize();
+
+        Vector3 camRight = cam.transform.right;
+        camRight.y = 0f;
+        camRight.Normalize();
+
+        //only update while moving so idle keeps last direction 
+        Vector3 velo = agent.velocity;
+        velo.y = 0f;
+
+        bool moving = velo.magnitude > _moveThreshold;
+
+        if (moving) facingDir = velo.normalized;
+
+        //
+        float x = Vector3.Dot(facingDir, camRight);
+        float y = Vector3.Dot(facingDir, camForward);
+
+        _animator.SetFloat("MoveX", x);
+        _animator.SetFloat("MoveY", y);
+        _animator.SetBool("IsMoving", moving);
+
+    }
+
+    private void LateUpdate()
+    {
+        Camera cam = Camera.main;
+        if (cam == null) return;
+        _spriteTransform.rotation = Quaternion.Euler(0f, cam.transform.eulerAngles.y, 0f);
+    }
+
+
+    #endregion
+
 
     void OnEnable()
     {
@@ -214,11 +259,6 @@ public class PlayerController : MonoBehaviour, IDataHandler
 
 
 
-    }
-
-    private void OnHitGround()
-    {
-        // invoke method in uimanager everytime we hit the navmesh ground layer 
     }
 
     public void setPlayerInput(bool disabled)
