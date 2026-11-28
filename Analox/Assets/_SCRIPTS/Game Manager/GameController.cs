@@ -269,10 +269,14 @@ public class GameController : MonoBehaviour, IDataHandler
 
     public void SaveData(ref GameData data)
     {
+        data.day = currentDay;
+
         data.scannedItems.Clear();
 
         foreach(ItemData item in allItems)
         {
+            if (item == null) continue;
+
             if (item.wasScanned)
             {
                 data.scannedItems.Add(item.ItemName);
@@ -281,9 +285,11 @@ public class GameController : MonoBehaviour, IDataHandler
     }
     public void LoadData(GameData data)
     {
+        currentDay = data.day;
+
        foreach(ItemData item in allItems)
         {
-            if (data.scannedItems.Contains(item.name))
+            if (data.scannedItems.Contains(item.ItemName))
             {
                 item.wasScanned = true;
             }

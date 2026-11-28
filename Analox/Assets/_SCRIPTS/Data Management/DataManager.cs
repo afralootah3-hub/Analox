@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,13 +20,26 @@ public class DataManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        Application.wantsToQuit += OnWantsToQuit;
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        Application.wantsToQuit -= OnWantsToQuit;
     }
 
+    private bool OnWantsToQuit()
+    {
+        if(instance != this)
+        {
+            return true;
+        }
+
+        SaveGame();
+        return true;
+
+    }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if(instance != this)
@@ -32,13 +47,19 @@ public class DataManager : MonoBehaviour
             return;
         }
 
+        StartCoroutine(Refresh());
+
+    }
+
+    private IEnumerator Refresh()
+    {
+        yield return null; // duplicate singletons finish destorying themselves
         getAllDataObj();
 
         if (loadPending)
         {
             loadPending = false;
-
-            foreach(IDataHandler dataHandler in dataObjs)
+            foreach (IDataHandler dataHandler in dataObjs)
             {
                 dataHandler.LoadData(gameData);
             }
@@ -125,6 +146,42 @@ public class DataManager : MonoBehaviour
 
     public void SaveGame()
     {
+
+        Debug.Log("SaveGame called in scene: " + SceneManager.GetActiveScene().name);
+
+        // never save from menu
+        if (SceneManager.GetActiveScene().name == menuSceneName)
+        {
+            Debug.Log("SaveGame skipped: in menu scene");
+            return;
+        }
+
+        if (gameData == null)
+        {
+            Debug.Log("SaveGame skipped: gameData is null");
+            return;
+        }
+
+        getAllDataObj(); 
+
+        gameData.sceneName = SceneManager.GetActiveScene().name;
+
+        foreach (IDataHandler dataHandler in dataObjs)
+        {
+            try
+            {
+                dataHandler.SaveData(ref gameData);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError("SaveData failed on a handler: " + e);
+            }
+        }
+
+        fileManager.SaveFile(gameData);
+        Debug.Log("Save file path: " + Path.Combine(Application.persistentDataPath, fileName));
+
+        /*
         //never save from menu 
         if (SceneManager.GetActiveScene().name == menuSceneName) return;
         if (gameData == null) return; //protect against saving before anything loaded
@@ -140,11 +197,11 @@ public class DataManager : MonoBehaviour
         }
 
         Debug.Log("Saved Player Position: " + gameData.playerPos.ToString());
-
+        */
 
 
         // FINISHED: Use the file writing system to serialize the gameData varialbe into a file on my computer
-        fileManager.SaveFile(gameData);
+        //fileManager.SaveFile(gameData);
     }
 
     public void PlayGame()
@@ -159,8 +216,8 @@ public class DataManager : MonoBehaviour
         SceneManager.LoadScene(gameData.sceneName);
     }
 
-    public void OnApplicationQuit()
-    {
-        SaveGame();
-    }
+    //public void OnApplicationQuit()
+    //{
+    //    SaveGame();
+    //}
 }

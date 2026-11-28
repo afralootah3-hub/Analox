@@ -158,6 +158,8 @@ public class DrawingManager : MonoBehaviour, IDataHandler
 
     public void SaveData(ref GameData data)
     {
+        if (strokeContainer == null) return;
+
         data.strokes.Clear();
 
         //only look at strokes within the container (in case theres any other line renderers in scene)

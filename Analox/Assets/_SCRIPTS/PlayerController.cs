@@ -10,6 +10,7 @@ using static GameController;
 using RangeAttribute = UnityEngine.RangeAttribute;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerController : MonoBehaviour, IDataHandler
@@ -18,7 +19,9 @@ public class PlayerController : MonoBehaviour, IDataHandler
 
     public static PlayerController instance { get; private set; }
 
-    public enum playerState { isIdle, isMoving, isDisabled }
+    public enum pSpriteDir { right, left, up, down}
+    [SerializeField] public pSpriteDir spriteDirection = pSpriteDir.up;
+    public enum playerState { isIdle, isDisabled }
     [Header("READ ONLY - DEBUG")]
     [SerializeField] public playerState currentState = playerState.isIdle; //default state
 
@@ -119,6 +122,13 @@ public class PlayerController : MonoBehaviour, IDataHandler
         //_cameraHolder = GameObject.FindWithTag("camHolder").transform;
     }
 
+
+    #region ANIMATION
+
+
+
+    #endregion
+
     private void Update()
     {
         if (_pActiveCam == null) ReloadPlayerVariables();
@@ -137,7 +147,7 @@ public class PlayerController : MonoBehaviour, IDataHandler
 
         //Debug.Log(currentState);
 
-        if(_doorInRange != null && Keyboard.current.spaceKey.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame)
+        if(_doorInRange != null)
         {
             _ui.OpenDoor(_doorInRange);
         }
@@ -185,9 +195,6 @@ public class PlayerController : MonoBehaviour, IDataHandler
                 Debug.Log("Player is in Idle state");
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                break;
-            case playerState.isMoving:
-                Debug.Log("Player is in moving state");
                 break;
             case playerState.isDisabled:
                 Debug.Log("Disabling player movement");
