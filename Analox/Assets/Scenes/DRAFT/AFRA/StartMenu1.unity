@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DataManager
   menuSceneName: StartMenu1
-  fileName: meowmeowmoewmoew
+  fileName: meow
 --- !u!4 &61495591
 Transform:
   m_ObjectHideFlags: 0

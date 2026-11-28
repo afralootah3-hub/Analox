@@ -23,7 +23,7 @@ public class InteractableObj : MonoBehaviour
     private void Awake()
     {
         itemRenderer = GetComponentInChildren<MeshRenderer>();
-        itemdata.wasScanned = false;
+        //itemdata.wasScanned = false;
 
         if(itemdata.objtype == itemType.Door)
         {

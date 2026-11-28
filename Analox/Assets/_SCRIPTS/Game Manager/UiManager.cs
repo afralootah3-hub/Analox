@@ -13,7 +13,6 @@ using Yarn.Unity;
 public class UiManager : MonoBehaviour
 {
     // MUST BE AND STAY ATTACHED TO GAMECONTROLLER GAMEOBJECT //
-    
 
     
 
@@ -30,6 +29,14 @@ public class UiManager : MonoBehaviour
     private Transform _promptTarget;
     private bool _visible; //debug temp var
     // this is basic pop up stuff, but you can add animation stuff to this script //
+
+    public CanvasGroup cursorCG;
+    public Transform cursorTransform;
+    private Vector3 _cpromptPos;
+    private Coroutine _cursorRoutine;
+    public float cursorFadeDuration = 3f;
+    
+
 
     private MenusManager _menusManager;
 
@@ -112,7 +119,7 @@ public class UiManager : MonoBehaviour
         npcInspectPanel.gameObject.SetActive(false);
         _dropPanel.SetActive(false);
         _dropDownTMP.onValueChanged.AddListener(OnDropdownChanged);
-
+        
         _playerCC = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _pillmanager = GetComponent<PillManager>();
         _menusManager = GetComponent<MenusManager>();
@@ -124,6 +131,41 @@ public class UiManager : MonoBehaviour
         if (scanDesc == null || itemDesc == null || itemName == null) Debug.LogWarning("MISSING COMPONENT IN INSPECTOR");
         if (npcScanDesc == null) Debug.LogWarning("MISSING NPCSCANDESC IN INSPECTOR");
     }
+    public void ShowCursorPrompt(Vector3 position)
+    {
+        if (activeCam != null)
+        {
+            cursorTransform.rotation = Quaternion.LookRotation(cursorTransform.position - activeCam.transform.position);
+        }
+        cursorTransform.position = position;
+        if (_cursorRoutine != null) StopCoroutine(_cursorRoutine);
+         _cursorRoutine = StartCoroutine(fadeCursor());
+        // play routine
+        
+    }
+
+    private IEnumerator fadeCursor()
+    {
+        float time = 0f;
+
+        while(time < cursorFadeDuration)
+        {
+            time += Time.deltaTime;
+            float t = Mathf.Clamp01(time / cursorFadeDuration);
+            cursorCG.alpha = Mathf.Lerp(1, 0, t);
+            yield return null;
+
+
+        }
+
+        cursorCG.alpha = 0;
+        _cursorRoutine = null;
+
+
+
+    }
+
+
 
     /*  Dropdown logic
         1. yarn runs this command <<showDropDown GAMEMANAGER "NPCprefix">> 

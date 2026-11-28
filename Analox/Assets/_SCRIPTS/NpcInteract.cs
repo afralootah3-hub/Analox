@@ -266,6 +266,7 @@ public class NpcInteract : MonoBehaviour
         _player.setPlayerState(PlayerController.playerState.isDisabled);
 
         Vector2 mousePos = Mouse.current.position.ReadValue();
+        if(_wheel == null) _wheel = FindFirstObjectByType<ActionWheel>(FindObjectsInactive.Include);
         _wheel.OpenWheel(mousePos, OnWheelChoice);
     }
 

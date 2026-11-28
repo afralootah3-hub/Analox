@@ -178,8 +178,8 @@ public class GameController : MonoBehaviour, IDataHandler
         InsantiateCameraSetup();
         DisableDoors();
         Debug.Log("player cc is " + _playerCC);
-        PlayerController.instance.setPlayerState(PlayerController.playerState.isIdle);
         if (_playerCC == null) _playerCC = FindFirstObjectByType<PlayerController>();
+        PlayerController.instance.setPlayerState(PlayerController.playerState.isIdle);
         _playerCC.setPlayerState(PlayerController.playerState.isIdle);
         MenusManager.instance.CloseCork();
 
@@ -269,10 +269,14 @@ public class GameController : MonoBehaviour, IDataHandler
 
     public void SaveData(ref GameData data)
     {
+        data.day = currentDay;
+
         data.scannedItems.Clear();
 
         foreach(ItemData item in allItems)
         {
+            if (item == null) continue;
+
             if (item.wasScanned)
             {
                 data.scannedItems.Add(item.ItemName);
@@ -281,9 +285,11 @@ public class GameController : MonoBehaviour, IDataHandler
     }
     public void LoadData(GameData data)
     {
+        currentDay = data.day;
+
        foreach(ItemData item in allItems)
         {
-            if (data.scannedItems.Contains(item.name))
+            if (data.scannedItems.Contains(item.ItemName))
             {
                 item.wasScanned = true;
             }

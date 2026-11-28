@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ActionWheel : MonoBehaviour
@@ -36,12 +37,17 @@ public class ActionWheel : MonoBehaviour
     private void Start()
     {
         _canvas = GetComponentInParent<Canvas>();
-        wheelHolder.SetActive(false);
-        _playercc = FindFirstObjectByType<PlayerController>();
-        _agent = _playercc.gameObject.GetComponent<NavMeshAgent>();
+       
     }
     public void OpenWheel(Vector2 screenPos, Action<int> callback)
     {
+        wheelHolder.SetActive(false);
+        //if(_playercc == null)
+        _playercc = FindFirstObjectByType<PlayerController>();
+        
+        //if(_agent == null)
+        _agent = _playercc.gameObject.GetComponent<NavMeshAgent>();
+
         _agent.ResetPath();
         onFinished = callback;
         cursorPos = Vector2.zero;
@@ -53,6 +59,25 @@ public class ActionWheel : MonoBehaviour
         
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        isOpen = false;
+        onFinished = null;
+        wheelHolder.SetActive(false);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
     public void CloseWheel(int selected)
     {
        if (isOpen == false) return;
@@ -61,6 +86,7 @@ public class ActionWheel : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         isOpen = false;
+        if(onFinished != null)
         onFinished(selected);
         //_playercc.setPlayerState(PlayerController.playerState.isIdle);
         wheelHolder.SetActive(false);
