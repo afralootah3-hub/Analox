@@ -201,7 +201,10 @@ public class PlayerController : MonoBehaviour, IDataHandler
     {
         Camera cam = Camera.main;
         if (cam == null) return;
-        _spriteTransform.rotation = Quaternion.Euler(0f, cam.transform.eulerAngles.y, 0f);
+
+        _spriteTransform.rotation = cam.transform.rotation;
+
+       // _spriteTransform.rotation = Quaternion.Euler(0f, cam.transform.eulerAngles.y, 0f);
     }
 
 

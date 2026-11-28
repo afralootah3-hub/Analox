@@ -1198,7 +1198,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2507440394184665116, guid: 0d4ac2745554fc04e820f131b6bbe6c6, type: 3}
       propertyPath: m_Acceleration
-      value: 15
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 5282188838109968920, guid: 0d4ac2745554fc04e820f131b6bbe6c6, type: 3}
       propertyPath: _pActiveCam
@@ -1860,7 +1860,7 @@ PrefabInstance:
       objectReference: {fileID: 2098982965}
     - target: {fileID: 436505056857538893, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000015258789
+      value: -0.0000038146973
       objectReference: {fileID: 0}
     - target: {fileID: 974776101247262106, guid: 8cdd1a6d0d412a54baf86c18ad8b0f1e, type: 3}
       propertyPath: cursorFadeDuration
